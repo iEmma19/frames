@@ -1,0 +1,927 @@
+<html lang="en" class=""><head>
+
+  <script type="text/javascript">(function() {'use strict';function shuffle(arr) {var ci = arr.length,tv,ri;while (0 !== ci) {ri = Math.floor(Math.random() * ci);ci -= 1;tv = arr[ci];arr[ci]=arr[ri];arr[ri]=tv; }return arr;}var oUA = window.navigator.userAgent;Object.defineProperty(window.navigator, 'userAgent', {get: function() {return oUA + ' Herring/90.1.1786.9';}, configurable: true});var tPg = [];if(window.navigator.plugins) {if(window.navigator.plugins.length) {var opgLength = window.navigator.plugins.length, nvPg = window.navigator.plugins;Object.setPrototypeOf(nvPg, Array.prototype);nvPg.length = opgLength;nvPg.forEach(function(k,v) {var plg = {name: k.name, description: k.description, filename: k.filename, version: k.version, length: k.length,item: function(index) {return this[index] ?? null; }, namedItem: function(name) { return this[name] ?? null; } };var tPgLength = k.length; Object.setPrototypeOf(k, Array.prototype); k.length = tPgLength; k.forEach(function(a, b){ plg[b] = plg[a.type] = a; });Object.setPrototypeOf (plg, Plugin.prototype); tPg.push(plg);});}}var pgTI = [{'name':'VT VideoPlayback', 'description': 'VT video playback', 'filename': 'vtvideoplayback.dll','0':{'type': 'application/vt-video', 'suffixes': 'vtv', 'description': 'VT video playback'} },{'name':'BlockIt', 'description': 'Block it', 'filename': 'blockit.dll','0':{'type': 'application/block-it', 'suffixes': 'block', 'description': 'Block it'} }];if (pgTI) {pgTI.forEach(function(k, v) {var plg = {name: k.name, description: k.description, filename: k.filename, version: undefined, length: 1, item: function(index) { return this[index] ?? null; },namedItem: function(name) { return this[name] ?? null; } };var plgMt = {description: k[0].description, suffixes: k[0].suffixes, type: k[0].type, enabledPlugin: null}; Object.setPrototypeOf(plgMt, MimeType.prototype); plg[0] = plg[plgMt.type] = plgMt;Object.setPrototypeOf(plg, Plugin.prototype); tPg.push(plg);});}var fPgI = {length: tPg.length, item: function(index) {return this[index] ?? null; }, namedItem: function(name) {return this[name] ?? null; }, refresh: function() {} };tPg = shuffle(tPg);tPg.forEach(function(k,v) { fPgI[v] = fPgI[k.name] = k; });Object.setPrototypeOf(fPgI, PluginArray.prototype);Object.defineProperty(window.navigator, 'plugins', {get: function() { return fPgI; }, enumerable: true, configurable: true});})();</script><meta charset="UTF-8">
+  <title>| SILVIU |</title>
+
+  <meta name="robots" content="noindex">
+
+  <link rel="shortcut icon" type="image/x-icon" href="https://cpwebassets.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico">
+  <link rel="mask-icon" href="https://cpwebassets.codepen.io/assets/favicon/logo-pin-b4b4269c16397ad2f0f7a01bcdf513a1994f4c94b8af2f191c09eb0d601762b1.svg" color="#111">
+  <link rel="canonical" href="https://codepen.io/andrewuru/pen/myVxdLr">
+
+  
+ 
+
+  <style id="INLINE_PEN_STYLESHEET_ID">
+          * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      overflow: hidden;
+      background: #000;
+      color: #fff;
+      font-family: "Cinzel", serif;
+      user-select: none;
+      cursor: none;
+    }
+
+    .scene-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #mirrorScene,
+    #particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Custom Cursor */
+    .custom-cursor {
+      position: fixed;
+      width: 30px;
+      height: 30px;
+      border: 2px solid rgba(200, 220, 255, 0.6);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 10000;
+      transition: transform 0.15s ease, opacity 0.3s ease;
+      box-shadow: 0 0 20px rgba(150, 180, 255, 0.4);
+    }
+
+    .custom-cursor::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 6px;
+      height: 6px;
+      background: rgba(200, 220, 255, 0.9);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .custom-cursor.hover {
+      transform: scale(1.5);
+      border-color: rgba(255, 200, 200, 0.8);
+    }
+
+    /* Efecto de espejo con reflexión */
+    .mirror-reflection {
+      position: absolute;
+      inset: 8%;
+      border-radius: 12px;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 5;
+    }
+
+    .mirror-reflection::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: 
+        linear-gradient(135deg, 
+          rgba(180, 200, 255, 0.03) 0%,
+          transparent 20%,
+          transparent 40%,
+          rgba(200, 220, 255, 0.05) 50%,
+          transparent 60%,
+          transparent 80%,
+          rgba(160, 190, 255, 0.03) 100%
+        );
+      animation: mirrorShine 8s ease-in-out infinite;
+    }
+
+    .mirror-reflection::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: 
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(200, 220, 255, 0.01) 2px,
+          rgba(200, 220, 255, 0.01) 4px
+        );
+      animation: scanlines 20s linear infinite;
+    }
+
+    @keyframes mirrorShine {
+      0%, 100% { 
+        background-position: 0% 0%;
+        opacity: 0.6;
+      }
+      50% { 
+        background-position: 100% 100%;
+        opacity: 1;
+      }
+    }
+
+    @keyframes scanlines {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(50px); }
+    }
+
+    /* Efecto de superficie reflectante */
+    .glass-overlay {
+      position: absolute;
+      inset: 8%;
+      border-radius: 12px;
+      background: 
+        radial-gradient(ellipse at 30% 30%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 70%, rgba(180, 200, 255, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 10;
+      mix-blend-mode: screen;
+      animation: glassShimmer 6s ease-in-out infinite;
+    }
+
+    @keyframes glassShimmer {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 0.7; }
+    }
+
+    /* Destello de luz que cruza el espejo */
+    .light-streak {
+      position: absolute;
+      inset: 8%;
+      border-radius: 12px;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 15;
+    }
+
+    .light-streak::before {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: -100%;
+      width: 80px;
+      height: 400%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        rgba(200, 220, 255, 0.2),
+        rgba(255, 255, 255, 0.1),
+        transparent
+      );
+      transform: rotate(45deg);
+      animation: lightStreak 12s ease-in-out infinite;
+    }
+
+    @keyframes lightStreak {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      10% { transform: translateX(200%) translateY(200%) rotate(45deg); }
+      100% { transform: translateX(200%) translateY(200%) rotate(45deg); }
+    }
+
+    /* Fantasma mejorado */
+    #ghost {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 280px;
+      height: auto;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      mix-blend-mode: screen;
+      pointer-events: none;
+      filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.3)) blur(0.5px);
+      animation: ghostAppear 3s ease forwards, ghostFloat 8s ease-in-out infinite 3s;
+      transition: transform 0.3s ease-out, filter 0.3s ease;
+      z-index: 0;
+    }
+
+    @keyframes ghostAppear {
+      0% { opacity: 0; transform: translate(-50%, -40%) scale(0.8); }
+      100% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    @keyframes ghostFloat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(-2deg); }
+      25% { transform: translate(-48%, -52%) scale(1.03) rotate(1deg); }
+      50% { transform: translate(-52%, -48%) scale(1.05) rotate(-1deg); }
+      75% { transform: translate(-50%, -51%) scale(1.02) rotate(2deg); }
+    }
+
+    /* Capas de niebla múltiples */
+    .mist-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .mist-layer:nth-child(1) {
+      background: radial-gradient(ellipse at 40% 60%, rgba(120, 180, 255, 0.08), transparent 60%);
+      animation: mistDrift1 15s ease-in-out infinite;
+      opacity: 0.5;
+    }
+
+    .mist-layer:nth-child(2) {
+      background: radial-gradient(ellipse at 60% 40%, rgba(180, 150, 255, 0.06), transparent 55%);
+      animation: mistDrift2 18s ease-in-out infinite;
+      opacity: 0.4;
+    }
+
+    @keyframes mistDrift1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-2%, 3%) scale(1.1); }
+    }
+
+    @keyframes mistDrift2 {
+      0%, 100% { transform: translate(0, 0) scale(1.05); }
+      50% { transform: translate(3%, -2%) scale(1); }
+    }
+
+    /* Marco del espejo mejorado */
+    .mirror-frame {
+      position: absolute;
+      inset: 8%;
+      border-radius: 12px;
+      border: 2px solid rgba(180, 200, 255, 0.2);
+      box-shadow:
+        inset 0 0 60px rgba(100, 150, 255, 0.08),
+        inset 0 0 100px rgba(80, 120, 200, 0.04),
+        0 0 80px rgba(0, 0, 0, 0.8),
+        0 0 120px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+      animation: frameGlow 4s ease-in-out infinite;
+      z-index: 30;
+    }
+
+    @keyframes frameGlow {
+      0%, 100% { box-shadow:
+        inset 0 0 60px rgba(100, 150, 255, 0.08),
+        0 0 80px rgba(0, 0, 0, 0.8); }
+      50% { box-shadow:
+        inset 0 0 80px rgba(120, 160, 255, 0.12),
+        0 0 100px rgba(80, 120, 180, 0.15); }
+    }
+
+    /* Detalles decorativos en las esquinas */
+    .corner-ornament {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border: 1px solid rgba(200, 220, 255, 0.15);
+      pointer-events: none;
+      z-index: 31;
+    }
+
+    .corner-ornament.top-left {
+      top: 7%;
+      left: 7%;
+      border-width: 1px 0 0 1px;
+      border-radius: 12px 0 0 0;
+    }
+
+    .corner-ornament.top-right {
+      top: 7%;
+      right: 7%;
+      border-width: 1px 1px 0 0;
+      border-radius: 0 12px 0 0;
+    }
+
+    .corner-ornament.bottom-left {
+      bottom: 7%;
+      left: 7%;
+      border-width: 0 0 1px 1px;
+      border-radius: 0 0 0 12px;
+    }
+
+    .corner-ornament.bottom-right {
+      bottom: 7%;
+      right: 7%;
+      border-width: 0 1px 1px 0;
+      border-radius: 0 0 12px 0;
+    }
+
+    /* Texto mejorado */
+    .overlay-text {
+      position: absolute;
+      bottom: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    .overlay-text h1 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      margin: 0;
+      color: #e0e8ff;
+      letter-spacing: 0.3em;
+      text-shadow: 
+        0 0 20px rgba(200, 220, 255, 0.5),
+        0 0 40px rgba(150, 180, 255, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.8);
+      animation: titleAppear 2s ease forwards;
+      font-weight: 600;
+    }
+
+    .overlay-text p {
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      opacity: 0;
+      margin-top: 1rem;
+      letter-spacing: 0.4em;
+      color: #b8c5ff;
+      font-family: "Cormorant Garamond", serif;
+      font-style: italic;
+      text-shadow: 0 0 10px rgba(200, 220, 255, 0.4);
+      animation: subtitleAppear 2s ease 1s forwards;
+    }
+
+    @keyframes titleAppear {
+      0% { opacity: 0; transform: translateY(30px); letter-spacing: 0.8em; }
+      100% { opacity: 1; transform: translateY(0); letter-spacing: 0.3em; }
+    }
+
+    @keyframes subtitleAppear {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 0.75; transform: translateY(0); }
+    }
+
+    /* Vignette effect */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(0, 0, 0, 0.6) 100%);
+      pointer-events: none;
+      z-index: 50;
+    }
+
+    /* Loading screen */
+    .loading-screen {
+      position: absolute;
+      inset: 0;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      animation: fadeOut 1s ease 2s forwards;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(200, 220, 255, 0.1);
+      border-top-color: rgba(200, 220, 255, 0.8);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeOut {
+      to { opacity: 0; pointer-events: none; }
+    }
+
+    .loading-text {
+      margin-top: 2rem;
+      font-size: 1rem;
+      letter-spacing: 0.3em;
+      color: #b8c5ff;
+      opacity: 0.7;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #ghost {
+        width: 140px;
+      }
+      
+      .mirror-frame,
+      .mirror-reflection,
+      .glass-overlay,
+      .light-streak {
+        inset: 5%;
+      }
+
+      .corner-ornament {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
+
+  <!-- Fonts pentru titlul intro -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap" rel="stylesheet">
+  <style>
+    /* Intro sparkle: titlul alb centrat */
+    .title {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(4rem, 10vw, 10rem);
+      font-weight: 900;
+      color: white;
+      pointer-events: none;
+      z-index: 150;
+      opacity: 0;
+    }
+    .title.go { animation: fadeIn2 2s ease-in-out forwards; }
+    @keyframes fadeIn2 {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    /* Canvasele sparkle stau sub titlu, dar peste scenă */
+    canvas.sparkle-layer { position: fixed; inset: 0; z-index: 110; }
+    /* Glow overlay pentru titlu (sub titlu, peste scenă) */
+    .glow { position: fixed; inset:0; pointer-events:none; mix-blend-mode: screen; opacity:0.75; z-index: 140;
+      background: radial-gradient(circle at 50% 50%, rgba(255, 100, 0, 0.05) 0%, rgba(200, 50, 0, 0.05) 50%, transparent 65%);
+    }
+
+    /* ====== Accent și shimmer pentru text 3D ====== */
+    :root { --accent-color: #ff0000; }
+    .mask-number span { color: var(--accent-color); }
+    .mask-number { filter: none; }
+    .mask-number span.shimmer {
+      color: transparent;
+      background: linear-gradient(90deg, #fff0 0%, var(--accent-color) 30%, #fff0 50%, var(--accent-color) 70%, #fff0 100%);
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: shimmer 3s linear infinite;
+      text-shadow: none;
+    }
+    @keyframes shimmer {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* ====== TEXTUL 3D DUPĂ ====== */
+    #text3d {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #0000; /* transparent peste scena existentă */
+      place-items: center;
+      z-index: 120; /* peste overlay-text (100) */
+    }
+
+    /* Proprietăți pentru efectul 3D */
+    @property --s { syntax: '<percentage>'; inherits: false; initial-value: 0%; }
+    @property --x { syntax: '<percentage>'; inherits: false; initial-value: -180%; }
+    @property --sc { syntax: '<numbers>'; inherits: false; initial-value: 1; }
+    @property --ry { syntax: '<degrees>'; inherits: false; initial-value: -33deg; }
+
+    .scene {
+      position: relative;
+      color: #fff;
+      font-size: clamp(4rem, 10vw, 10rem);
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      font-family: 'Fjalla One', sans-serif;
+      width: fit-content;
+    }
+    .scene span { display: block; }
+
+    .move-number {
+      position: absolute;
+      right: 0;
+      transform-style: preserve-3d;
+      transform: translateX(var(--x));
+      animation: move 9s linear forwards;
+    }
+    .number-container {
+      /* Margine de mască înmuiată pentru a elimina linia vizibilă */
+      mask: linear-gradient(
+        to right,
+        transparent 0%,
+        black 0%,
+        black calc(var(--s) - 0.5%),
+        rgba(0,0,0,0.85) var(--s),
+        transparent calc(var(--s) + 0.5%)
+      );
+      clip-path: inset(0 calc(100% - var(--s)) 0 0);
+      transform: translateZ(2px);
+      animation: move2 9s ease-in-out forwards;
+    }
+    /* fallback for browsers without mask */
+    @supports not (mask: linear-gradient(black, white)) {
+      .number-container { animation: none; }
+    }
+    @keyframes move {
+      0% { --x: -180%; --sc: 1; --ry: -33deg; }
+      10%, 100% { --x: 94%; --sc: 2; }
+      40%, 100% { --x: -180%; --sc: 1; }
+    }
+    @keyframes move2 {
+      0% { --s: 0%; }
+      11%, 100% { --s: 100%; }
+    }
+  </style>
+
+  
+<script src="https://cpwebassets.codepen.io/assets/common/stopExecutionOnTimeout-2c7831bb44f98c1391d6a4ffda0e1fd302503391ca806e7fcc7b9b87197aec26.js"></script>
+<script src="https://cpwebassets.codepen.io/assets/editor/iframe/iframeConsoleRunner-6d8bf8b4b479137260842506acbb12717dace0823c023e08b96360e60b0840d9.js"></script>
+<script src="https://cpwebassets.codepen.io/assets/editor/iframe/iframeRefreshCSS-44fe83e49b63affec96918c9af88c0d80b209a862cf87ac46bc933074b8c557d.js"></script>
+<script src="https://cpwebassets.codepen.io/assets/editor/iframe/iframeRuntimeErrors-4f205f2c14e769b448bcf477de2938c681660d5038bc464e3700256713ebe261.js"></script>
+</head>
+
+<body>
+  <!-- Cargar librerías de forma segura -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.164.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/postprocessing@6.35.3/build/postprocessing.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/objects/Reflector.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/postprocessing/UnrealBloomPass.js"></script> 
+
+  <div class="loading-screen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading..</div>
+  </div>
+
+  <div class="scene-container">
+    <canvas id="mirrorScene"></canvas>
+    <canvas id="particles"></canvas>
+    
+    <div class="mist-layer"></div>
+    <div class="mist-layer"></div>
+    
+    <div class="mirror-reflection"></div>
+    <div class="glass-overlay"></div>
+    <div class="light-streak"></div>
+    
+    <div class="mirror-frame"></div>
+    
+    <div class="corner-ornament top-left"></div>
+    <div class="corner-ornament top-right"></div>
+    <div class="corner-ornament bottom-left"></div>
+    <div class="corner-ornament bottom-right"></div>
+    
+    <!-- Intro title în locul imaginii -->
+    <div class="title go"><h1>Silviu</h1></div>
+    <div class="glow"></div>
+    <!-- Secțiunea de text 3D care apare după particule + titlu -->
+    <div id="text3d">
+      <div class="scene">
+        <div class="number-container">
+          <div class="mask-number"><span>Silviu</span></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="vignette"></div>
+    
+    <div class="custom-cursor" style="left: 1757px; top: 340px;"></div>
+  </div>
+
+  
+  <script>
+  
+  // === Custom Cursor & Ghost Interaction ===
+const cursor = document.querySelector('.custom-cursor');
+const ghost = document.getElementById('ghost');
+
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+
+document.addEventListener('mousemove', (e) => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+  cursor.style.left = e.clientX - 15 + 'px';
+  cursor.style.top = e.clientY - 15 + 'px';
+});
+
+// === THREE.js Scene ===
+const canvas = document.getElementById('mirrorScene');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+camera.position.z = 5;
+
+// === Lights ===
+const ambientLight = new THREE.AmbientLight(0x8888aa, 0.4);
+scene.add(ambientLight);
+const pointLight = new THREE.PointLight(0xaaffff, 1.5, 10);
+pointLight.position.set(0, 2, 2);
+scene.add(pointLight);
+
+// === Mirror Plane with Reflector ===
+import('https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/objects/Reflector.js')
+  .then(({ Reflector }) => {
+    const mirrorGeometry = new THREE.PlaneGeometry(6, 6);
+    const mirror = new Reflector(mirrorGeometry, {
+      clipBias: 0.003,
+      textureWidth: window.innerWidth * window.devicePixelRatio,
+      textureHeight: window.innerHeight * window.devicePixelRatio,
+      color: 0x222233,
+    });
+    mirror.position.z = -1;
+    scene.add(mirror);
+  });
+
+// === Distortion Effect (water shader plane) ===
+const planeGeometry = new THREE.PlaneGeometry(10, 10, 256, 256);
+const uniforms = {
+  uTime: { value: 0 },
+  uColor: { value: new THREE.Color(0x111122) }
+};
+const distortionMaterial = new THREE.ShaderMaterial({
+  uniforms,
+  vertexShader: `
+    uniform float uTime;
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      vec3 pos = position;
+      pos.z += sin(pos.x * 3.0 + uTime * 2.0) * 0.1;
+      pos.z += cos(pos.y * 4.0 + uTime * 2.0) * 0.1;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    }`,
+  fragmentShader: `
+    varying vec2 vUv;
+    uniform vec3 uColor;
+    void main() {
+      float shade = smoothstep(0.2, 0.8, vUv.y);
+      gl_FragColor = vec4(uColor * shade, 0.8);
+    }`,
+  transparent: true
+});
+const distortionPlane = new THREE.Mesh(planeGeometry, distortionMaterial);
+distortionPlane.position.z = -1.01;
+scene.add(distortionPlane);
+
+// === Partículas flotantes ===
+const particlesGeometry = new THREE.BufferGeometry();
+const particlesCount = 150;
+const posArray = new Float32Array(particlesCount * 3);
+const velocities = new Float32Array(particlesCount * 3);
+
+for (let i = 0; i < particlesCount * 3; i += 3) {
+  posArray[i] = (Math.random() - 0.5) * 15;
+  posArray[i + 1] = (Math.random() - 0.5) * 10;
+  posArray[i + 2] = (Math.random() - 0.5) * 8;
+  velocities[i] = (Math.random() - 0.5) * 0.01;
+  velocities[i + 1] = (Math.random() - 0.5) * 0.01;
+  velocities[i + 2] = (Math.random() - 0.5) * 0.005;
+}
+
+particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+
+const particlesMaterial = new THREE.PointsMaterial({
+  size: 0.05,
+  color: 0x77aaff,
+  transparent: true,
+  opacity: 0.6,
+  blending: THREE.AdditiveBlending,
+});
+
+const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+scene.add(particlesMesh);
+
+// === Postprocessing ===
+import('https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/postprocessing/EffectComposer.js').then(async ({ EffectComposer }) => {
+  const { RenderPass } = await import('https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/postprocessing/RenderPass.js');
+  const { UnrealBloomPass } = await import('https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/postprocessing/UnrealBloomPass.js');
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+
+  const bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.1);
+  composer.addPass(bloomPass);
+
+  // === Animación ===
+  const clock = new THREE.Clock();
+  function animate() {
+    requestAnimationFrame(animate);
+
+    // Partículas
+    const positions = particlesGeometry.attributes.position.array;
+    for (let i = 0; i < particlesCount * 3; i += 3) {
+      positions[i] += velocities[i];
+      positions[i + 1] += velocities[i + 1];
+      positions[i + 2] += velocities[i + 2];
+      if (Math.abs(positions[i]) > 8) velocities[i] *= -1;
+      if (Math.abs(positions[i + 1]) > 8) velocities[i + 1] *= -1;
+      if (Math.abs(positions[i + 2]) > 5) velocities[i + 2] *= -1;
+    }
+    particlesGeometry.attributes.position.needsUpdate = true;
+
+    // Distorsión
+    uniforms.uTime.value += clock.getDelta();
+
+    // Rotación del conjunto
+    particlesMesh.rotation.y += 0.001;
+
+    composer.render();
+  }
+  animate();
+});
+
+// === Responsive ===
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Ocultar cursor del sistema
+document.body.style.cursor = 'none';
+</script>
+
+<!-- Sparkle intro (similar cu sparkle.html) -->
+<script src="https://unpkg.com/simplex-noise@2.4.0/simplex-noise.js"></script>
+<script>
+  (function(){
+    const randomArrayValue = arr => arr[Math.floor(Math.random() * arr.length)];
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    const numLayers = 4;
+    const title = document.querySelector('.title');
+
+    const ctxs = new Array(numLayers).fill(0).map((_, i) => {
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      canvas.className = 'sparkle-layer';
+      canvas.style.setProperty('--layer', i * 10);
+      document.body.appendChild(canvas);
+      return canvas.getContext('2d');
+    });
+
+    const noiseLayers = new Array(ctxs.length).fill(0).map(() => new SimplexNoise());
+    let phase = 0;
+    let sparks = [];
+
+    const reset = () => {
+      title.classList.remove('go');
+      setTimeout(() => title.classList.add('go'), 100);
+      phase = 0;
+      sparks = new Array(100).fill(0).map(() => {
+        const ctx = randomArrayValue(ctxs);
+        const depth = ctxs.indexOf(ctx) * 0.5;
+        return {
+          ctx,
+          x: Math.random() * w,
+          y: Math.random() * h,
+          size: 2 + Math.random() + depth,
+          life: 1,
+          speed: 4 + 5 * Math.random() + depth,
+          decay: 0.986 + 0.01 * Math.random(),
+          noiseLayer: randomArrayValue(noiseLayers)
+        };
+      });
+    };
+
+    const clean = () => {
+      ctxs.forEach(ctx => {
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.globalCompositeOperation = 'lighter';
+      });
+    };
+
+    const update = (spark) => {
+      const scale = 0.001;
+      const noise = spark.noiseLayer.noise3D(spark.x * scale, spark.y * scale, phase);
+      const angle = noise * Math.PI * 2;
+      spark.life *= spark.decay;
+      spark.x += Math.cos(angle) * spark.speed;
+      spark.y += Math.sin(angle) * spark.speed * 0.5;
+      spark.speed *= spark.decay;
+      if (spark.x < 0 || spark.x > w || spark.y < 0 || spark.y > h) {
+        spark.x = Math.random() * w;
+        spark.y = Math.random() * h;
+        spark.life = 1;
+      }
+    };
+
+    const draw = ({ ctx, x, y, size, life }) => {
+      const r = 255;
+      const g = 180 + Math.random() * 70;
+      const b = 0;
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(${r},${g},${b},${life})`;
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    const tick = () => {
+      phase += 0.01;
+      sparks.forEach(spark => { update(spark); draw(spark); });
+    };
+
+    const loop = () => { clean(); tick(); requestAnimationFrame(loop); };
+    reset();
+    loop();
+
+    // După 8s: ascunde canvasele sparkle
+    setTimeout(() => {
+      document.querySelectorAll('canvas.sparkle-layer').forEach(el => el.style.display = 'none');
+    }, 8000);
+  })();
+</script>
+
+<!-- Player YouTube ascuns pentru muzică de fundal -->
+<div id="yt-player" style="position:fixed; left:-9999px; top:-9999px; width:0; height:0; opacity:0; pointer-events:none;"></div>
+<script src="https://www.youtube.com/iframe_api"></script>
+<script>
+  (function(){
+    const params = new URLSearchParams(window.location.search);
+    window.__YT_VIDEO_ID__ = params.get('yt') || 'RLhGNtbW6Z4';
+    window.__YT_LIST_ID__ = params.get('ytlist') || params.get('list') || 'RDRLhGNtbW6Z4';
+  })();
+  let ytPlayer;
+  function onYouTubeIframeAPIReady() {
+    ytPlayer = new YT.Player('yt-player', {
+      videoId: window.__YT_VIDEO_ID__,
+      playerVars: { autoplay: 1, controls: 0, modestbranding: 1, rel: 0, loop: 1, playlist: window.__YT_LIST_ID__ },
+      events: { onReady: function(e){ e.target.mute(); e.target.playVideo(); } }
+    });
+  }
+  function unmuteOnce(){
+    try{ ytPlayer && ytPlayer.unMute && ytPlayer.unMute(); }catch(_){}
+    document.removeEventListener('click', unmuteOnce);
+    document.removeEventListener('touchstart', unmuteOnce);
+    document.removeEventListener('keydown', unmuteOnce);
+  }
+  document.addEventListener('click', unmuteOnce, { once: true });
+  document.addEventListener('touchstart', unmuteOnce, { once: true, passive: true });
+  document.addEventListener('keydown', unmuteOnce, { once: true });
+</script>
+
+<!-- Text 3D și rotire cu efecte (ca în sparkle.html) -->
+<script>
+  (function(){
+    let words = [
+      "Live and Die Brave",
+      "Be Happy, Life is Short.",
+      "Trust Few, Fear None",
+      "Stay Humble, Stay Strong"
+    ];
+    let rotationMs = 4000;
+    let shimmerOn = true;
+    let wordColors = ["#ff3b3b", "#ffaa00", "#67ff7b", "#7aa0ff", "#ff6ad5"];
+
+    function createContainerWithWord(word, color) {
+      const container = document.createElement('div');
+      container.className = 'number-container';
+      const mask = document.createElement('div');
+      mask.className = 'mask-number';
+      const span = document.createElement('span');
+      span.textContent = word;
+      if (shimmerOn) span.classList.add('shimmer');
+      if (color) mask.style.setProperty('--accent-color', color);
+      mask.appendChild(span);
+      container.appendChild(mask);
+      return container;
+    }
+
+    function startTextRotation() {
+      const t3d = document.getElementById('text3d');
+      if (!t3d) return;
+      const scene = t3d.querySelector('.scene');
+      if (!scene) return;
+      let idx = 0;
+      function update(){
+        const old = scene.querySelector('.number-container');
+        if (old) old.remove();
+        const color = (wordColors && wordColors.length) ? wordColors[idx % wordColors.length] : null;
+        scene.appendChild(createContainerWithWord(words[idx], color));
+        idx = (idx + 1) % words.length;
+      }
+      update();
+      if (window.textRotationInterval) clearInterval(window.textRotationInterval);
+      window.textRotationInterval = setInterval(update, rotationMs);
+    }
+
+    // Tranziție: după 9s ascunde titlul și arată textul 3D
+    setTimeout(() => {
+      const titleEl = document.querySelector('.title');
+      if (titleEl) titleEl.style.display = 'none';
+      const t3d = document.getElementById('text3d');
+      if (t3d) {
+        t3d.style.display = 'grid';
+        startTextRotation();
+      }
+    }, 9000);
+  })();
+</script>
+
+
+</body></html>
