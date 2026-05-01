@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OverThink</title>
+
+<style>
+body {
+  background-color: #000;
+  margin: 0;
+  font-family: monospace;
+  color: #ff0000; /* 🔥 culoare mai clean */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* bara sus */
+.fakeMenu {
+  width: 90%;
+  max-width: 700px;
+  height: 25px;
+  background-color: #bbb;
+  margin-top: 40px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+}
+
+.fakeButtons,
+.fakeButtons2,
+.fakeButtons3 {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+
+.fakeButtons { background: #ff3b47; }
+.fakeButtons2 { background: #ffc100; }
+.fakeButtons3 { background: #00d742; }
+
+/* terminal */
+.fakeScreen {
+  width: 90%;
+  max-width: 700px;
+  height: 65vh;
+  min-height: 250px;
+  background: #010101;
+  padding: 15px;
+  overflow-y: auto;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 0 20px #ff000033;
+}
+
+/* text */
+p {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* mobil */
+@media (max-width: 500px) {
+  .fakeScreen {
+    height: 70vh;
+    font-size: 13px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="fakeMenu">
+  <div class="fakeButtons"></div>
+  <div class="fakeButtons2"></div>
+  <div class="fakeButtons3"></div>
+</div>
+
+<div class="fakeScreen" id="terminal"></div>
+
+<script>
+const terminal = document.getElementById("terminal");
+
+// random delay
+function rand(min, max) {
+  return Math.floor(Math.random() * (max - min) + min);
+}
+
+// typing
+function typeLine(text, callback) {
+  let p = document.createElement("p");
+  terminal.appendChild(p);
+
+  let i = 0;
+
+  function typing() {
+    if (i < text.length) {
+      p.textContent += text[i];
+      i++;
+      terminal.scrollTop = terminal.scrollHeight;
+      setTimeout(typing, rand(10, 35));
+    } else if (callback) {
+      setTimeout(callback, rand(200, 500));
+    }
+  }
+
+  typing();
+}
+
+// progres
+function decryptAnimation(callback) {
+  let p = document.createElement("p");
+  terminal.appendChild(p);
+
+  let progress = 0;
+
+  function update() {
+    if (progress <= 100) {
+      let blocks = Math.floor(progress / 10);
+      let bar =
+        "[" +
+        "█".repeat(blocks) +
+        "▒".repeat(10 - blocks) +
+        "] " +
+        progress +
+        "%";
+
+      p.textContent = "decrypting data " + bar;
+      progress += rand(4, 12);
+      terminal.scrollTop = terminal.scrollHeight;
+
+      setTimeout(update, rand(80, 180));
+    } else if (callback) {
+      setTimeout(callback, 400);
+    }
+  }
+
+  update();
+}
+
+// scan ports
+function scanPorts(callback) {
+  let ports = [21, 22, 80, 443, 3306, 8080];
+  let i = 0;
+
+  function scan() {
+    if (i < ports.length) {
+      typeLine("scanning port " + ports[i] + " ... open", () => {
+        i++;
+        scan();
+      });
+    } else if (callback) {
+      callback();
+    }
+  }
+
+  scan();
+}
+
+// glitch
+function glitchLine(text, callback) {
+  let p = document.createElement("p");
+  terminal.appendChild(p);
+
+  let chars = "!<>-_\\/[]{}—=+*^?#________";
+  let iterations = 0;
+
+  let interval = setInterval(() => {
+    p.textContent = text
+      .split("")
+      .map((char, index) => {
+        if (index < iterations) return text[index];
+        return chars[Math.floor(Math.random() * chars.length)];
+      })
+      .join("");
+
+    if (iterations >= text.length) {
+      clearInterval(interval);
+      if (callback) setTimeout(callback, 300);
+    }
+
+    iterations += 0.5;
+  }, 30);
+}
+
+// flow
+function start() {
+  typeLine("root@system:~$ boot sequence start", () => {
+    typeLine("loading kernel modules...", () => {
+      typeLine("initializing network interface...", () => {
+        typeLine("connecting to 185.23.54.12...", () => {
+          scanPorts(() => {
+            typeLine("bypassing firewall...", () => {
+              glitchLine("injecting exploit...", () => {
+                decryptAnimation(() => {
+                  typeLine("access granted ✔", () => {
+                    typeLine("retrieving user credentials...", () => {
+                      typeLine("tracking target IP...", () => {
+                        typeLine("uploading payload...", () => {
+                          typeLine("operation completed successfully.", () => {
+
+                            // 😂 partea funny
+                            typeLine("", () => {
+                              typeLine("just kidding... nothing was actually hacked 😄", () => {
+                                typeLine("you've been watching too many hacker movies 🎬", () => {
+                                  typeLine("root@system:~$ 😂 _");
+                                });
+                              });
+                            });
+
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+}
+
+start();
+</script>
+
+</body>
+</html>
+```
