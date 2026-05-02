@@ -104,7 +104,7 @@ function typeLine(text, callback) {
       p.textContent += text[i];
       i++;
       terminal.scrollTop = terminal.scrollHeight;
-      setTimeout(typing, rand(10, 35));
+      setTimeout(typing, rand(5, 15));
     } else if (callback) {
       setTimeout(callback, rand(200, 500));
     }
