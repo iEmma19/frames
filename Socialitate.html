@@ -251,50 +251,73 @@
         }
 
         /* ── Logo ───────────────────────────────── */
-        .logo-area {
-            position: absolute;
-            left: 5%;
-            top: calc(50% - 100px);
-            transform: translateY(-50%) perspective(800px) rotateY(16deg);
-            transform-origin: right center;
-            z-index: 5;
-        }
+        
+.logo-area{
 
-        .logo-text {
-                font-family:'Raleway',sans-serif;
+    position:absolute;
 
-            font-size: clamp(2.8rem, 5.5vw, 4.5rem);
-            font-weight: 800;
-            color: #c8c4d8;
-            letter-spacing: 4px;
-            line-height: 1;
-            text-shadow:
-                0  1px 0 #b0abbd,
-                0  2px 0 #9a95a8,
-                0  3px 0 #847f93,
-                0  4px 0 #6e697e,
-                0  5px 0 #585369,
-                0  6px 0 #423d54,
-                0  7px 0 #2c273f,
-                0  8px 0 #1a162a,
-                0  9px 0 #100c1f,
-                0 10px 0 #080618,
-                0 12px 16px rgba(0, 0, 10, 0.6),
-                0 18px 35px rgba(0, 0, 20, 0.4),
-                0 24px 50px rgba(0, 0, 15, 0.25),
-                0  0  60px rgba(120, 110, 180, 0.1);
-            user-select: text;
-        }
+    left:80px;
+    top:50%;
 
-        .logo-sub {
-            font-family: 'Poppins', sans-serif;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: rgba(140, 135, 170, 0.35);
-            letter-spacing: 4px;
-            margin-top: 10px;
-            margin-left: 6px;
-        }
+    transform:translateY(-50%);
+
+    z-index:10;
+
+    text-align:left;
+
+    color:#fff;
+}
+
+.eyebrow{
+
+    font-size:11px;
+
+    letter-spacing:4px;
+
+    text-transform:uppercase;
+
+    color:rgba(0,255,200,.7);
+
+    margin-bottom:20px;
+
+    font-weight:300;
+
+    font-family:'Raleway',sans-serif;
+}
+
+.logo-text{
+
+    font-family:'Raleway',sans-serif;
+
+    font-size:clamp(32px,6vw,80px);
+
+    font-weight:200;
+
+    letter-spacing:8px;
+
+    text-transform:uppercase;
+
+    line-height:1;
+
+    margin-bottom:20px;
+
+    color:#bfbebe;
+
+    text-shadow:
+        0 0 40px rgba(0,255,200,.3),
+        0 0 80px rgba(0,170,255,.2);
+}
+
+.logo-sub{
+
+    font-size:15px;
+
+    font-weight:300;
+
+    letter-spacing:2px;
+
+    color:rgba(255,255,255,.45);
+}
 
         /* ── Rules panel (gothic style) ─────────── */
         .rules-panel {
@@ -500,10 +523,21 @@
         <div class="fog fog-3"></div>
 
         <!-- Logo -->
-        <div class="logo-area">
-            <div class="logo-text">Sociale</div>
-            <div class="logo-sub">xat.com/Sociale</div>
+      <div class="logo-area">
+
+        <div class="eyebrow">
+            INTERNATIONAL ROOM
         </div>
+
+        <div class="logo-text">
+            Sociale
+        </div>
+
+        <div class="logo-sub">
+            xat.com/Sociale
+        </div>
+
+    </div>
 
         <!-- Chat backdrop -->
         <div class="chat-backdrop"></div>
