@@ -1,1 +1,293 @@
 
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Momentul Adevărului</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0a12;
+    --accent: #ff2d95;
+    --rainbow1: #ff0000;
+    --rainbow2: #ff8800;
+    --rainbow3: #ffff00;
+    --rainbow4: #00ff00;
+    --rainbow5: #0088ff;
+    --rainbow6: #8800ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    background: var(--bg);
+    font-family: 'Nunito', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Fundal animat subtle */
+  .bg-glow {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    filter: blur(150px);
+    opacity: 0.2;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .bg-glow.g1 { background: var(--accent); top: -200px; left: -200px; animation: float1 10s infinite alternate; }
+  .bg-glow.g2 { background: var(--rainbow5); bottom: -200px; right: -200px; animation: float2 12s infinite alternate; }
+
+  @keyframes float1 { 0% { transform: translate(0,0); } 100% { transform: translate(100px, 80px); } }
+  @keyframes float2 { 0% { transform: translate(0,0); } 100% { transform: translate(-80px, -100px); } }
+
+  /* Butonul de start */
+  .reveal-btn {
+    position: relative;
+    z-index: 10;
+    font-family: 'Bangers', cursive;
+    font-size: clamp(28px, 6vw, 48px);
+    letter-spacing: 3px;
+    padding: 20px 60px;
+    border: none;
+    border-radius: 60px;
+    background: linear-gradient(135deg, var(--accent), #9b59b6);
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 10px 40px rgba(255, 45, 149, 0.4), inset 0 3px 0 rgba(255,255,255,0.2);
+    transition: all 0.3s ease;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .reveal-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 50px rgba(255, 45, 149, 0.6);
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+  }
+
+  /* Container mesaj */
+  .message-container {
+    position: relative;
+    z-index: 10;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .message-container.visible {
+    display: flex;
+    animation: popIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  @keyframes popIn {
+    0% { opacity: 0; transform: scale(0.2) rotate(-10deg); }
+    50% { transform: scale(1.1) rotate(3deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+
+  .main-text {
+    font-family: 'Bangers', cursive;
+    font-size: clamp(40px, 10vw, 90px);
+    line-height: 1.1;
+    margin-bottom: 20px;
+    background: linear-gradient(
+      90deg, 
+      var(--rainbow1), 
+      var(--rainbow2), 
+      var(--rainbow3), 
+      var(--rainbow4), 
+      var(--rainbow5), 
+      var(--rainbow6)
+    );
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: rainbowMove 3s linear infinite;
+    filter: drop-shadow(0 0 20px rgba(255,45,149,0.5));
+  }
+
+  @keyframes rainbowMove {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 100% 50%; }
+  }
+
+  .sub-text {
+    font-family: 'Nunito', sans-serif;
+    font-weight: 900;
+    font-size: clamp(20px, 4vw, 36px);
+    color: #fff;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+    max-width: 800px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease-out 0.6s forwards;
+  }
+
+  @keyframes fadeUp {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .emoji-rain {
+    position: fixed;
+    font-size: 40px;
+    z-index: 5;
+    pointer-events: none;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* Confetti */
+  .confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    z-index: 20;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-glow g1"></div>
+<div class="bg-glow g2"></div>
+
+<!-- Buton revelație -->
+<button class="reveal-btn" id="revealBtn">DESCOPERĂ ADEVĂRUL!</button>
+
+<!-- Mesaj ascuns -->
+<div class="message-container" id="messageBox">
+  <div class="main-text">SUNT UN GAY!</div>
+  <div class="sub-text">Ma fut in cur oricand pentru orice suma.</div>
+</div>
+
+<script>
+  const revealBtn = document.getElementById('revealBtn');
+  const messageBox = document.getElementById('messageBox');
+  let revealed = false;
+
+  // Funcție confetti
+  function launchConfetti() {
+    const colors = ['#ff0000', '#ff8800', '#ffff00', '#00ff00', '#0088ff', '#8800ff', '#ff2d95'];
+    for (let i = 0; i < 120; i++) {
+      const conf = document.createElement('div');
+      conf.className = 'confetti';
+      conf.style.background = colors[Math.floor(Math.random() * colors.length)];
+      conf.style.left = Math.random() * 100 + '%';
+      conf.style.top = '-20px';
+      conf.style.width = (6 + Math.random() * 8) + 'px';
+      conf.style.height = (6 + Math.random() * 8) + 'px';
+      conf.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+
+      const xDrift = (Math.random() - 0.5) * 300;
+      const duration = 2 + Math.random() * 2;
+      
+      document.body.appendChild(conf);
+
+      conf.animate([
+        { transform: `translate(0, 0) rotate(0deg)`, opacity: 1 },
+        { transform: `translate(${xDrift}px, ${window.innerHeight + 50}px) rotate(${Math.random() * 720}deg)`, opacity: 0 }
+      ], {
+        duration: duration * 1000,
+        easing: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+      }).onfinish = () => conf.remove();
+    }
+  }
+
+  // Funcție ploaie de emoji-uri
+  function emojiRain() {
+    const emojis = ['🏳️‍🌈', '✨', '💪', '🔥', '🏳️‍🌈', '💃', '✨'];
+    let count = 0;
+    const interval = setInterval(() => {
+      if (count > 30) { clearInterval(interval); return; }
+      const emoji = document.createElement('div');
+      emoji.className = 'emoji-rain';
+      emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      emoji.style.left = Math.random() * 100 + '%';
+      emoji.style.fontSize = (20 + Math.random() * 30) + 'px';
+      const duration = 3 + Math.random() * 3;
+      emoji.style.animationDuration = duration + 's';
+      
+      document.body.appendChild(emoji);
+      
+      setTimeout(() => emoji.remove(), duration * 1000);
+      count++;
+    }, 150);
+  }
+
+  // Sunet de trompetă / revelație cu Web Audio API
+  function playRevealSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      
+      // Acord de revelație (Ta-da!)
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // Do5, Mi5, Sol5, Do6
+      notes.forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        osc.type = 'triangle';
+        osc.frequency.value = freq;
+        
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0, ctx.currentTime + i * 0.15);
+        gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + i * 0.15 + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + i * 0.15 + 0.6);
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + i * 0.15);
+        osc.stop(ctx.currentTime + i * 0.15 + 0.7);
+      });
+    } catch(e) {}
+  }
+
+  // Click pe buton
+  revealBtn.addEventListener('click', () => {
+    if (revealed) return;
+    revealed = true;
+
+    // Ascundem butonul
+    revealBtn.style.transition = 'all 0.4s ease';
+    revealBtn.style.transform = 'scale(0)';
+    revealBtn.style.opacity = '0';
+
+    setTimeout(() => {
+      revealBtn.style.display = 'none';
+      
+      // Afișăm mesajul
+      messageBox.classList.add('visible');
+      
+      // Efecte
+      playRevealSound();
+      launchConfetti();
+      emojiRain();
+    }, 400);
+  });
+</script>
+
+</body>
+</html>
