@@ -157,7 +157,7 @@
             opacity: 0; pointer-events: none; z-index: 6; transition: opacity 0.05s ease-out;
         }
 
-        /* ── Chat backdrop (ACUM CU IMAGINE) ───────────────────────── */
+        /* ── Chat backdrop (CU IMAGINE CLEAR - FARA UMBRA) ───────────────────────── */
         .chat-backdrop {
             position: absolute;
             top: 93px;
@@ -169,23 +169,16 @@
             border: 1px solid #000;
             z-index: 20;
             pointer-events: none;
-            overflow: hidden; /* Ca imaginea sa nu iasa din colturi rotunjite */
+            overflow: hidden; 
             
-            /* 🔻 SCHIMBA LINK-UL ASTA CU IMAGINEA TA 🔻 */
+            /* Imaginea ta, culori originale */
             background-image: url('https://xatimg.com/image/iGSJ3MHxHQOv.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
         }
 
-        /* Strat negru peste imagine pentru a o intuneca si a se potrivii cu tema */
-        .chat-backdrop::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(2, 8, 16, 0.55); /* Modifica 0.55 cu 0.1 (mai luminos) sau 0.9 (mai intunecat) */
-            border-radius: 16px;
-        }
+        /* Am eliminat complet stratul ::after care întuneca imaginea */
 
         /* ── Logo secondary ───── */
         .logo-tabs {
@@ -314,10 +307,10 @@
         <div class="logo-area">
             <div class="eyebrow">INTERNATIONAL ROOM</div>
             <div class="logo-text">Sociale</div>
-            <div class="logo-sub">xat.com/Sociale</div>
+            <div class="logo-sub">xat.com/Sociale and MewBots.com</div>
         </div>
 
-        <!-- Chat backdrop (Cu imagine) -->
+        <!-- Chat backdrop (Fără umbră) -->
         <div class="chat-backdrop"></div>
 
         <!-- Logo at tabs height -->
