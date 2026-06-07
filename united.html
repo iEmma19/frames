@@ -15,12 +15,11 @@
             height: 100%;
             overflow: hidden;
             font-family: 'Poppins', sans-serif;
-            background-color: #020205;
+            background-color: #020810; /* Siguranță suplimentară contra flash-ului alb */
         }
 
         body {
-            /* Fundal curat, negru cu o umbră fină de albastru cosmic */
-            background: linear-gradient(180deg, #020205 0%, #080812 30%, #0a0a18 60%, #050510 100%);
+            background: linear-gradient(180deg, #020810 0%, #06101f 30%, #0a1628 60%, #0d1a30 100%);
         }
 
         .scene {
@@ -43,36 +42,105 @@
                 0 0 40px rgba(200, 195, 170, 0.25),
                 0 0 100px rgba(180, 175, 150, 0.12),
                 0 0 200px rgba(160, 155, 130, 0.06);
-            z-index: 10;
+            z-index: 10; /* CRESCUT: Luna e acum mereu deasupra stelelor */
             pointer-events: none;
         }
 
+        /* Moon craters */
         .moon::before {
             content: "";
             position: absolute;
-            top: 25%; left: 30%; width: 30px; height: 28px; border-radius: 50%;
+            top: 25%;
+            left: 30%;
+            width: 30px;
+            height: 28px;
+            border-radius: 50%;
             background: rgba(100, 95, 75, 0.25);
             box-shadow:
-                45px 15px 0 8px rgba(100, 95, 75, 0.15), -10px 40px 0 4px rgba(100, 95, 75, 0.2),
-                30px 50px 0 12px rgba(100, 95, 75, 0.12), 60px -10px 0 6px rgba(100, 95, 75, 0.18),
+                45px 15px 0 8px rgba(100, 95, 75, 0.15),
+                -10px 40px 0 4px rgba(100, 95, 75, 0.2),
+                30px 50px 0 12px rgba(100, 95, 75, 0.12),
+                60px -10px 0 6px rgba(100, 95, 75, 0.18),
                 -5px -5px 0 15px rgba(100, 95, 75, 0.08);
         }
 
+        /* Moon ambient glow */
         .moon-glow {
-            position: absolute; top: 5%; left: 18%; width: 220px; height: 220px; border-radius: 50%;
+            position: absolute;
+            top: 5%;
+            left: 18%;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
             background: radial-gradient(circle, rgba(200, 195, 170, 0.08) 0%, transparent 70%);
-            transform: scale(2.5); z-index: 5; pointer-events: none;
+            transform: scale(2.5);
+            z-index: 5; /* Crescut și el, sub lună dar deasupra stelelor */
+            pointer-events: none;
         }
 
-        /* ── Fog layers (Ceață albastru cosmic curată) ─────── */
-        .fog { position: absolute; pointer-events: none; filter: blur(30px); }
-        .fog-1 { top: 2%; left: -5%; width: 60%; height: 150px; background: radial-gradient(ellipse at 50% 50%, rgba(100, 110, 140, 0.15) 0%, rgba(80, 90, 120, 0.05) 45%, transparent 70%); z-index: 2; animation: fogFloat1 25s ease-in-out infinite; }
-        .fog-2 { top: 10%; left: 30%; width: 55%; height: 120px; background: radial-gradient(ellipse at 50% 50%, rgba(110, 120, 150, 0.15) 0%, rgba(90, 100, 130, 0.05) 40%, transparent 65%); z-index: 2; animation: fogFloat2 30s ease-in-out infinite; }
-        .fog-3 { top: 6%; left: 10%; width: 50%; height: 180px; background: radial-gradient(ellipse at 50% 50%, rgba(90, 100, 130, 0.1) 0%, rgba(70, 80, 110, 0.03) 45%, transparent 65%); z-index: 15; animation: fogFloat3 20s ease-in-out infinite; }
+        /* ── Fog layers (floating clouds) ─────── */
+        .fog {
+            position: absolute;
+            pointer-events: none;
+            filter: blur(30px);
+        }
 
-        @keyframes fogFloat1 { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(200px); } }
-        @keyframes fogFloat2 { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-250px); } }
-        @keyframes fogFloat3 { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(180px); } }
+        .fog-1 {
+            top: 2%;
+            left: -5%;
+            width: 60%;
+            height: 150px;
+            background: radial-gradient(ellipse at 50% 50%,
+                rgba(140, 150, 180, 0.2) 0%,
+                rgba(120, 130, 165, 0.08) 45%,
+                transparent 70%
+            );
+            z-index: 2;
+            animation: fogFloat1 25s ease-in-out infinite;
+        }
+
+        .fog-2 {
+            top: 10%;
+            left: 30%;
+            width: 55%;
+            height: 120px;
+            background: radial-gradient(ellipse at 50% 50%,
+                rgba(160, 165, 195, 0.22) 0%,
+                rgba(130, 140, 175, 0.09) 40%,
+                transparent 65%
+            );
+            z-index: 2;
+            animation: fogFloat2 30s ease-in-out infinite;
+        }
+
+        .fog-3 {
+            top: 6%;
+            left: 10%;
+            width: 50%;
+            height: 180px;
+            background: radial-gradient(ellipse at 50% 50%,
+                rgba(120, 130, 165, 0.17) 0%,
+                rgba(100, 110, 150, 0.07) 45%,
+                transparent 65%
+            );
+            z-index: 15;
+            animation: fogFloat3 20s ease-in-out infinite;
+        }
+
+        @keyframes fogFloat1 {
+            0%, 100% { transform: translateX(0); }
+            50%      { transform: translateX(200px); }
+        }
+
+        @keyframes fogFloat2 {
+            0%, 100% { transform: translateX(0); }
+            50%      { transform: translateX(-250px); }
+        }
+
+        @keyframes fogFloat3 {
+            0%, 100% { transform: translateX(0); }
+            50%      { transform: translateX(180px); }
+        }
 
         /* ── Stars ───────────────────────────────── */
         .stars { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
@@ -94,15 +162,21 @@
 
         /* ── Chat backdrop (TRANSPARENT FĂRĂ IMAGINE) ───────────────────────── */
         .chat-backdrop {
-            position: absolute; top: 93px; left: 50.25%; transform: translateX(-50%);
-            width: 728px; height: 486px; border-radius: 16px; z-index: 20; pointer-events: none; overflow: hidden;
-            
-            /* Sticlă neagră transparentă elegantă */
-            background: rgba(0, 0, 0, 0.3); 
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(251, 191, 36, 0.1); /* Margine aurie subtilă */
-        }
+  position: absolute;
+  top: 93px;
+  left: 50.25%;
+  transform: translateX(-50%);
+  width: 728px;
+  height: 486px;
+  border-radius: 16px;
+  z-index: 20;
+  pointer-events: none;
+  overflow: hidden;
+  */background: rgba(0, 0, 0, 0.3);*/
+ */ backdrop-filter: blur(8px);*/
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(251, 191, 36, 0.1);
+}
 
         /* ── Logo secondary ───── */
         .logo-tabs { position: absolute; right: calc(50.25% - 189px + 10px); top: 449px; transform: translateY(-50%); z-index: 21; text-align: right; }
@@ -115,7 +189,7 @@
         .logo-area { position:absolute; left:80px; top:50%; transform:translateY(-50%); z-index:10; text-align:left; color:#fff; }
         .eyebrow { font-size:11px; letter-spacing:4px; text-transform:uppercase; color:rgba(251, 191, 36, .8); margin-bottom:20px; font-weight:300; font-family:'Raleway',sans-serif; }
         .logo-text { font-family:'Raleway',sans-serif; font-size:clamp(32px,6vw,80px); font-weight:200; letter-spacing:8px; text-transform:uppercase; line-height:1; margin-bottom:20px; color:#e5e7eb; text-shadow: 0 0 40px rgba(251, 191, 36, .3), 0 0 80px rgba(217, 119, 6, .2); }
-        .logo-sub { font-size:15px; font-weight:300; letter-spacing:2px; color:rgba(255,255,255,.45); }
+        .logo-sub { font-size:29px; font-weight:300; letter-spacing:2px; color:rgba(255,255,255,.45); }
 
         /* ── Rules panel (Premium Gold) ─────────── */
         .rules-panel { position: absolute; top: 336px; right: 5%; transform: translateY(-50%) perspective(800px) rotateY(-10deg); transform-origin: left center; width: clamp(220px, 17vw, 290px); z-index: 10; }
@@ -172,9 +246,9 @@
         <div class="fog fog-3"></div>
 
         <div class="logo-area">
-            <div class="eyebrow">GLOBAL COMMUNITY</div>
+            <div class="eyebrow">INTERNATIONAL ROOM •</div>
             <div class="logo-text">United</div>
-            <div class="logo-sub">xat.com/United</div>
+            <div class="logo-sub">xat.com/UNITED</div>
         </div>
 
         <div class="chat-backdrop"></div>
