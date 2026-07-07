@@ -26,7 +26,7 @@
             position: relative;
             width: 100vw;
             height: 100vh;
-            overflow: hidden;
+            overflow: visible;
         }
 
         /* ── Fog layers (Albastru Cosmic) ─────── */
@@ -162,8 +162,8 @@
             position: absolute;
             top: 112px;
             left: 80px;
-            z-index: 40;
-            width: 280px;
+            z-index: 100;
+            width: 560px;
         }
 
         .recent-matches {
@@ -240,15 +240,16 @@
 
         .filters-panel {
             position: relative;
-            z-index: 12;
+            z-index: 100;
+            pointer-events: auto;
             background: rgba(11, 18, 32, 0.78);
             border: 1px solid rgba(120, 150, 220, 0.16);
             border-radius: 14px;
-            padding: 9px 10px;
+            padding: 10px 12px;
             backdrop-filter: blur(8px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.22);
-            width: 280px;
-            margin-top: 12px;
+            width: 560px;
+            margin-bottom: 12px;
         }
 
         .filters-title {
@@ -266,24 +267,22 @@
         .filters-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 6px;
+            gap: 8px;
         }
 
         .filter-select {
             width: 100%;
             appearance: none;
             -webkit-appearance: none;
+            pointer-events: auto;
             background: rgba(15, 24, 48, 0.96);
             border: 1px solid rgba(120, 150, 220, 0.16);
             border-radius: 10px;
-            padding: 7px 8px;
+            padding: 8px 10px;
             color: rgba(237, 243, 255, 0.96);
             font-weight: 600;
-            font-size: 0.62rem;
+            font-size: 0.72rem;
             outline: none;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
         .filter-select:focus {
@@ -329,13 +328,6 @@
         <div class="fog fog-3"></div>
 
         <div class="left-stack">
-            <div class="recent-matches">
-                <div class="recent-header">Live / Recent</div>
-                <div id="recentMatches">
-                    <div class="match-row"><span>Loading...</span></div>
-                </div>
-            </div>
-
             <div class="filters-panel">
                 <div class="filters-title">
                     <span id="filtersTitle">Filters</span>
@@ -346,6 +338,13 @@
                     <select id="filterGroup" class="filter-select"></select>
                     <select id="filterTeam" class="filter-select"></select>
                     <select id="filterLanguage" class="filter-select"></select>
+                </div>
+            </div>
+
+            <div class="recent-matches">
+                <div class="recent-header">Live / Recent</div>
+                <div id="recentMatches">
+                    <div class="match-row"><span>Loading...</span></div>
                 </div>
             </div>
         </div>
