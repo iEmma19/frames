@@ -98,37 +98,12 @@
             position: absolute; top: 93px; left: 50.25%; transform: translateX(-50%);
             width: 728px; height: 486px; border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.1); /* Bordura de sticlă */
-            box-shadow: 0 0 60px rgba(74, 144, 226, 0.15), 0 20px 50px rgba(0,0,0,0.5); /* Glow modern */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             z-index: 10; pointer-events: none; overflow: hidden; 
             background-image: url('https://xatimg.com/image/IYW3LlkEK3X6.png');
             background-size: cover; background-position: center; background-repeat: no-repeat;
             position: absolute;
-            isolation: isolate;
-        }
-        .chat-backdrop::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            padding: 1px;
-            background: linear-gradient(110deg, rgba(96, 165, 250, 0.0), var(--edge-glow), rgba(255, 255, 255, 0.14), var(--edge-glow), rgba(96, 165, 250, 0.0));
-            background-size: 280% 280%;
-            animation: borderFlow 10s ease-in-out infinite;
-            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            opacity: 0.8;
-        }
-        .chat-backdrop::after {
-            content: "";
-            position: absolute;
-            inset: -120px;
-            background: linear-gradient(110deg, transparent 42%, rgba(255, 255, 255, 0.085) 50%, transparent 58%);
-            mix-blend-mode: screen;
-            animation: panelSheen 8.8s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 1;
+            opacity: 0.86;
         }
 
         /* ── Logo de sus (Pentru xat) ───────────────────────── */
@@ -141,40 +116,10 @@
         }
         .logo-tabs .logo-text {
             font-family: 'Outfit', sans-serif; font-size: 0.8rem; letter-spacing: 2px; font-weight: 700;
-            background: linear-gradient(90deg, var(--shimmer-a) 0%, var(--shimmer-b) 35%, var(--shimmer-c) 50%, var(--shimmer-b) 65%, var(--shimmer-a) 100%);
-            background-size: 220% 100%;
-            -webkit-background-clip: text; background-clip: text;
-            color: transparent;
-            animation: textShimmer 9s ease-in-out infinite;
-            text-shadow: 0 0 16px rgba(74, 144, 226, 0.28);
+            color: #fff;
+            text-shadow: 0 0 16px rgba(74, 144, 226, 0.22);
             position: relative;
             z-index: 2;
-        }
-        .logo-tabs::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            padding: 1px;
-            background: linear-gradient(110deg, rgba(96, 165, 250, 0.0), var(--edge-glow), rgba(255, 255, 255, 0.14), var(--edge-glow), rgba(96, 165, 250, 0.0));
-            background-size: 280% 280%;
-            animation: borderFlow 10.5s ease-in-out infinite;
-            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            pointer-events: none;
-            opacity: 0.75;
-            z-index: 1;
-        }
-        .logo-tabs::after {
-            content: "";
-            position: absolute;
-            inset: -80px;
-            background: linear-gradient(110deg, transparent 44%, rgba(255, 255, 255, 0.07) 50%, transparent 56%);
-            mix-blend-mode: screen;
-            animation: panelSheen 9.6s ease-in-out infinite;
-            pointer-events: none;
-            z-index: 1;
         }
 
         /* ── Panou Stanga: Logo ─────────────────────────────── */
@@ -192,7 +137,7 @@
             background: linear-gradient(90deg, var(--shimmer-a) 0%, var(--shimmer-b) 35%, var(--shimmer-c) 50%, var(--shimmer-b) 65%, var(--shimmer-a) 100%);
             background-size: 240% 100%;
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: textShimmer 7.2s ease-in-out infinite;
+            animation: textShimmer 75s ease-in-out infinite;
             text-shadow: 0 0 40px rgba(74, 144, 226, 0.32), 0 0 90px rgba(96, 165, 250, 0.12);
             margin-bottom: 10px;
         }
@@ -259,8 +204,36 @@
             background-size: 220% 100%;
             -webkit-background-clip: text; background-clip: text;
             color: transparent;
-            animation: textShimmer 8.6s ease-in-out infinite;
+            animation: textShimmer 90s ease-in-out infinite;
             text-shadow: 0 0 16px rgba(74, 144, 226, 0.22);
+        }
+        .rules-lang {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin: -10px 0 18px;
+        }
+        .lang-btn {
+            appearance: none;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(15, 25, 40, 0.35);
+            color: rgba(255,255,255,0.85);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 650;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            backdrop-filter: blur(10px) saturate(140%);
+            -webkit-backdrop-filter: blur(10px) saturate(140%);
+        }
+        .lang-btn.active {
+            background: rgba(74, 144, 226, 0.22);
+            border-color: rgba(74, 144, 226, 0.4);
+            color: #fff;
+            box-shadow: 0 0 0 1px rgba(74, 144, 226, 0.18), 0 10px 24px rgba(0,0,0,0.28);
         }
         .rule-item { display: flex; gap: 14px; margin-bottom: 20px; transition: transform 0.3s ease; }
         .rule-item:hover { transform: none; }
@@ -270,7 +243,7 @@
             background-size: 220% 100%;
             -webkit-background-clip: text; background-clip: text;
             color: transparent;
-            animation: textShimmer 9.8s ease-in-out infinite;
+            animation: textShimmer 105s ease-in-out infinite;
             text-shadow: 0 0 14px rgba(96, 165, 250, 0.25);
             opacity: 0.95;
         }
@@ -280,10 +253,17 @@
 
         @media (prefers-reduced-motion: reduce) {
             .rules-panel, .rules-panel::before, .rules-panel::after,
-            .chat-backdrop::before, .chat-backdrop::after,
-            .logo-tabs::before, .logo-tabs::after,
             .logo-tabs .logo-text, h1.logo-text, .rules-header, .rule-num { animation: none !important; transition: none !important; }
+            .logo-tabs .logo-text, h1.logo-text, .rules-header, .rule-num { background-position: 50% 50% !important; }
+            .rules-panel::before { background-position: 50% 50% !important; }
+            .rules-panel::after { transform: translateX(0) rotate(8deg) !important; opacity: 0.12 !important; }
         }
+        html { --fx-play: running; }
+        .eco { --fx-play: paused; }
+        .eco.fx-active { --fx-play: running; }
+        .fog, .star, .shooting-star,
+        .rules-panel::before, .rules-panel::after,
+        h1.logo-text, .rules-header, .rule-num { animation-play-state: var(--fx-play) !important; }
 
         /* ── Responsive ─────────────────────────────────── */
         @media (max-width: 960px) {
@@ -292,16 +272,14 @@
             .logo-sub { justify-content: center; }
         }
         @media (max-aspect-ratio: 3/4) {
-            .moon, .moon-glow, .fog, #shootingStars, .lightning-container, .flash-overlay { display: none !important; }
+            .moon, .moon-glow, .fog { display: none !important; }
             .rules-panel { display: none !important; }
-            .star { animation: none !important; }
             .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
             .logo-sub { justify-content: center; }
         }
         @media (min-aspect-ratio: 10/9) and (max-aspect-ratio: 16/10) {
-            .moon, .moon-glow, .fog, #shootingStars, .lightning-container, .flash-overlay { display: none !important; }
+            .moon, .moon-glow, .fog { display: none !important; }
             .rules-panel { display: none !important; }
-            .star { animation: none !important; }
             .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
             .logo-sub { justify-content: center; }
         }
@@ -348,7 +326,13 @@
 
         <!-- Reguli (Dreapta - Efect Sticlă) -->
         <aside class="rules-panel">
-            <div class="rules-header">Community Rules</div>
+            <div class="rules-header" id="rulesTitle">Community Rules</div>
+            <div class="rules-lang" role="tablist" aria-label="Rules language">
+                <button class="lang-btn active" type="button" data-lang="en">EN</button>
+                <button class="lang-btn" type="button" data-lang="ro">RO</button>
+                <button class="lang-btn" type="button" data-lang="it">IT</button>
+                <button class="lang-btn" type="button" data-lang="es">ES</button>
+            </div>
             
             <div class="rule-item">
                 <div class="rule-num">01</div>
@@ -399,6 +383,86 @@
     </div>
 
     <script>
+        var eco = false;
+        try {
+            eco = window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+                window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+                (navigator.connection && navigator.connection.saveData);
+        } catch (e) {}
+        if (eco) document.documentElement.classList.add("eco");
+
+        var rulesData = {
+            en: {
+                title: "Community Rules",
+                items: [
+                    { h: "Freedom of Expression", p: "Feel free to chat and express yourself. All languages are allowed." },
+                    { h: "Mutual Respect", p: "Personal insults, excessively vulgar language, constant provocation, or harassment will not be tolerated." },
+                    { h: "Respect for the Staff", p: "All staff members must be treated with respect. Disrespect or undermining staff may result in a ban." },
+                    { h: "Transparency", p: "Bans longer than 10 hours must be accompanied by screenshot evidence. 1-hour bans are exempt." },
+                    { h: "Staff Impartiality", p: "Banning for personal reasons is strictly prohibited. Punishments must be fair and impartial." },
+                    { h: "Anti-Spam", p: "Users who spam the chat with emojis or multiple consecutive messages will receive a permanent XP ban." }
+                ]
+            },
+            ro: {
+                title: "Regulile Comunității",
+                items: [
+                    { h: "Libertate de exprimare", p: "Poți discuta liber și să te exprimi. Toate limbile sunt permise." },
+                    { h: "Respect reciproc", p: "Insultele personale, limbajul excesiv de vulgar, provocările constante sau hărțuirea nu vor fi tolerate." },
+                    { h: "Respect față de staff", p: "Toți membrii staff-ului trebuie tratați cu respect. Disprețul sau subminarea staff-ului poate duce la ban." },
+                    { h: "Transparență", p: "Banurile mai lungi de 10 ore trebuie însoțite de dovezi (screenshot). Banurile de 1 oră sunt exceptate." },
+                    { h: "Imparțialitatea staff-ului", p: "Banarea din motive personale este strict interzisă. Sancțiunile trebuie să fie corecte și imparțiale." },
+                    { h: "Anti-Spam", p: "Utilizatorii care fac spam în chat cu emoji-uri sau mesaje consecutive vor primi XP ban permanent." }
+                ]
+            },
+            it: {
+                title: "Regole della Community",
+                items: [
+                    { h: "Libertà di espressione", p: "Sentiti liberi di chattare ed esprimervi. Tutte le lingue sono consentite." },
+                    { h: "Rispetto reciproco", p: "Insulti personali, linguaggio eccessivamente volgare, provocazioni continue o molestie non saranno tollerati." },
+                    { h: "Rispetto per lo staff", p: "Tutti i membri dello staff devono essere trattati con rispetto. Mancanza di rispetto o sabotaggio può portare al ban." },
+                    { h: "Trasparenza", p: "I ban superiori a 10 ore devono essere accompagnati da prove (screenshot). I ban di 1 ora sono esenti." },
+                    { h: "Imparzialità dello staff", p: "Bannare per motivi personali è severamente vietato. Le punizioni devono essere eque e imparziali." },
+                    { h: "Anti-Spam", p: "Gli utenti che fanno spam in chat con emoji o messaggi consecutivi riceveranno un XP ban permanente." }
+                ]
+            },
+            es: {
+                title: "Reglas de la Comunidad",
+                items: [
+                    { h: "Libertad de expresión", p: "Siéntete libre de chatear y expresarte. Se permiten todos los idiomas." },
+                    { h: "Respeto mutuo", p: "No se tolerarán insultos personales, lenguaje excesivamente vulgar, provocación constante ni acoso." },
+                    { h: "Respeto al staff", p: "Todo el staff debe ser tratado con respeto. La falta de respeto o el sabotaje puede resultar en ban." },
+                    { h: "Transparencia", p: "Los bans de más de 10 horas deben ir acompañados de pruebas (capturas). Los bans de 1 hora están exentos." },
+                    { h: "Imparcialidad del staff", p: "Está estrictamente prohibido banear por motivos personales. Los castigos deben ser justos e imparciales." },
+                    { h: "Anti-Spam", p: "Los usuarios que hagan spam en el chat con emojis o mensajes consecutivos recibirán un XP ban permanente." }
+                ]
+            }
+        };
+
+        function applyRulesLang(lang) {
+            var data = rulesData[lang] || rulesData.en;
+            var titleEl = document.getElementById("rulesTitle");
+            if (titleEl) titleEl.textContent = data.title;
+            var items = document.querySelectorAll(".rules-panel .rule-item");
+            for (var i = 0; i < items.length && i < data.items.length; i++) {
+                var h = items[i].querySelector(".rule-content h3");
+                var p = items[i].querySelector(".rule-content p");
+                if (h) h.textContent = data.items[i].h;
+                if (p) p.textContent = data.items[i].p;
+            }
+            var btns = document.querySelectorAll(".rules-lang .lang-btn");
+            for (var j = 0; j < btns.length; j++) {
+                btns[j].classList.toggle("active", btns[j].getAttribute("data-lang") === lang);
+            }
+        }
+
+        var langBtns = document.querySelectorAll(".rules-lang .lang-btn");
+        for (var k = 0; k < langBtns.length; k++) {
+            langBtns[k].addEventListener("click", function () {
+                applyRulesLang(this.getAttribute("data-lang") || "en");
+            });
+        }
+        applyRulesLang("en");
+
         /* ── Stars ───────────────────────────────── */
         var starsEl = document.getElementById("stars");
         for (var i = 0; i < 180; i++) {
@@ -428,6 +492,7 @@
         if (isWidescreen || isSplit) {
             var shootEl = document.getElementById("shootingStars");
             function spawnShootingStar() {
+                if (!shootEl) return;
                 var el = document.createElement("div"); el.className = "shooting-star";
                 el.style.top = (3 + Math.random() * 55) + "%"; el.style.left = (5 + Math.random() * 85) + "%";
                 var angle = 25 + Math.random() * 30;
@@ -435,20 +500,7 @@
                 el.style.width = (60 + Math.random() * 60) + "px"; shootEl.appendChild(el);
                 setTimeout(function () { el.remove(); }, 1500);
             }
-            function scheduleShoot() {
-                var delay = 3000 + Math.random() * 5000;
-                setTimeout(function () { spawnShootingStar(); scheduleShoot(); }, delay);
-            }
-            setTimeout(function () { spawnShootingStar(); scheduleShoot(); }, 1500 + Math.random() * 1500);
-            setTimeout(function () {
-                function scheduleShoot2() {
-                    var delay = 4000 + Math.random() * 7000;
-                    setTimeout(function () { spawnShootingStar(); scheduleShoot2(); }, delay);
-                }
-                spawnShootingStar(); scheduleShoot2();
-            }, 3000 + Math.random() * 2000);
 
-            /* ── Lightning Generator ────────────────────── */
             var lightCont = document.getElementById("lightningContainer");
             var flashEl = document.getElementById("flashOverlay");
             var svgNS = "http://www.w3.org/2000/svg";
@@ -458,6 +510,7 @@
                 return points;
             }
             function spawnLightning() {
+                if (!lightCont || !flashEl) return;
                 var svg = document.createElementNS(svgNS, "svg");
                 svg.setAttribute("width", "100%"); svg.setAttribute("height", "100%");
                 svg.style.cssText = "position:absolute; top:0; left:0; filter:drop-shadow(0 0 6px rgba(150,180,255,0.9)) drop-shadow(0 0 15px rgba(100,140,255,0.5)); opacity:0;";
@@ -476,11 +529,40 @@
                     { opacity: 0 }, { opacity: 1, offset: 0.1 }, { opacity: 0.2, offset: 0.2 }, { opacity: 0.9, offset: 0.3 }, { opacity: 0 }
                 ], { duration: 500, easing: "ease-out" }).onfinish = function() { svg.remove(); };
             }
-            function scheduleLightning() {
-                var delay = 8000 + Math.random() * 15000;
-                setTimeout(function() { spawnLightning(); scheduleLightning(); }, delay);
+
+            if (eco) {
+                function ecoBurst() {
+                    if (document.hidden) return;
+                    document.documentElement.classList.add("fx-active");
+                    spawnShootingStar();
+                    if (Math.random() < 0.18) spawnLightning();
+                    setTimeout(function () { document.documentElement.classList.remove("fx-active"); }, 1200);
+                }
+                function scheduleEcoBurst() {
+                    var delay = 6500 + Math.random() * 9000;
+                    setTimeout(function () { ecoBurst(); scheduleEcoBurst(); }, delay);
+                }
+                setTimeout(function () { ecoBurst(); scheduleEcoBurst(); }, 1200);
+            } else {
+                function scheduleShoot() {
+                    var delay = 3000 + Math.random() * 5000;
+                    setTimeout(function () { spawnShootingStar(); scheduleShoot(); }, delay);
+                }
+                setTimeout(function () { spawnShootingStar(); scheduleShoot(); }, 1500 + Math.random() * 1500);
+                setTimeout(function () {
+                    function scheduleShoot2() {
+                        var delay = 4000 + Math.random() * 7000;
+                        setTimeout(function () { spawnShootingStar(); scheduleShoot2(); }, delay);
+                    }
+                    spawnShootingStar(); scheduleShoot2();
+                }, 3000 + Math.random() * 2000);
+
+                function scheduleLightning() {
+                    var delay = 8000 + Math.random() * 15000;
+                    setTimeout(function() { spawnLightning(); scheduleLightning(); }, delay);
+                }
+                setTimeout(function() { spawnLightning(); scheduleLightning(); }, 6000 + Math.random() * 2000);
             }
-            setTimeout(function() { spawnLightning(); scheduleLightning(); }, 6000 + Math.random() * 2000);
         }
 
         /* ── Pause when tab hidden ────────────────── */
