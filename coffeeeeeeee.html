@@ -162,6 +162,7 @@
             box-shadow: 0 24px 64px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.1);
             overflow: hidden;
             isolation: isolate;
+            pointer-events: auto;
             transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease;
         }
         .rules-panel:hover { transform: translateY(-50%) perspective(800px) rotateY(-6deg) translateZ(0); box-shadow: 0 28px 80px rgba(0,0,0,0.48), inset 0 1px 1px rgba(255,255,255,0.1); }
@@ -211,7 +212,10 @@
             display: flex;
             gap: 6px;
             justify-content: center;
-            margin: -10px 0 18px;
+            margin: 0;
+            pointer-events: auto;
+            position: relative;
+            z-index: 3;
         }
         .lang-btn {
             appearance: none;
@@ -228,6 +232,8 @@
             cursor: pointer;
             backdrop-filter: blur(10px) saturate(140%);
             -webkit-backdrop-filter: blur(10px) saturate(140%);
+            text-decoration: none;
+            line-height: 1;
         }
         .lang-btn.active {
             background: rgba(74, 144, 226, 0.22);
@@ -248,7 +254,8 @@
             opacity: 0.95;
         }
         .rule-content p { font-size: 0.75rem; font-weight: 300; line-height: 1.5; color: var(--text-secondary); }
-        .rule-credit { margin-top: auto; text-align: center; font-size: 0.7rem; letter-spacing: 2px; color: rgba(255,255,255,0.3); padding-top: 20px; }
+        .rules-footer { margin-top: auto; padding-top: 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.08); }
+        .rule-credit { text-align: right; font-size: 0.7rem; letter-spacing: 2px; color: rgba(255,255,255,0.3); }
 
 
         @media (prefers-reduced-motion: reduce) {
@@ -327,12 +334,6 @@
         <!-- Reguli (Dreapta - Efect Sticlă) -->
         <aside class="rules-panel">
             <div class="rules-header" id="rulesTitle">Community Rules</div>
-            <div class="rules-lang" role="tablist" aria-label="Rules language">
-                <button class="lang-btn active" type="button" data-lang="en">EN</button>
-                <button class="lang-btn" type="button" data-lang="ro">RO</button>
-                <button class="lang-btn" type="button" data-lang="it">IT</button>
-                <button class="lang-btn" type="button" data-lang="es">ES</button>
-            </div>
             
             <div class="rule-item">
                 <div class="rule-num">01</div>
@@ -378,7 +379,15 @@
     </div>
 </div>
 
-            <div class="rule-credit">© SOCIALE</div>
+            <div class="rules-footer">
+                <div class="rules-lang" role="tablist" aria-label="Rules language">
+                    <a class="lang-btn active" href="#" data-lang="en" onclick="applyRulesLang('en'); return false;">EN</a>
+                    <a class="lang-btn" href="#" data-lang="ro" onclick="applyRulesLang('ro'); return false;">RO</a>
+                    <a class="lang-btn" href="#" data-lang="it" onclick="applyRulesLang('it'); return false;">IT</a>
+                    <a class="lang-btn" href="#" data-lang="es" onclick="applyRulesLang('es'); return false;">ES</a>
+                </div>
+                <div class="rule-credit">© SOCIALE</div>
+            </div>
         </aside>
     </div>
 
@@ -454,6 +463,7 @@
                 btns[j].classList.toggle("active", btns[j].getAttribute("data-lang") === lang);
             }
         }
+        window.applyRulesLang = applyRulesLang;
 
         var langBtns = document.querySelectorAll(".rules-lang .lang-btn");
         for (var k = 0; k < langBtns.length; k++) {
