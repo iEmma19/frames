@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Nox</title>
+<style>
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: Georgia, 'Times New Roman', 'Palatino Linotype', serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  #storm {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    display: block;
+  }
+
+  #flash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+    pointer-events: none;
+    background: transparent;
+    will-change: background;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .content {
+    display: flex;
+    align-items: center;
+    gap: 80px;
+    max-width: 1100px;
+    width: 100%;
+    padding: 24px 52px;
+    pointer-events: auto;
+  }
+
+  .avatar-wrap {
+    flex-shrink: 0;
+    position: relative;
+    width: 220px;
+    height: 220px;
+    align-self: flex-end;
+    margin-bottom: 32px;
+  }
+
+  .avatar-halo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle,
+      rgba(160,18,12,0.3) 0%,
+      rgba(120,10,8,0.15) 35%,
+      rgba(80,5,3,0.05) 60%,
+      transparent 78%
+    );
+    transform: translate(-50%, -50%) scale(1);
+    animation: haloPulse 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .avatar-ring-outer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    border: 1px solid rgba(140,22,16,0.22);
+    transform: translate(-50%, -50%) scale(1);
+    animation: haloPulse 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .avatar-ring-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 242px;
+    height: 242px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(160,28,18,0.4);
+    transform: translate(-50%, -50%) scale(1);
+    animation: haloPulse 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .avatar {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    border: 2.5px solid rgba(140,22,16,0.5);
+    box-shadow:
+      0 0 18px rgba(140,18,12,0.55),
+      0 0 40px rgba(110,12,8,0.35),
+      0 0 80px rgba(80,8,5,0.22),
+      0 0 130px rgba(55,4,2,0.14),
+      inset 0 0 35px rgba(0,0,0,0.55);
+    animation: avatarBreath 5s ease-in-out infinite;
+    transition: box-shadow 0.1s ease;
+  }
+
+  @keyframes haloPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+    50% { transform: translate(-50%, -50%) scale(1.09); opacity: 1; }
+  }
+
+  @keyframes avatarBreath {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.022); }
+  }
+
+  .quote-wrap {
+    flex: 1;
+    max-width: 580px;
+    min-width: 0;
+    align-self: flex-start;
+    margin-top: 20px;
+  }
+
+  .deco-line {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(160,25,18,0.75), transparent);
+    transition: all 0.1s ease;
+  }
+
+  .deco-line.top { margin-bottom: 32px; }
+  .deco-line.bottom { margin-top: 32px; }
+
+  .quote {
+    font-family: Georgia, 'Times New Roman', 'Palatino Linotype', serif;
+    font-style: italic;
+    font-size: 2.12rem;
+    line-height: 1.55;
+    color: rgba(238,228,218,0.92);
+    text-shadow: 0 0 18px rgba(160,25,18,0.28), 0 0 42px rgba(90,10,8,0.16);
+    letter-spacing: 0.02em;
+    transition: text-shadow 0.1s ease;
+  }
+
+  .sound-btn {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 20;
+    background: rgba(18,4,4,0.65);
+    border: 1px solid rgba(130,25,18,0.35);
+    color: rgba(195,175,165,0.75);
+    padding: 9px 34px;
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    outline: none;
+  }
+
+  .sound-btn:hover {
+    background: rgba(35,8,6,0.8);
+    border-color: rgba(170,35,25,0.55);
+    color: rgba(235,215,205,0.92);
+    box-shadow: 0 0 24px rgba(140,18,12,0.25);
+  }
+
+  .sound-btn:focus-visible {
+    border-color: rgba(200,45,30,0.7);
+    box-shadow: 0 0 0 2px rgba(200,45,30,0.3);
+  }
+
+  .sound-btn:active {
+    transform: translateX(-50%) scale(0.97);
+  }
+
+  @media (max-width: 768px) {
+    .content {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      padding: 28px 40px;
+      text-align: center;
+      max-width: 440px;
+    }
+
+    .avatar-wrap {
+      align-self: center;
+      margin-bottom: 0;
+      width: 128px;
+      height: 128px;
+    }
+
+    .avatar {
+      width: 128px;
+      height: 128px;
+    }
+
+    .avatar-halo { width: 196px; height: 196px; }
+    .avatar-ring-outer { width: 158px; height: 158px; }
+    .avatar-ring-inner { width: 146px; height: 146px; }
+
+    .quote-wrap {
+      align-self: center;
+      margin-top: 0;
+    }
+
+    .quote {
+      font-size: 1.32rem;
+      line-height: 1.62;
+    }
+
+    .deco-line {
+      margin-left: auto;
+      margin-right: auto;
+    }
+  }
+
+  @media (max-width: 420px) {
+    .content {
+      padding: 22px 28px;
+      gap: 30px;
+      max-width: 360px;
+    }
+
+    .avatar-wrap {
+      width: 108px;
+      height: 108px;
+    }
+
+    .avatar {
+      width: 108px;
+      height: 108px;
+    }
+
+    .avatar-halo { width: 168px; height: 168px; }
+    .avatar-ring-outer { width: 134px; height: 134px; }
+    .avatar-ring-inner { width: 124px; height: 124px; }
+
+    .quote {
+      font-size: 1.08rem;
+      line-height: 1.68;
+    }
+
+    .deco-line.top { margin-bottom: 24px; }
+    .deco-line.bottom { margin-top: 24px; }
+
+    .sound-btn {
+      padding: 8px 24px;
+      font-size: 0.72rem;
+      bottom: 22px;
+    }
+  }
+
+  @media (min-width: 1800px) {
+    .content {
+      max-width: 1400px;
+      gap: 100px;
+      padding: 52px 80px;
+    }
+
+    .quote { font-size: 2.65rem; }
+
+    .avatar-wrap { width: 270px; height: 270px; }
+    .avatar { width: 270px; height: 270px; }
+    .avatar-halo { width: 380px; height: 380px; }
+    .avatar-ring-outer { width: 316px; height: 316px; }
+    .avatar-ring-inner { width: 296px; height: 296px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .avatar, .avatar-halo, .avatar-ring-outer, .avatar-ring-inner {
+      animation: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="storm"></canvas>
+<div id="flash"></div>
+
+<div class="overlay">
+  <div class="content">
+    <div class="avatar-wrap">
+      <div class="avatar-halo"></div>
+      <div class="avatar-ring-outer"></div>
+      <div class="avatar-ring-inner"></div>
+      <img class="avatar" id="avatarEl"
+           src="https://xatimg.com/image/uK0UEBZBRu0v.jpg"
+           alt="Avatar">
+    </div>
+    <div class="quote-wrap">
+      <div class="deco-line top"></div>
+      <p class="quote" id="quoteEl">One guitar solo reveals more truth<br>than a thousand confessions.</p>
+      <div class="deco-line bottom"></div>
+    </div>
+  </div>
+</div>
+
+<button class="sound-btn" id="soundBtn" aria-label="Toggle sound">Sound</button>
+
+<audio id="bgAudio" loop preload="auto">
+  <source src="https://files.catbox.moe/toaqe0.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── Utilities ── */
+  function rand(a, b) { return a + Math.random() * (b - a); }
+  function randInt(a, b) { return Math.floor(rand(a, b + 1)); }
+  function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+
+  /* ── Canvas ── */
+  var canvas = document.getElementById('storm');
+  var ctx = canvas.getContext('2d');
+  var W = 1, H = 1;
+
+  /* ── DOM ── */
+  var flashEl = document.getElementById('flash');
+  var quoteEl = document.getElementById('quoteEl');
+  var avatarEl = document.getElementById('avatarEl');
+  var soundBtn = document.getElementById('soundBtn');
+  var bgAudio = document.getElementById('bgAudio');
+  var decoLines = document.querySelectorAll('.deco-line');
+
+  /* ── Configuration ── */
+  var CFG = {
+    lightning: {
+      minInterval: 2200,
+      maxInterval: 7000,
+      doubleChance: 0.32,
+      flashDuration: 550,
+      flashMax: 0.48,
+      maxDepth: 6,
+      segLen: [5, 12],
+      deviation: 0.9,
+      branchProb: 0.38,
+      microBranchProb: 0.2,
+      passes: [
+        { w: 32, rgb: [105, 12, 7], a: 0.2 },
+        { w: 14, rgb: [190, 38, 20], a: 0.52 },
+        { w: 5.5, rgb: [255, 170, 125], a: 0.85 },
+        { w: 2.2, rgb: [255, 248, 236], a: 1.0 }
+      ]
+    },
+    clouds: [
+      { n: 6, yMin: -0.06, yMax: 0.2,  wMin: 750, wMax: 1300, hMin: 240, hMax: 400, spd: 0.035, opa: 0.48, dk: 40, rd: 0.3 },
+      { n: 5, yMin: -0.02, yMax: 0.26, wMin: 650, wMax: 1100, hMin: 210, hMax: 360, spd: 0.08,  opa: 0.58, dk: 32, rd: 0.5 },
+      { n: 5, yMin: 0.02,  yMax: 0.36, wMin: 550, wMax: 950,  hMin: 180, hMax: 320, spd: 0.15,  opa: 0.7,  dk: 25, rd: 0.9 },
+      { n: 5, yMin: 0.04,  yMax: 0.42, wMin: 450, wMax: 820,  hMin: 150, hMax: 270, spd: 0.24,  opa: 0.76, dk: 20, rd: 0.72 },
+      { n: 4, yMin: 0.07,  yMax: 0.48, wMin: 380, wMax: 700,  hMin: 120, hMax: 220, spd: 0.36,  opa: 0.8,  dk: 16, rd: 0.45 }
+    ],
+    embers:  { count: 85,  sz: [0.4, 3.2],  sy: [-1.3, -0.08], sx: [-0.45, 0.45], life: [220, 750] },
+    ash:     { count: 100, sz: [0.15, 0.85], sy: [-0.35, -0.02], sx: [-0.18, 0.18], life: [350, 1000], aRange: [0.03, 0.13] },
+    fog: {
+      low:   { n: 8, yR: [0.58, 0.96], wR: [450, 1100], hR: [65, 190], sR: [0.03, 0.12], aR: [0.06, 0.2] },
+      smoke: { n: 9, yR: [0.08, 0.52], wR: [650, 1600], hR: [22, 85],   sR: [0.04, 0.22], aR: [0.02, 0.07] },
+      mist:  { n: 5, yR: [0.28, 0.68], wR: [900, 2000], hR: [45, 110],  sR: [0.02, 0.08], aR: [0.012, 0.035] }
+    },
+    rain: { count: 200, len: [5, 26], spd: [10, 22], alpha: [0.01, 0.055], wind: [-0.75, -0.08] },
+    reflection: { hRatio: 0.2, streaks: 50 },
+    ripples: { spawnRate: 0.035, maxR: [8, 55], spd: [0.2, 0.6], alpha: [0.02, 0.085] }
+  };
+
+  /* ── State ── */
+  var cloudLayers = [];
+  var embers = [];
+  var ashParticles = [];
+  var fogPatches = [];
+  var raindrops = [];
+  var reflectionStreaks = [];
+  var ripples = [];
+  var activeBolts = [];
+  var nextStrike = 0;
+  var flashIntensity = 0;
+  var audioStarted = false;
+  var isPlaying = false;
+  var decoLineCached = false;
+
+  /* ── Cloud Sprite Generator ── */
+  function makeCloudSprite(w, h, dk, rd) {
+    var oc = document.createElement('canvas');
+    oc.width = w;
+    oc.height = h;
+    var ox = oc.getContext('2d');
+
+    var cr = Math.floor(dk * (0.35 + rd * 0.65));
+    var cg = Math.floor(dk * 0.055);
+    var cb = Math.floor(dk * 0.07);
+
+    /* Subtle base fill so the body is never fully transparent */
+    var baseR = Math.max(1, w * 0.48);
+    var bg = ox.createRadialGradient(w * 0.5, h * 0.42, 0, w * 0.5, h * 0.42, baseR);
+    bg.addColorStop(0, 'rgba(' + Math.floor(dk * 0.12) + ',' + Math.floor(dk * 0.015) + ',' + Math.floor(dk * 0.02) + ',0.1)');
+    bg.addColorStop(0.65, 'rgba(' + Math.floor(dk * 0.06) + ',0,0,0.04)');
+    bg.addColorStop(1, 'rgba(0,0,0,0)');
+    ox.fillStyle = bg;
+    ox.fillRect(0, 0, w, h);
+
+    /* Main volumetric blobs */
+    var n = Math.min(58, 28 + Math.floor((w * h) / 9000));
+    for (var i = 0; i < n; i++) {
+      var bx = rand(-w * 0.12, w * 1.12);
+      var by = rand(-h * 0.1, h * 1.1);
+      var br = Math.max(1, rand(28, w * 0.2));
+      var ba = rand(0.1, 0.52);
+
+      ox.save();
+      ox.translate(bx, by);
+      ox.rotate(rand(0, Math.PI));
+      ox.scale(rand(0.7, 1.35), rand(0.7, 1.35));
+
+      var g = ox.createRadialGradient(0, 0, 0, 0, 0, br);
+      g.addColorStop(0, 'rgba(' + cr + ',' + cg + ',' + cb + ',' + ba + ')');
+      g.addColorStop(0.2, 'rgba(' + Math.floor(cr * 0.82) + ',' + Math.floor(cg * 0.65) + ',' + Math.floor(cb * 0.55) + ',' + (ba * 0.72) + ')');
+      g.addColorStop(0.5, 'rgba(' + Math.floor(cr * 0.45) + ',' + Math.floor(cg * 0.3) + ',' + Math.floor(cb * 0.22) + ',' + (ba * 0.25) + ')');
+      g.addColorStop(1, 'rgba(0,0,0,0)');
+      ox.fillStyle = g;
+      ox.beginPath();
+      ox.arc(0, 0, br, 0, Math.PI * 2);
+      ox.fill();
+      ox.restore();
+    }
+
+    /* Dark undersides */
+    var dn = Math.floor(n * 0.5);
+    for (var j = 0; j < dn; j++) {
+      var dx = rand(0, w);
+      var dy = rand(h * 0.58, h * 1.2);
+      var dr = Math.max(1, rand(22, w * 0.14));
+      var da = rand(0.1, 0.32);
+
+      var dg = ox.createRadialGradient(dx, dy, 0, dx, dy, dr);
+      dg.addColorStop(0, 'rgba(2,0,0,' + da + ')');
+      dg.addColorStop(0.55, 'rgba(1,0,0,' + (da * 0.35) + ')');
+      dg.addColorStop(1, 'rgba(0,0,0,0)');
+      ox.fillStyle = dg;
+      ox.beginPath();
+      ox.arc(dx, dy, dr, 0, Math.PI * 2);
+      ox.fill();
+    }
+
+    /* Crimson internal highlights */
+    var hn = Math.floor(n * 0.25);
+    for (var k = 0; k < hn; k++) {
+      var hx = rand(w * 0.08, w * 0.92);
+      var hy = rand(h * 0.15, h * 0.55);
+      var hr = Math.max(1, rand(14, w * 0.07));
+      var ha = rand(0.02, 0.07);
+
+      var hg = ox.createRadialGradient(hx, hy, 0, hx, hy, hr);
+      hg.addColorStop(0, 'rgba(' + Math.min(255, cr + 45) + ',' + Math.floor(cg * 2.2) + ',' + Math.floor(cb * 1.6) + ',' + ha + ')');
+      hg.addColorStop(1, 'rgba(0,0,0,0)');
+      ox.fillStyle = hg;
+      ox.beginPath();
+      ox.arc(hx, hy, hr, 0, Math.PI * 2);
+      ox.fill();
+    }
+
+    /* Crimson underlighting at bottom edge */
+    var un = Math.floor(n * 0.3);
+    for (var u = 0; u < un; u++) {
+      var ux = rand(0, w);
+      var uy = rand(h * 0.72, h * 1.1);
+      var ur = Math.max(1, rand(28, w * 0.1));
+      var ua = rand(0.02, 0.065);
+
+      var ug = ox.createRadialGradient(ux, uy, 0, ux, uy, ur);
+      ug.addColorStop(0, 'rgba(130,20,10,' + ua + ')');
+      ug.addColorStop(0.5, 'rgba(80,10,6,' + (ua * 0.45) + ')');
+      ug.addColorStop(1, 'rgba(0,0,0,0)');
+      ox.fillStyle = ug;
+      ox.beginPath();
+      ox.arc(ux, uy, ur, 0, Math.PI * 2);
+      ox.fill();
+    }
+
+    /* Soft edge feathers */
+    var en = Math.floor(n * 0.4);
+    for (var e = 0; e < en; e++) {
+      var ex, ey;
+      if (Math.random() > 0.5) {
+        ex = Math.random() > 0.5 ? rand(-w * 0.18, w * 0.12) : rand(w * 0.88, w * 1.18);
+        ey = rand(h * 0.1, h * 0.9);
+      } else {
+        ex = rand(w * 0.1, w * 0.9);
+        ey = Math.random() > 0.5 ? rand(-h * 0.18, h * 0.12) : rand(h * 0.88, h * 1.18);
+      }
+      var er = Math.max(1, rand(18, 55));
+      var ea = rand(0.015, 0.065);
+
+      var eg = ox.createRadialGradient(ex, ey, 0, ex, ey, er);
+      eg.addColorStop(0, 'rgba(' + Math.floor(cr * 0.6) + ',' + Math.floor(cg * 0.5) + ',' + Math.floor(cb * 0.4) + ',' + ea + ')');
+      eg.addColorStop(1, 'rgba(0,0,0,0)');
+      ox.fillStyle = eg;
+      ox.beginPath();
+      ox.arc(ex, ey, er, 0, Math.PI * 2);
+      ox.fill();
+    }
+
+    return oc;
+  }
+
+  /* ── Cloud Layers ── */
+  function initClouds() {
+    cloudLayers = [];
+    for (var li = 0; li < CFG.clouds.length; li++) {
+      var lc = CFG.clouds[li];
+      var layer = { clouds: [], speed: lc.spd, opacity: lc.opa };
+      for (var i = 0; i < lc.n; i++) {
+        var cw = rand(lc.wMin, lc.wMax);
+        var ch = rand(lc.hMin, lc.hMax);
+        layer.clouds.push({
+          sprite: makeCloudSprite(cw, ch, lc.dk, lc.rd),
+          x: rand(-cw * 0.5, W + cw * 0.3),
+          y: rand(H * lc.yMin, H * lc.yMax),
+          w: cw,
+          h: ch,
+          yPhase: rand(0, Math.PI * 2),
+          yAmp: rand(0.006, 0.022)
+        });
+      }
+      cloudLayers.push(layer);
+    }
+  }
+
+  function updateClouds(t) {
+    for (var li = 0; li < cloudLayers.length; li++) {
+      var layer = cloudLayers[li];
+      for (var i = 0; i < layer.clouds.length; i++) {
+        var c = layer.clouds[i];
+        c.x += layer.speed;
+        c.y += Math.sin(t * 0.00022 + c.yPhase) * c.yAmp;
+        if (c.x > W + c.w * 0.15) {
+          c.x = -c.w - rand(30, 300);
+          c.y = rand(H * CFG.clouds[li].yMin, H * CFG.clouds[li].yMax);
+        }
+      }
+    }
+  }
+
+  function drawClouds(t) {
+    for (var li = 0; li < cloudLayers.length; li++) {
+      var layer = cloudLayers[li];
+      var breathOpa = layer.opacity * (0.93 + 0.07 * Math.sin(t * 0.00018 + li * 1.2));
+      ctx.globalAlpha = breathOpa;
+      for (var i = 0; i < layer.clouds.length; i++) {
+        var c = layer.clouds[i];
+        ctx.drawImage(c.sprite, c.x, c.y, c.w, c.h);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  /* ── Cloud Illumination (localized to strike origin) ── */
+  function drawCloudGlow() {
+    if (flashIntensity < 0.008) return;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+
+    for (var i = 0; i < activeBolts.length; i++) {
+      var b = activeBolts[i];
+      if (b.a < 0.02) continue;
+
+      var ox = b.originX;
+      var oy = H * 0.12;
+      var intensity = b.a;
+
+      /* Inner bright crimson glow */
+      var r1 = Math.max(1, W * 0.38);
+      var g1 = ctx.createRadialGradient(ox, oy, 0, ox, oy, r1);
+      g1.addColorStop(0, 'rgba(120,22,12,' + clamp(intensity * 0.65, 0, 0.55) + ')');
+      g1.addColorStop(0.25, 'rgba(80,14,8,' + clamp(intensity * 0.4, 0, 0.4) + ')');
+      g1.addColorStop(0.55, 'rgba(40,6,4,' + clamp(intensity * 0.15, 0, 0.18) + ')');
+      g1.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g1;
+      ctx.fillRect(0, 0, W, H * 0.6);
+
+      /* Outer diffuse spread */
+      var r2 = Math.max(2, W * 0.65);
+      var g2 = ctx.createRadialGradient(ox, oy, 0, ox, oy, r2);
+      g2.addColorStop(0, 'rgba(65,10,6,' + clamp(intensity * 0.22, 0, 0.22) + ')');
+      g2.addColorStop(0.4, 'rgba(35,5,3,' + clamp(intensity * 0.1, 0, 0.12) + ')');
+      g2.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = g2;
+      ctx.fillRect(0, 0, W, H * 0.7);
+
+      /* Secondary glow along bolt path */
+      if (b.bolt.pts.length > 2) {
+        var midIdx = Math.floor(b.bolt.pts.length * 0.3);
+        var mp = b.bolt.pts[midIdx];
+        var r3 = Math.max(1, W * 0.25);
+        var g3 = ctx.createRadialGradient(mp.x, mp.y, 0, mp.x, mp.y, r3);
+        g3.addColorStop(0, 'rgba(90,15,8,' + clamp(intensity * 0.3, 0, 0.3) + ')');
+        g3.addColorStop(0.5, 'rgba(45,6,4,' + clamp(intensity * 0.1, 0, 0.12) + ')');
+        g3.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = g3;
+        ctx.fillRect(0, 0, W, H);
+      }
+    }
+
+    ctx.restore();
+  }
+
+  /* ── Lightning System ── */
+  function genBolt(sx, sy, angle, length, depth, maxD) {
+    var pts = [{ x: sx, y: sy }];
+    var cx = sx, cy = sy, rem = length;
+    var branches = [];
+    var segL = rand(CFG.lightning.segLen[0], CFG.lightning.segLen[1]);
+
+    while (rem > 0) {
+      var step = Math.min(segL + rand(-2, 3), rem);
+      angle += (Math.random() - 0.5) * CFG.lightning.deviation * 2;
+      cx += Math.cos(angle) * step;
+      cy += Math.sin(angle) * step;
+      pts.push({ x: cx, y: cy });
+      rem -= step;
+
+      /* Primary branch */
+      if (depth < maxD && Math.random() < CFG.lightning.branchProb) {
+        var side = Math.random() > 0.5 ? 1 : -1;
+        var ba = angle + side * rand(0.2, 1.3);
+        var bl = rem * rand(0.1, 0.5);
+        branches.push(genBolt(cx, cy, ba, bl, depth + 1, maxD));
+      }
+
+      /* Secondary micro-branch */
+      if (depth >= 2 && depth <= maxD && Math.random() < CFG.lightning.microBranchProb) {
+        var s2 = Math.random() > 0.5 ? 1 : -1;
+        var ba2 = angle + s2 * rand(0.25, 0.9);
+        var bl2 = rem * rand(0.04, 0.2);
+        branches.push(genBolt(cx, cy, ba2, bl2, depth + 1, maxD));
+      }
+    }
+
+    return { pts: pts, depth: depth, branches: branches, w: Math.max(0.3, (maxD - depth + 1) * 1.15) };
+  }
+
+  function strokePts(pts) {
+    if (pts.length < 2) return;
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+    ctx.stroke();
+  }
+
+  function drawBolt(bolt, alpha) {
+    if (bolt.pts.length < 2) return;
+    var passes = CFG.lightning.passes;
+    var depthFade = 1 - bolt.depth * 0.1;
+
+    for (var p = 0; p < passes.length; p++) {
+      var pass = passes[p];
+      var lw = Math.max(0.2, pass.w * (bolt.w / 5.5));
+      var a = pass.a * alpha * depthFade;
+      if (a < 0.004) continue;
+
+      ctx.strokeStyle = 'rgba(' + pass.rgb[0] + ',' + pass.rgb[1] + ',' + pass.rgb[2] + ',' + clamp(a, 0, 1) + ')';
+      ctx.lineWidth = lw;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      strokePts(bolt.pts);
+    }
+
+    for (var b = 0; b < bolt.branches.length; b++) {
+      drawBolt(bolt.branches[b], alpha * 0.58);
+    }
+  }
+
+  function boltFlicker(elapsed, duration) {
+    var r = elapsed / duration;
+    if (r >= 1) return 0;
+    if (r < 0.02) return r / 0.02;
+    var decay = Math.pow(1 - r, 2.2);
+    var flicker = 0.55 + 0.45 * Math.abs(Math.sin(r * 105 + 0.3) * Math.sin(r * 51 + 1.1));
+    return decay * flicker;
+  }
+
+  function triggerStrike() {
+    var sx = rand(W * 0.06, W * 0.94);
+    var sy = rand(-8, H * 0.03);
+    var ey = rand(H * 0.35, H * 0.9);
+    var len = ey - sy;
+    var ang = Math.PI * 0.5 + rand(-0.28, 0.28);
+    var bolt = genBolt(sx, sy, ang, len, 0, CFG.lightning.maxDepth);
+
+    activeBolts.push({
+      bolt: bolt,
+      t0: performance.now(),
+      dur: CFG.lightning.flashDuration + rand(0, 350),
+      a: 1,
+      originX: sx,
+      originY: sy
+    });
+    flashIntensity = Math.max(flashIntensity, CFG.lightning.flashMax);
+
+    /* Double strike chance */
+    if (Math.random() < CFG.lightning.doubleChance) {
+      setTimeout(function () {
+        var sx2 = rand(W * 0.1, W * 0.9);
+        var a2 = Math.PI * 0.5 + rand(-0.3, 0.3);
+        var l2 = rand(len * 0.5, len * 0.95);
+        var b2 = genBolt(sx2, rand(-8, H * 0.04), a2, l2, 0, CFG.lightning.maxDepth);
+        activeBolts.push({ bolt: b2, t0: performance.now(), dur: CFG.lightning.flashDuration + rand(0, 300), a: 1, originX: sx2, originY: 0 });
+        flashIntensity = Math.max(flashIntensity, CFG.lightning.flashMax * 0.8);
+      }, rand(35, 250));
+    }
+
+    nextStrike = performance.now() + rand(CFG.lightning.minInterval, CFG.lightning.maxInterval);
+  }
+
+  function updateLightning(now) {
+    activeBolts = activeBolts.filter(function (b) {
+      var elapsed = now - b.t0;
+      if (elapsed > b.dur) return false;
+      b.a = boltFlicker(elapsed, b.dur);
+      return true;
+    });
+    if (now >= nextStrike) triggerStrike();
+    if (flashIntensity > 0) {
+      flashIntensity *= 0.90;
+      if (flashIntensity < 0.003) flashIntensity = 0;
+    }
+  }
+
+  function drawLightning() {
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    for (var i = 0; i < activeBolts.length; i++) {
+      drawBolt(activeBolts[i].bolt, activeBolts[i].a);
+    }
+    ctx.restore();
+  }
+
+  /* ── Ember Particles ── */
+  function makeEmber(scattered) {
+    return {
+      x: rand(0, W), y: scattered ? rand(0, H) : H + rand(0, 80),
+      sz: rand(CFG.embers.sz[0], CFG.embers.sz[1]),
+      vy: rand(CFG.embers.sy[0], CFG.embers.sy[1]),
+      vx: rand(CFG.embers.sx[0], CFG.embers.sx[1]),
+      life: scattered ? rand(0, CFG.embers.life[1]) : 0,
+      maxLife: rand(CFG.embers.life[0], CFG.embers.life[1]),
+      r: randInt(168, 240), g: randInt(10, 50), b: randInt(0, 14),
+      wPhase: rand(0, Math.PI * 2), wSpd: rand(0.008, 0.03)
+    };
+  }
+
+  function initEmbers() {
+    embers = [];
+    for (var i = 0; i < CFG.embers.count; i++) embers.push(makeEmber(true));
+  }
+
+  function updateEmbers() {
+    var windGust = flashIntensity * 1.8;
+    for (var i = 0; i < embers.length; i++) {
+      var e = embers[i];
+      e.x += e.vx + Math.sin(e.life * e.wSpd + e.wPhase) * 0.32 + (Math.random() - 0.5) * windGust;
+      e.y += e.vy;
+      e.life++;
+      if (e.life >= e.maxLife || e.y < -30) embers[i] = makeEmber(false);
+    }
+  }
+
+  function drawEmbers() {
+    for (var i = 0; i < embers.length; i++) {
+      var e = embers[i];
+      var lr = e.life / e.maxLife;
+      var a;
+      if (lr < 0.08) a = lr / 0.08;
+      else if (lr > 0.7) a = (1 - lr) / 0.3;
+      else a = 1;
+      a *= 0.8;
+      if (a < 0.005) continue;
+
+      /* Outer glow (simple circle, no gradient per-particle) */
+      ctx.fillStyle = 'rgba(' + e.r + ',' + e.g + ',' + e.b + ',' + (a * 0.25) + ')';
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, Math.max(0.2, e.sz * 3), 0, Math.PI * 2);
+      ctx.fill();
+
+      /* Mid glow */
+      ctx.fillStyle = 'rgba(' + e.r + ',' + Math.min(255, e.g + 15) + ',' + e.b + ',' + (a * 0.5) + ')';
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, Math.max(0.2, e.sz * 1.6), 0, Math.PI * 2);
+      ctx.fill();
+
+      /* Bright core */
+      ctx.fillStyle = 'rgba(' + Math.min(255, e.r + 50) + ',' + Math.min(255, e.g + 25) + ',' + Math.min(255, e.b + 15) + ',' + a + ')';
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, Math.max(0.2, e.sz), 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  /* ── Ash Particles ── */
+  function makeAsh(scattered) {
+    var ar = CFG.ash.aRange;
+    return {
+      x: rand(0, W), y: scattered ? rand(0, H) : H + rand(0, 40),
+      sz: rand(CFG.ash.sz[0], CFG.ash.sz[1]),
+      vy: rand(CFG.ash.sy[0], CFG.ash.sy[1]),
+      vx: rand(CFG.ash.sx[0], CFG.ash.sx[1]),
+      life: scattered ? rand(0, CFG.ash.life[1]) : 0,
+      maxLife: rand(CFG.ash.life[0], CFG.ash.life[1]),
+      a: rand(ar[0], ar[1]),
+      phase: rand(0, Math.PI * 2)
+    };
+  }
+
+  function initAsh() {
+    ashParticles = [];
+    for (var i = 0; i < CFG.ash.count; i++) ashParticles.push(makeAsh(true));
+  }
+
+  function updateAsh() {
+    for (var i = 0; i < ashParticles.length; i++) {
+      var p = ashParticles[i];
+      p.x += p.vx + Math.sin(p.life * 0.005 + p.phase) * 0.12;
+      p.y += p.vy;
+      p.life++;
+      if (p.life >= p.maxLife || p.y < -20) ashParticles[i] = makeAsh(false);
+    }
+  }
+
+  function drawAsh() {
+    for (var i = 0; i < ashParticles.length; i++) {
+      var p = ashParticles[i];
+      var lr = p.life / p.maxLife;
+      var a;
+      if (lr < 0.1) a = lr / 0.1;
+      else if (lr > 0.75) a = (1 - lr) / 0.25;
+      else a = 1;
+      a *= p.a;
+      if (a < 0.003) continue;
+
+      ctx.fillStyle = 'rgba(100,22,18,' + clamp(a, 0, 0.15) + ')';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, Math.max(0.15, p.sz), 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  /* ── Fog System ── */
+  function initFog() {
+    fogPatches = [];
+    var sets = [
+      { cfg: CFG.fog.low,   type: 0 },
+      { cfg: CFG.fog.smoke, type: 1 },
+      { cfg: CFG.fog.mist,  type: 2 }
+    ];
+    for (var s = 0; s < sets.length; s++) {
+      var sc = sets[s].cfg;
+      var tp = sets[s].type;
+      for (var i = 0; i < sc.n; i++) {
+        fogPatches.push({
+          x: rand(-400, W + 400),
+          y: rand(H * sc.yR[0], H * sc.yR[1]),
+          w: rand(sc.wR[0], sc.wR[1]),
+          h: rand(sc.hR[0], sc.hR[1]),
+          spd: rand(sc.sR[0], sc.sR[1]),
+          a: rand(sc.aR[0], sc.aR[1]),
+          type: tp,
+          yPhase: rand(0, Math.PI * 2)
+        });
+      }
+    }
+  }
+
+  function updateFog(now) {
+    for (var i = 0; i < fogPatches.length; i++) {
+      var p = fogPatches[i];
+      p.x += p.spd + Math.sin(now * 0.0004 + p.yPhase) * 0.12;
+      if (p.x > W + p.w * 0.4) {
+        p.x = -p.w - rand(60, 400);
+        var cfgs = [CFG.fog.low, CFG.fog.smoke, CFG.fog.mist];
+        var c = cfgs[p.type];
+        p.y = rand(H * c.yR[0], H * c.yR[1]);
+      }
+    }
+  }
+
+  function drawFog() {
+    var flashBoost = flashIntensity * 3.0;
+
+    /* Vertical base fog gradient */
+    var fg = ctx.createLinearGradient(0, H * 0.4, 0, H);
+    fg.addColorStop(0, 'rgba(10,4,4,0)');
+    fg.addColorStop(0.3, 'rgba(16,6,6,' + clamp(0.08 + flashBoost * 0.08, 0, 0.25) + ')');
+    fg.addColorStop(0.6, 'rgba(22,8,7,' + clamp(0.18 + flashBoost * 0.15, 0, 0.4) + ')');
+    fg.addColorStop(1, 'rgba(28,10,8,' + clamp(0.3 + flashBoost * 0.25, 0, 0.55) + ')');
+    ctx.fillStyle = fg;
+    ctx.fillRect(0, 0, W, H);
+
+    /* Individual patches */
+    for (var i = 0; i < fogPatches.length; i++) {
+      var p = fogPatches[i];
+      var cx = p.x + p.w * 0.5;
+      var cy = p.y;
+      var rx = Math.max(1, p.w * 0.5);
+      var ry = Math.max(1, p.h * 0.5);
+
+      var boostMul = p.type === 0 ? 1.2 : (p.type === 1 ? 0.6 : 0.4);
+      var pa = clamp(p.a + flashBoost * boostMul, 0, 0.5);
+
+      var pg = ctx.createRadialGradient(cx, cy, 0, cx, cy, rx);
+      pg.addColorStop(0, 'rgba(24,10,8,' + pa + ')');
+      pg.addColorStop(0.45, 'rgba(18,7,6,' + (pa * 0.4) + ')');
+      pg.addColorStop(1, 'rgba(10,3,3,0)');
+      ctx.fillStyle = pg;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  /* ── Rain ── */
+  function initRain() {
+    raindrops = [];
+    var rc = CFG.rain;
+    for (var i = 0; i < rc.count; i++) {
+      raindrops.push({
+        x: rand(0, W), y: rand(-H, H),
+        len: rand(rc.len[0], rc.len[1]),
+        spd: rand(rc.spd[0], rc.spd[1]),
+        a: rand(rc.alpha[0], rc.alpha[1]),
+        wind: rand(rc.wind[0], rc.wind[1])
+      });
+    }
+  }
+
+  function updateRain() {
+    for (var i = 0; i < raindrops.length; i++) {
+      var r = raindrops[i];
+      r.y += r.spd;
+      r.x += r.wind;
+      if (r.y > H + 35) { r.y = rand(-70, -8); r.x = rand(0, W); }
+    }
+  }
+
+  function drawRain() {
+    ctx.lineWidth = 0.5;
+    ctx.lineCap = 'butt';
+    for (var i = 0; i < raindrops.length; i++) {
+      var r = raindrops[i];
+      var alpha = clamp(r.a + flashIntensity * 0.45, 0, 0.28);
+      ctx.strokeStyle = 'rgba(120,30,24,' + alpha + ')';
+      ctx.beginPath();
+      ctx.moveTo(r.x, r.y);
+      ctx.lineTo(r.x + r.wind * 2.8, r.y + r.len);
+      ctx.stroke();
+    }
+  }
+
+  /* ── Wet Ground Reflection ── */
+  function initReflection() {
+    reflectionStreaks = [];
+    var rh = H * CFG.reflection.hRatio;
+    var ry = H - rh;
+    for (var i = 0; i < CFG.reflection.streaks; i++) {
+      var x1 = rand(0, W * 0.4);
+      reflectionStreaks.push({
+        y: ry + rand(3, rh - 3),
+        x1: x1,
+        x2: x1 + rand(W * 0.04, W * 0.48),
+        a: rand(0.012, 0.05),
+        phase: rand(0, Math.PI * 2)
+      });
+    }
+  }
+
+  function drawReflection(now) {
+    var rh = H * CFG.reflection.hRatio;
+    var ry = H - rh;
+    var baseA = 0.1;
+    var flashA = flashIntensity * 3.8;
+    var totalA = baseA + flashA;
+
+    /* Main gradient */
+    var rg = ctx.createLinearGradient(0, ry, 0, H);
+    rg.addColorStop(0, 'rgba(55,7,4,0)');
+    rg.addColorStop(0.1, 'rgba(95,13,9,' + clamp(totalA * 0.4, 0, 0.55) + ')');
+    rg.addColorStop(0.4, 'rgba(85,11,8,' + clamp(totalA * 0.72, 0, 0.65) + ')');
+    rg.addColorStop(0.75, 'rgba(65,9,7,' + clamp(totalA * 0.88, 0, 0.7) + ')');
+    rg.addColorStop(1, 'rgba(42,5,4,' + clamp(totalA, 0, 0.75) + ')');
+    ctx.fillStyle = rg;
+    ctx.fillRect(0, ry, W, rh);
+
+    /* Shimmer streaks */
+    ctx.lineWidth = 0.6;
+    ctx.lineCap = 'round';
+    for (var i = 0; i < reflectionStreaks.length; i++) {
+      var s = reflectionStreaks[i];
+      var shimmer = 0.4 + 0.6 * Math.sin(now * 0.0016 + s.phase);
+      var sa = clamp((s.a + flashA * 0.65) * shimmer, 0, 0.4);
+      ctx.strokeStyle = 'rgba(145,22,14,' + sa + ')';
+      ctx.beginPath();
+      ctx.moveTo(s.x1, s.y);
+      ctx.lineTo(s.x2, s.y);
+      ctx.stroke();
+    }
+
+    /* Lightning hot-spot reflection on wet ground */
+    if (flashIntensity > 0.03) {
+      for (var j = 0; j < activeBolts.length; j++) {
+        var b = activeBolts[j];
+        if (b.a < 0.05) continue;
+        var rx = b.originX;
+        var rry = H - rh * 0.3;
+        var rr = Math.max(1, W * 0.3);
+        var rrg = ctx.createRadialGradient(rx, rry, 0, rx, rry, rr);
+        rrg.addColorStop(0, 'rgba(160,25,15,' + clamp(b.a * flashIntensity * 1.5, 0, 0.35) + ')');
+        rrg.addColorStop(0.4, 'rgba(100,14,8,' + clamp(b.a * flashIntensity * 0.6, 0, 0.2) + ')');
+        rrg.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = rrg;
+        ctx.fillRect(0, ry, W, rh);
+      }
+    }
+  }
+
+  /* ── Ripples ── */
+  function updateRipples() {
+    if (Math.random() < CFG.ripples.spawnRate) {
+      ripples.push({
+        x: rand(0, W),
+        y: H - rand(3, H * CFG.reflection.hRatio * 0.5),
+        r: 0,
+        maxR: rand(CFG.ripples.maxR[0], CFG.ripples.maxR[1]),
+        spd: rand(CFG.ripples.spd[0], CFG.ripples.spd[1]),
+        a: rand(CFG.ripples.alpha[0], CFG.ripples.alpha[1])
+      });
+    }
+
+    if (flashIntensity > 0.04 && Math.random() < 0.2) {
+      ripples.push({
+        x: rand(0, W),
+        y: H - rand(3, H * CFG.reflection.hRatio * 0.65),
+        r: 0,
+        maxR: rand(CFG.ripples.maxR[0], CFG.ripples.maxR[1]) * 1.4,
+        spd: rand(CFG.ripples.spd[0], CFG.ripples.spd[1]) * 1.3,
+        a: rand(CFG.ripples.alpha[0], CFG.ripples.alpha[1]) * 1.8
+      });
+    }
+
+    var maxRipples = 60;
+    if (ripples.length > maxRipples) ripples.splice(0, ripples.length - maxRipples);
+
+    ripples = ripples.filter(function (rp) {
+      rp.r += rp.spd;
+      rp.a *= 0.976;
+      return rp.r < rp.maxR && rp.a > 0.002;
+    });
+  }
+
+  function drawRipples() {
+    ctx.lineWidth = 0.5;
+    for (var i = 0; i < ripples.length; i++) {
+      var rp = ripples[i];
+      var ra = clamp(rp.a + flashIntensity * 0.22, 0, 0.25);
+      ctx.strokeStyle = 'rgba(130,20,12,' + ra + ')';
+      ctx.beginPath();
+      ctx.ellipse(rp.x, rp.y, Math.max(0.2, rp.r), Math.max(0.1, rp.r * 0.26), 0, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  /* ── Red Mist ── */
+  function drawRedMist(now) {
+    var mistA = 0.025 + 0.012 * Math.sin(now * 0.00028);
+    mistA += flashIntensity * 0.18;
+    var mg = ctx.createRadialGradient(W * 0.5, H * 0.38, 0, W * 0.5, H * 0.38, Math.max(1, W * 0.72));
+    mg.addColorStop(0, 'rgba(65,9,6,' + clamp(mistA, 0, 0.22) + ')');
+    mg.addColorStop(0.45, 'rgba(38,5,3,' + clamp(mistA * 0.45, 0, 0.1) + ')');
+    mg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = mg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  /* ── Full-Sky Flash Overlay (canvas) ── */
+  function drawFlashCanvas() {
+    if (flashIntensity < 0.005) return;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.fillStyle = 'rgba(85,14,9,' + clamp(flashIntensity * 0.45, 0, 0.32) + ')';
+    ctx.fillRect(0, 0, W, H);
+    ctx.restore();
+  }
+
+  /* ── Ambient Sky ── */
+  function drawAmbientSky() {
+    var ag = ctx.createLinearGradient(0, 0, 0, H * 0.35);
+    ag.addColorStop(0, 'rgba(30,5,3,0.38)');
+    ag.addColorStop(0.45, 'rgba(16,3,2,0.18)');
+    ag.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = ag;
+    ctx.fillRect(0, 0, W, H * 0.35);
+
+    /* Side glows */
+    var s1r = Math.max(1, W * 0.42);
+    var s1 = ctx.createRadialGradient(W * 0.18, H * 0.08, 0, W * 0.18, H * 0.08, s1r);
+    s1.addColorStop(0, 'rgba(38,6,4,0.09)');
+    s1.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = s1;
+    ctx.fillRect(0, 0, W, H * 0.4);
+
+    var s2r = Math.max(1, W * 0.38);
+    var s2 = ctx.createRadialGradient(W * 0.82, H * 0.06, 0, W * 0.82, H * 0.06, s2r);
+    s2.addColorStop(0, 'rgba(32,5,3,0.07)');
+    s2.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = s2;
+    ctx.fillRect(0, 0, W, H * 0.35);
+
+    /* Deep horizon glow */
+    var hr = Math.max(1, W * 0.6);
+    var hg = ctx.createRadialGradient(W * 0.5, H * 0.42, 0, W * 0.5, H * 0.42, hr);
+    hg.addColorStop(0, 'rgba(45,8,5,0.06)');
+    hg.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = hg;
+    ctx.fillRect(0, H * 0.2, W, H * 0.4);
+  }
+
+  /* ── Vignette ── */
+  function drawVignette() {
+    var inner = Math.max(1, Math.min(W, H) * 0.25);
+    var outer = Math.max(2, Math.max(W, H) * 0.85);
+    var vg = ctx.createRadialGradient(W * 0.5, H * 0.5, inner, W * 0.5, H * 0.5, outer);
+    vg.addColorStop(0, 'rgba(0,0,0,0)');
+    vg.addColorStop(0.55, 'rgba(0,0,0,0.18)');
+    vg.addColorStop(1, 'rgba(0,0,0,0.68)');
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+  }
+
+  /* ── Flash DOM Updates ── */
+  function updateFlashDOM() {
+    if (flashIntensity > 0.005) {
+      var fi = flashIntensity;
+
+      flashEl.style.background = 'rgba(135,20,12,' + clamp(fi * 1.4, 0, 0.5) + ')';
+
+      var g = fi * 130;
+      avatarEl.style.boxShadow =
+        '0 0 ' + (20 + g) + 'px rgba(225,48,28,' + clamp(0.55 + fi * 1.6, 0, 1) + '),' +
+        '0 0 ' + (48 + g * 2.2) + 'px rgba(175,32,20,' + clamp(0.35 + fi * 0.9, 0, 0.88) + '),' +
+        '0 0 ' + (95 + g * 3.5) + 'px rgba(125,18,12,' + clamp(0.22 + fi * 0.55, 0, 0.68) + '),' +
+        '0 0 ' + (155 + g * 5) + 'px rgba(85,8,5,' + clamp(0.14 + fi * 0.35, 0, 0.52) + '),' +
+        'inset 0 0 40px rgba(0,0,0,0.42)';
+
+      var qs = 20 + fi * 220;
+      quoteEl.style.textShadow =
+        '0 0 ' + qs + 'px rgba(225,48,28,' + clamp(0.3 + fi * 2.8, 0, 1) + '),' +
+        '0 0 ' + (qs * 2.6) + 'px rgba(155,24,14,' + clamp(0.18 + fi * 1.6, 0, 0.65) + ')';
+
+      for (var i = 0; i < decoLines.length; i++) {
+        decoLines[i].style.background = 'linear-gradient(90deg, transparent, rgba(225,48,30,' + clamp(0.75 + fi * 2.8, 0, 1) + '), transparent)';
+        decoLines[i].style.boxShadow = '0 0 ' + (12 + fi * 55) + 'px rgba(210,38,22,' + clamp(fi * 1.2, 0, 0.65) + ')';
+      }
+      decoLineCached = true;
+    } else if (decoLineCached) {
+      flashEl.style.background = 'transparent';
+      avatarEl.style.boxShadow = '';
+      quoteEl.style.textShadow = '';
+      for (var j = 0; j < decoLines.length; j++) {
+        decoLines[j].style.background = '';
+        decoLines[j].style.boxShadow = '';
+      }
+      decoLineCached = false;
+    }
+  }
+
+  /* ── Audio ── */
+  function tryAutoplay() {
+    bgAudio.volume = 0.55;
+    bgAudio.play().then(function () {
+      audioStarted = true;
+      isPlaying = true;
+      soundBtn.textContent = 'Mute';
+    }).catch(function () {});
+  }
+
+  function startAudio() {
+    if (audioStarted) return;
+    audioStarted = true;
+    bgAudio.volume = 0.55;
+    bgAudio.play().then(function () {
+      isPlaying = true;
+      soundBtn.textContent = 'Mute';
+    }).catch(function () {});
+  }
+
+  soundBtn.addEventListener('click', function () {
+    if (!audioStarted) { startAudio(); return; }
+    if (isPlaying) {
+      bgAudio.pause();
+      isPlaying = false;
+      soundBtn.textContent = 'Sound';
+    } else {
+      bgAudio.play().then(function () {
+        isPlaying = true;
+        soundBtn.textContent = 'Mute';
+      }).catch(function () {});
+    }
+  });
+
+  document.addEventListener('click', startAudio, { once: true });
+  document.addEventListener('touchstart', startAudio, { once: true });
+  document.addEventListener('keydown', startAudio, { once: true });
+
+  /* ── Resize ── */
+  function onResize() {
+    W = canvas.width = Math.max(1, window.innerWidth);
+    H = canvas.height = Math.max(1, window.innerHeight);
+    initClouds();
+    initFog();
+    initRain();
+    initReflection();
+  }
+
+  window.addEventListener('resize', onResize);
+
+  /* ── Main Render Loop ── */
+  function frame(now) {
+    if (W < 2 || H < 2) { requestAnimationFrame(frame); return; }
+
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, W, H);
+
+    /* Update */
+    updateClouds(now);
+    updateLightning(now);
+    updateEmbers();
+    updateAsh();
+    updateFog(now);
+    updateRain();
+    updateRipples();
+    updateFlashDOM();
+
+    /* Draw layers back-to-front */
+    drawAmbientSky();
+    drawClouds(now);
+    drawCloudGlow();
+    drawRedMist(now);
+    drawFlashCanvas();
+    drawFog();
+    drawRain();
+    drawLightning();
+    drawEmbers();
+    drawAsh();
+    drawReflection(now);
+    drawRipples();
+    drawVignette();
+
+    requestAnimationFrame(frame);
+  }
+
+  /* ── Init ── */
+  function init() {
+    onResize();
+    initEmbers();
+    initAsh();
+    nextStrike = performance.now() + rand(600, 2000);
+    tryAutoplay();
+    requestAnimationFrame(frame);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
