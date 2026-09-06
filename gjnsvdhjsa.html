@@ -289,6 +289,7 @@
     </style>
 </head>
 <body>
+
     <div id="bgPhoto"></div>
     <div id="bgOverlay"></div>
 
@@ -360,13 +361,6 @@
     </div>
 </div>
 
-<div class="rule-item">
-    <div class="rule-num">06</div>
-    <div class="rule-content">
-        <h3>Anti-Spam</h3>
-        <p>Users who spam the chat with emojis or multiple consecutive messages will receive a permanent XP ban.</p>
-    </div>
-</div>
 
             <div class="rules-footer">
                 <div class="rules-lang" role="tablist" aria-label="Rules language">
@@ -397,8 +391,7 @@
                     { h: "Mutual Respect", p: "Personal insults, excessively vulgar language, constant provocation, or harassment will not be tolerated." },
                     { h: "Respect for the Staff", p: "All staff members must be treated with respect. Disrespect or undermining staff may result in a ban." },
                     { h: "Transparency", p: "Bans longer than 10 hours must be accompanied by screenshot evidence. 1-hour bans are exempt." },
-                    { h: "Staff Impartiality", p: "Banning for personal reasons is strictly prohibited. Punishments must be fair and impartial." },
-                    { h: "Anti-Spam", p: "Users who spam the chat with emojis or multiple consecutive messages will receive a permanent XP ban." }
+                    { h: "Staff Impartiality", p: "Banning for personal reasons is strictly prohibited. Punishments must be fair and impartial." }
                 ]
             },
             ro: {
@@ -408,9 +401,8 @@
                     { h: "Respect reciproc", p: "Insultele personale, limbajul excesiv de vulgar, provocările constante sau hărțuirea nu vor fi tolerate." },
                     { h: "Respect față de staff", p: "Toți membrii staff-ului trebuie tratați cu respect. Disprețul sau subminarea staff-ului poate duce la ban." },
                     { h: "Transparență", p: "Banurile mai lungi de 10 ore trebuie însoțite de dovezi (screenshot). Banurile de 1 oră sunt exceptate." },
-                    { h: "Imparțialitatea staff-ului", p: "Banarea din motive personale este strict interzisă. Sancțiunile trebuie să fie corecte și imparțiale." },
-                    { h: "Anti-Spam", p: "Utilizatorii care fac spam în chat cu emoji-uri sau mesaje consecutive vor primi XP ban permanent." }
-                ]
+                    { h: "Imparțialitatea staff-ului", p: "Banarea din motive personale este strict interzisă. Sancțiunile trebuie să fie corecte și imparțiale." }
+					]
             },
             it: {
                 title: "Regole della Community",
@@ -419,8 +411,7 @@
                     { h: "Rispetto reciproco", p: "Insulti personali, linguaggio eccessivamente volgare, provocazioni continue o molestie non saranno tollerati." },
                     { h: "Rispetto per lo staff", p: "Tutti i membri dello staff devono essere trattati con rispetto. Mancanza di rispetto o sabotaggio può portare al ban." },
                     { h: "Trasparenza", p: "I ban superiori a 10 ore devono essere accompagnati da prove (screenshot). I ban di 1 ora sono esenti." },
-                    { h: "Imparzialità dello staff", p: "Bannare per motivi personali è severamente vietato. Le punizioni devono essere eque e imparziali." },
-                    { h: "Anti-Spam", p: "Gli utenti che fanno spam in chat con emoji o messaggi consecutivi riceveranno un XP ban permanente." }
+                    { h: "Imparzialità dello staff", p: "Bannare per motivi personali è severamente vietato. Le punizioni devono essere eque e imparziali." }
                 ]
             },
             es: {
@@ -430,9 +421,8 @@
                     { h: "Respeto mutuo", p: "No se tolerarán insultos personales, lenguaje excesivamente vulgar, provocación constante ni acoso." },
                     { h: "Respeto al staff", p: "Todo el staff debe ser tratado con respeto. La falta de respeto o el sabotaje puede resultar en ban." },
                     { h: "Transparencia", p: "Los bans de más de 10 horas deben ir acompañados de pruebas (capturas). Los bans de 1 hora están exentos." },
-                    { h: "Imparcialidad del staff", p: "Está estrictamente prohibido banear por motivos personales. Los castigos deben ser justos e imparciales." },
-                    { h: "Anti-Spam", p: "Los usuarios que hagan spam en el chat con emojis o mensajes consecutivos recibirán un XP ban permanente." }
-                ]
+                    { h: "Imparcialidad del staff", p: "Está estrictamente prohibido banear por motivos personales. Los castigos deben ser justos e imparciales." }
+					]
             }
         };
 
@@ -570,5 +560,37 @@
             sceneEl.classList.toggle("paused", document.hidden);
         });
     </script>
+	<script>
+function keepLogoBelowMoon() {
+    const moon = document.querySelector('.moon-container');
+    const logo = document.querySelector('.logo-area');
+
+    if (!moon || !logo) return;
+
+    // Păstrăm poziția originală
+    logo.style.transform = 'translateY(-50%)';
+
+    const moonRect = moon.getBoundingClientRect();
+    const logoRect = logo.getBoundingClientRect();
+
+    // Spațiul dintre lună și text
+    const gap = 20;
+
+    // Dacă logo-ul intră peste lună, îl coborâm doar cât trebuie
+    if (logoRect.top < moonRect.bottom + gap) {
+        const moveDown = moonRect.bottom + gap - logoRect.top;
+
+        logo.style.transform =
+            `translateY(calc(-50% + ${moveDown}px))`;
+    }
+}
+
+window.addEventListener('load', keepLogoBelowMoon);
+window.addEventListener('resize', keepLogoBelowMoon);
+
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', keepLogoBelowMoon);
+}
+</script>
 </body>
 </html>
