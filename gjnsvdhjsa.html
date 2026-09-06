@@ -41,6 +41,19 @@
         @keyframes borderFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         @keyframes panelSheen { 0% { transform: translateX(-45%) rotate(8deg); opacity: 0; } 12% { opacity: 0.7; } 45% { opacity: 0.08; } 100% { transform: translateX(45%) rotate(8deg); opacity: 0; } }
         @keyframes floatMoon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+		@keyframes textShimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    55% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
 
         .scene {
             position: relative; width: 100vw; height: 100vh; overflow: hidden;
@@ -49,12 +62,15 @@
 
         /* ── Moon (Imagine Nouă Păstrată) ────────────────────────────────── */
         .moon-container {
-            position: absolute; top: 5%; left: 18%; 
-            width: 220px; height: 220px;
-            z-index: 2;
-            pointer-events: none;
-            animation: floatMoon 6s ease-in-out infinite;
-        }
+    position: absolute;
+    top: 26%;
+    left: 3%;
+    width: 220px;
+    height: 220px;
+    z-index: 2;
+    pointer-events: none;
+    animation: floatMoon 6s ease-in-out infinite;
+}
         .moon-img {
             width: 100%; height: 100%;
             object-fit: contain;
@@ -227,9 +243,10 @@
             .moon-container { left: 50%; transform: translateX(-50%); top: 3%; animation: none; }
         }
         @media (max-aspect-ratio: 3/4) {
-            .moon-container, .fog { display: none !important; }
+            .moon, .moon-glow, .fog { display: none !important; }
             .rules-panel { display: none !important; }
             .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+            .logo-sub { justify-content: center; }
         }
         @media (min-aspect-ratio: 10/9) and (max-aspect-ratio: 16/10) {
             .moon-container, .fog { display: none !important; }
