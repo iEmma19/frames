@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)https://iemma19.github.io/frames/gjnsvdhjsa.html -->
+<html lang="es"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style>body {transition: opacity ease-in 0.2s; } 
+body[unresolved] {opacity: 0; display: block; overflow: hidden; position: relative; } 
+</style>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociale - International Room</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <!-- Fonturi moderne si elegante -->
+    <link href="./Sociale1 - International Room_files/css2" rel="stylesheet">
+    <style>
+        :root {
+            --glass-bg: rgba(15, 25, 40, 0.45);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.65);
+            --accent-glow: #4a90e2;
+            --shimmer-a: rgba(255, 255, 255, 0.72);
+            --shimmer-b: rgba(125, 211, 252, 0.95);
+            --shimmer-c: rgba(255, 255, 255, 0.96);
+            --edge-glow: rgba(96, 165, 250, 0.55);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html, body {
+            width: 100%; height: 100%; overflow: hidden;
+            font-family: 'Outfit', sans-serif; color: var(--text-primary);
+            background: transparent;
+        }
+
+#bgPhoto { position: fixed; inset: 0; background: url("https://xatimg.com/image/hrbEmuedBb7M.png") center/cover no-repeat; z-index: 0; }        #bgOverlay { position: fixed; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(12, 19, 37, 0.15), rgba(8, 13, 24, 0.78) 55%, rgba(8, 13, 24, 0.92)); z-index: 1; }
+
+        @keyframes textShimmer { 0% { background-position: 0% 50%; } 55% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes borderFlow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        @keyframes panelSheen { 0% { transform: translateX(-45%) rotate(8deg); opacity: 0; } 12% { opacity: 0.7; } 45% { opacity: 0.08; } 100% { transform: translateX(45%) rotate(8deg); opacity: 0; } }
+        @keyframes glowPulse { 0%, 100% { opacity: 0.22; } 55% { opacity: 0.45; } }
+
+        .scene {
+            position: relative; width: 100vw; height: 100vh; overflow: hidden;
+            z-index: 2;
+        }
+
+        /* ── Moon (Imagine Nouă Păstrată) ────────────────────────────────── */
+        .moon-container {
+    position: absolute;
+    top: 26%;
+    left: 3%;
+    width: 220px;
+    height: 220px;
+    z-index: 2;
+    pointer-events: none;
+    animation: floatMoon 6s ease-in-out infinite;
+}
+        .moon-img {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 30px rgba(165, 180, 252, 0.4));
+        }
+
+        /* ── Fog layers ─────── */
+        .fog { position: absolute; pointer-events: none; filter: blur(35px); z-index: 3; }
+        .fog-1 { top: 2%; left: -5%; width: 60%; height: 150px; background: radial-gradient(ellipse at 50% 50%, rgba(140, 150, 180, 0.25) 0%, transparent 70%); animation: fogFloat1 25s ease-in-out infinite; }
+        .fog-2 { top: 10%; left: 30%; width: 55%; height: 120px; background: radial-gradient(ellipse at 50% 50%, rgba(160, 165, 195, 0.22) 0%, transparent 65%); animation: fogFloat2 30s ease-in-out infinite; }
+        .fog-3 { top: 6%; left: 10%; width: 50%; height: 180px; background: radial-gradient(ellipse at 50% 50%, rgba(120, 130, 165, 0.18) 0%, transparent 65%); z-index: 4; animation: fogFloat3 20s ease-in-out infinite; }
+
+        @keyframes fogFloat1 { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(200px); } }
+        @keyframes fogFloat2 { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-250px); } }
+        @keyframes fogFloat3 { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(180px); } }
+
+        /* ── Stars ───────────────────────────────── */
+        .stars, #shootingStars { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+        .star { position: absolute; border-radius: 50%; background: #fff; will-change: opacity, transform; }
+        @keyframes twinkle { 0%, 100% { opacity: var(--base-opacity, 0.3); } 50% { opacity: var(--peak-opacity, 1); } }
+
+        /* ── Shooting star ──────────────────────── */
+        .shooting-star {
+            position: absolute; width: 80px; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8));
+            border-radius: 1px; opacity: 0; z-index: 2; transform: rotate(35deg);
+            animation: shoot 1.2s ease-out forwards;
+        }
+        .shooting-star::before {
+            content: ""; position: absolute; right: 0; top: -1px; width: 4px; height: 3px;
+            border-radius: 50%; background: #fff; box-shadow: 0 0 6px 2px rgba(200, 210, 255, 0.6);
+        }
+        @keyframes shoot { 0% { transform: rotate(var(--angle, 35deg)) translateX(0); opacity: 0; } 5% { opacity: 1; } 70% { opacity: 0.6; } 100% { transform: rotate(var(--angle, 35deg)) translateX(350px); opacity: 0; } }
+
+        /* ── Lightning ──────────────────────── */
+        .lightning-container { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+        .flash-overlay { position: absolute; inset: 0; background: radial-gradient(circle at 50% 20%, rgba(160, 180, 255, 0.25), transparent 70%); opacity: 0; pointer-events: none; z-index: 6; transition: opacity 0.05s ease-out; }
+
+        /* ── Chat backdrop (STRUCTURA ORIGINALĂ PĂSTRATĂ) ───────────────── */
+        
+
+        
+        .logo-tabs .logo-text {
+            font-family: 'Outfit', sans-serif; font-size: 0.8rem; letter-spacing: 2px; font-weight: 700;
+            color: #fff;
+            text-shadow: 0 0 16px rgba(74, 144, 226, 0.22);
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ── Panou Stanga: Logo ─────────────────────────────── */
+        .logo-area { 
+            position:absolute; left:80px; top:50%; transform:translateY(-50%); 
+            z-index:15; text-align:left; color:#fff; 
+        }
+        .eyebrow {
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #ffffff;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+      h1.logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 5vw, 72px);
+    font-weight: 600;
+    line-height: 0.9;
+    background: linear-gradient(90deg, var(--shimmer-a) 0%, rgb(85 5 255) 35%, var(--shimmer-c) 50%, rgb(144 24 180 / 95%) 65%, var(--shimmer-a) 100%);
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textShimmer 75s ease-in-out infinite;
+    text-shadow: 0 0 40px rgba(74, 144, 226, 0.32), 0 0 90px rgba(96, 165, 250, 0.12);
+    margin-bottom: 10px;
+}
+        .logo-sub {
+    font-size: 1rem;
+    font-weight: 300;
+    color: rgb(255 255 255);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+        .mewbots-icon { 
+            width: 18px; height: 18px; stroke: var(--accent-glow); 
+            fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; 
+        }
+ /* ── Chat backdrop (STRUCTURA ORIGINALĂ PĂSTRATĂ) ───────────────── */
+        .chat-backdrop {
+            position: absolute; top: 93px; left: 50.25%; transform: translateX(-50%);
+            width: 728px; height: 486px; border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1); /* Bordura de sticlă */
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            z-index: 10; pointer-events: none; overflow: hidden; 
+            background-image: url('https://xatimg.com/image/aeKVoiOr5Y6l.png');
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            position: absolute;
+            
+        }
+        /* ── Panou Dreapta: Reguli (Sticla) ─────────────────── */
+              
+element.style {
+}
+.rules-panel {
+    position: absolute;
+    top: 472px;
+    right: 9%;
+    transform: translateY(-50%) perspective(800px) rotateY(-10deg);
+    transform-origin: left center;
+    width: clamp(240px, 18vw, 310px);
+    z-index: 15;
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+    background: rgb(15 25 40 / 43%);
+    background: linear-gradient(#004, #4a0675);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 24px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+    isolation: isolate;
+    pointer-events: auto;
+    transition: box-shadow 0.35s ease;
+}
+        .rules-panel:hover { transform: translateY(-50%) perspective(800px) rotateY(-6deg) translateZ(0); box-shadow: 0 28px 80px rgba(0,0,0,0.48), inset 0 1px 1px rgba(255,255,255,0.1); }
+        .rules-panel > * { position: relative; z-index: 2; }
+        .rules-panel::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            background: linear-gradient(110deg, rgba(96, 165, 250, 0.0), var(--edge-glow), rgba(255, 255, 255, 0.14), var(--edge-glow), rgba(96, 165, 250, 0.0));
+            background-size: 280% 280%;
+            animation: borderFlow 9.2s ease-in-out infinite;
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            opacity: 0.9;
+            z-index: 0;
+        }
+        .rules-panel::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            top: -60%;
+            left: -60%;
+            width: 220%;
+            height: 220%;
+            background: linear-gradient(110deg, transparent 42%, rgba(255, 255, 255, 0.07) 50%, transparent 58%);
+            mix-blend-mode: screen;
+            animation: panelSheen 7.8s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .rules-header {
+            font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic;
+            margin-bottom: 24px;
+            background: linear-gradient(90deg, var(--shimmer-a) 0%, var(--shimmer-b) 35%, var(--shimmer-c) 50%, var(--shimmer-b) 65%, var(--shimmer-a) 100%);
+            background-size: 220% 100%;
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent;
+            animation: textShimmer 90s ease-in-out infinite;
+            text-shadow: 0 0 16px rgba(74, 144, 226, 0.22);
+        }
+        .rules-lang {
+            display: flex;
+            gap: 6px;
+            justify-content: center;
+            margin: 0;
+            pointer-events: auto;
+            position: relative;
+            z-index: 3;
+        }
+        .lang-btn {
+            appearance: none;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(15, 25, 40, 0.35);
+            color: rgba(255,255,255,0.85);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 650;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            backdrop-filter: blur(10px) saturate(140%);
+            -webkit-backdrop-filter: blur(10px) saturate(140%);
+            text-decoration: none;
+            line-height: 1;
+        }
+        .lang-btn.active {
+            background: rgba(74, 144, 226, 0.22);
+            border-color: rgba(74, 144, 226, 0.4);
+            color: #fff;
+            box-shadow: 0 0 0 1px rgba(74, 144, 226, 0.18), 0 10px 24px rgba(0,0,0,0.28);
+        }
+        .rule-item { display: flex; gap: 14px; margin-bottom: 20px; transition: transform 0.3s ease; }
+        .rule-item:hover { transform: none; }
+        .rule-num {
+            font-size: 1rem; font-weight: 800; min-width: 20px; letter-spacing: 0.02em;
+            background: linear-gradient(90deg, rgba(96, 165, 250, 0.65) 0%, var(--shimmer-b) 45%, rgba(255, 255, 255, 0.85) 55%, var(--shimmer-b) 70%, rgba(96, 165, 250, 0.55) 100%);
+            background-size: 220% 100%;
+            -webkit-background-clip: text; background-clip: text;
+            color: transparent;
+            animation: textShimmer 105s ease-in-out infinite;
+            text-shadow: 0 0 14px rgba(96, 165, 250, 0.25);
+            opacity: 0.95;
+        }
+        .rule-content p { font-size: 0.75rem; font-weight: 300; line-height: 1.5; color: var(--text-secondary); }
+        .rules-footer { margin-top: auto; padding-top: 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; border-top: 1px solid rgba(255,255,255,0.08); }
+        .rule-credit { text-align: right; font-size: 0.7rem; letter-spacing: 2px; color: rgba(255,255,255,0.3); }
+
+
+        @media (prefers-reduced-motion: reduce) {
+            .rules-panel, .rules-panel::before, .rules-panel::after,
+            .logo-tabs .logo-text, h1.logo-text, .rules-header, .rule-num { animation: none !important; transition: none !important; }
+            .logo-tabs .logo-text, h1.logo-text, .rules-header, .rule-num { background-position: 50% 50% !important; }
+            .rules-panel::before { background-position: 50% 50% !important; }
+            .rules-panel::after { transform: translateX(0) rotate(8deg) !important; opacity: 0.12 !important; }
+        }
+        html { --fx-play: running; }
+        .eco { --fx-play: paused; }
+        .eco.fx-active { --fx-play: running; }
+        .fog, .star, .shooting-star,
+        .rules-panel::before, .rules-panel::after,
+        h1.logo-text, .rules-header, .rule-num { animation-play-state: var(--fx-play) !important; }
+
+        /* ── Responsive ─────────────────────────────────── */
+        @media (max-width: 960px) {
+            .rules-panel { display: none; }
+            .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+            .logo-sub { justify-content: center; }
+        }
+        @media (max-aspect-ratio: 3/4) {
+            .moon, .moon-glow, .fog { display: none !important; }
+            .rules-panel { display: none !important; }
+            .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+            .logo-sub { justify-content: center; }
+        }
+        @media (min-aspect-ratio: 10/9) and (max-aspect-ratio: 16/10) {
+            .moon, .moon-glow, .fog { display: none !important; }
+            .rules-panel { display: none !important; }
+            .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+            .logo-sub { justify-content: center; }
+        }
+        .paused, .paused *, .paused::before, .paused::after, .paused *::before, .paused *::after { animation-play-state: paused !important; }
+    </style>
+</head>
+<body>
+
+    <div id="bgPhoto"></div>
+    <div id="bgOverlay"></div>
+
+    <div class="scene">
+        <!-- Moon (Imagine Nouă Păstrată) -->
+        <div class="moon-container" aria-hidden="true">
+            <img src="https://xatimg.com/image/BylwdxZGchGf.png" alt="Moon" class="moon-img">
+        </div>
+
+        <div class="stars" id="stars" aria-hidden="true"><div class="star" style="width: 1px; height: 1px; top: 54.2753%; left: 90.8663%; --base-opacity: 0.2582502655901949; --peak-opacity: 1; animation: 2.5s ease-in-out 5.2058s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 42.79%; left: 39.3891%; --base-opacity: 0.264463281730824; --peak-opacity: 0.9231015320787788; animation: 1.8s ease-in-out 2.80591s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 73.2645%; left: 19.638%; --base-opacity: 0.48378194187539025; --peak-opacity: 1; animation: 2.5s ease-in-out 5.00503s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 49.8377%; left: 20.7619%; --base-opacity: 0.2699200837979422; --peak-opacity: 0.9758680334942643; opacity: 0.26992;"></div><div class="star" style="width: 1px; height: 1px; top: 67.8439%; left: 78.9743%; --base-opacity: 0.3421347728244306; --peak-opacity: 1; animation: 1.8s ease-in-out 0.645271s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 3.5126%; left: 98.763%; --base-opacity: 0.49999722876743036; --peak-opacity: 1; opacity: 0.499997;"></div><div class="star" style="width: 1px; height: 1px; top: 66.1498%; left: 4.81877%; --base-opacity: 0.4325813824786998; --peak-opacity: 1; opacity: 0.432581;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 45.2293%; left: 44.5685%; --base-opacity: 0.4503225823672868; --peak-opacity: 1; opacity: 0.450323;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 36.4664%; left: 5.9675%; --base-opacity: 0.2984739429319874; --peak-opacity: 0.8098546403285849; opacity: 0.298474;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 70.4785%; left: 7.68613%; --base-opacity: 0.36529894128567597; --peak-opacity: 1; animation: 2.5s ease-in-out 5.43967s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 10.4234%; left: 99.0446%; --base-opacity: 0.2376844655772793; --peak-opacity: 0.8982849485220004; animation: 1.8s ease-in-out 3.1389s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 57.739%; left: 26.709%; --base-opacity: 0.47833581413827064; --peak-opacity: 1; opacity: 0.478336;"></div><div class="star" style="width: 1px; height: 1px; top: 38.0779%; left: 75.0226%; --base-opacity: 0.4262503638862999; --peak-opacity: 0.9567427080321209; animation: 4s ease-in-out 2.8808s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 73.8356%; left: 42.695%; --base-opacity: 0.41897682323486435; --peak-opacity: 1; animation: 4s ease-in-out 3.95546s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 46.1048%; left: 49.1554%; --base-opacity: 0.2234973665674689; --peak-opacity: 0.8609755317259307; animation: 2.5s ease-in-out 5.01888s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 52.2046%; left: 22.0676%; --base-opacity: 0.24108238560390324; --peak-opacity: 1; animation: 4s ease-in-out 1.02243s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 52.4862%; left: 28.6949%; --base-opacity: 0.34853548610410867; --peak-opacity: 0.8932605073339563; animation: 1.8s ease-in-out 1.43364s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 23.1112%; left: 28.4802%; --base-opacity: 0.49341007794614494; --peak-opacity: 1; opacity: 0.49341;"></div><div class="star" style="width: 1px; height: 1px; top: 21.3992%; left: 64.8485%; --base-opacity: 0.44516966132447006; --peak-opacity: 1; animation: 4s ease-in-out 2.23204s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 56.1653%; left: 22.5687%; --base-opacity: 0.2585143963863009; --peak-opacity: 0.9820060960292804; animation: 1.8s ease-in-out 2.04113s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 32.8496%; left: 65.6099%; --base-opacity: 0.47476542706179015; --peak-opacity: 1; animation: 4s ease-in-out 2.72724s infinite normal none running twinkle;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 38.6731%; left: 18.6229%; --base-opacity: 0.3549167256908268; --peak-opacity: 1; opacity: 0.354917; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 4.00229px;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 28.7728%; left: 70.7103%; --base-opacity: 0.3744396059929225; --peak-opacity: 1; animation: 1.8s ease-in-out 3.95643s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 26.5219%; left: 93.5581%; --base-opacity: 0.30825339590445416; --peak-opacity: 1; opacity: 0.308253;"></div><div class="star" style="width: 1px; height: 1px; top: 68.9308%; left: 82.8108%; --base-opacity: 0.4770761377591881; --peak-opacity: 1; animation: 4s ease-in-out 3.46225s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 73.7929%; left: 16.0836%; --base-opacity: 0.3187419519813124; --peak-opacity: 1; opacity: 0.318742;"></div><div class="star" style="width: 1px; height: 1px; top: 4.10849%; left: 4.43244%; --base-opacity: 0.3229533659335519; --peak-opacity: 0.9576741274983414; animation: 1.8s ease-in-out 2.73495s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 52.4272%; left: 34.3423%; --base-opacity: 0.45771566281315745; --peak-opacity: 1; animation: 1.8s ease-in-out 2.96337s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 57.5746%; left: 29.3258%; --base-opacity: 0.3770482237263809; --peak-opacity: 1; animation: 4s ease-in-out 3.05821s infinite normal none running twinkle;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 63.8859%; left: 84.4701%; --base-opacity: 0.4179863767081174; --peak-opacity: 1; opacity: 0.417986; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 2.10553px;"></div><div class="star" style="width: 1px; height: 1px; top: 51.4616%; left: 18.8463%; --base-opacity: 0.3353921823382034; --peak-opacity: 1; animation: 1.8s ease-in-out 0.77574s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 62.1628%; left: 6.94684%; --base-opacity: 0.40329909159681987; --peak-opacity: 1; opacity: 0.403299;"></div><div class="star" style="width: 1px; height: 1px; top: 50.7434%; left: 22.6596%; --base-opacity: 0.48574505136272444; --peak-opacity: 1; animation: 2.5s ease-in-out 4.75505s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 56.9381%; left: 83.1583%; --base-opacity: 0.3282766412303717; --peak-opacity: 0.9176518838428298; animation: 4s ease-in-out 1.84226s infinite normal none running twinkle;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 33.8865%; left: 61.2652%; --base-opacity: 0.22151081558087926; --peak-opacity: 0.8828239055912025; animation: 4s ease-in-out 4.7734s infinite normal none running twinkle; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 3.85132px;"></div><div class="star" style="width: 1px; height: 1px; top: 73.2872%; left: 96.1079%; --base-opacity: 0.40063365348851654; --peak-opacity: 1; animation: 1.8s ease-in-out 3.02575s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 49.9345%; left: 40.2167%; --base-opacity: 0.4642512926292959; --peak-opacity: 1; animation: 2.5s ease-in-out 0.904694s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 25.4246%; left: 49.5223%; --base-opacity: 0.41653306975920434; --peak-opacity: 1; animation: 2.5s ease-in-out 4.28367s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 7.29379%; left: 82.815%; --base-opacity: 0.26116928058265565; --peak-opacity: 0.9517696512143563; opacity: 0.261169;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 48.3026%; left: 82.9858%; --base-opacity: 0.2282873237580729; --peak-opacity: 0.9982138470440155; opacity: 0.228287;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 7.79529%; left: 25.4113%; --base-opacity: 0.22286153276610307; --peak-opacity: 0.9716370186779997; opacity: 0.222862; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 2.94986px;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 77.1948%; left: 83.7636%; --base-opacity: 0.214882247439752; --peak-opacity: 0.8346956610533669; animation: 2.5s ease-in-out 5.38241s infinite normal none running twinkle; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 2.5932px;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 41.8434%; left: 80.8119%; --base-opacity: 0.308444186610529; --peak-opacity: 0.9058398792845417; opacity: 0.308444;"></div><div class="star" style="width: 1px; height: 1px; top: 49.9707%; left: 58.8728%; --base-opacity: 0.44491692804144656; --peak-opacity: 1; animation: 2.5s ease-in-out 0.189973s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 79.0115%; left: 53.6428%; --base-opacity: 0.3843383968043005; --peak-opacity: 0.9940298741227557; opacity: 0.384338;"></div><div class="star" style="width: 1px; height: 1px; top: 35.8547%; left: 96.819%; --base-opacity: 0.24032922296817835; --peak-opacity: 0.8704917171427279; opacity: 0.240329;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 59.3162%; left: 45.5803%; --base-opacity: 0.33617346741915155; --peak-opacity: 1; animation: 1.8s ease-in-out 1.95125s infinite normal none running twinkle; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 2.1364px;"></div><div class="star" style="width: 1px; height: 1px; top: 14.1673%; left: 89.4527%; --base-opacity: 0.4403172683551135; --peak-opacity: 1; animation: 4s ease-in-out 5.48292s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 78.8922%; left: 18.5782%; --base-opacity: 0.44007501734172283; --peak-opacity: 1; opacity: 0.440075;"></div><div class="star" style="width: 1px; height: 1px; top: 18.0214%; left: 38.9131%; --base-opacity: 0.4763612613212969; --peak-opacity: 1; animation: 2.5s ease-in-out 5.68076s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 57.0867%; left: 29.3468%; --base-opacity: 0.2965711646057804; --peak-opacity: 1; opacity: 0.296571;"></div><div class="star" style="width: 1px; height: 1px; top: 19.1157%; left: 44.0957%; --base-opacity: 0.296694613355095; --peak-opacity: 0.8546719274034577; animation: 4s ease-in-out 1.25924s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 53.7449%; left: 77.0009%; --base-opacity: 0.4732685334898492; --peak-opacity: 1; animation: 2.5s ease-in-out 2.06793s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 19.7405%; left: 35.2325%; --base-opacity: 0.32291123526773857; --peak-opacity: 0.8335599934418823; opacity: 0.322911;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 48.6719%; left: 64.8922%; --base-opacity: 0.23541633228367506; --peak-opacity: 0.983959608190623; animation: 1.8s ease-in-out 1.09556s infinite normal none running twinkle;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 66.4275%; left: 40.3215%; --base-opacity: 0.2137717270247264; --peak-opacity: 0.8817674078792231; animation: 1.8s ease-in-out 1.58425s infinite normal none running twinkle; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 4.18966px;"></div><div class="star" style="width: 1px; height: 1px; top: 56.5657%; left: 26.1462%; --base-opacity: 0.23003462832581567; --peak-opacity: 0.9924081385542778; opacity: 0.230035;"></div><div class="star" style="width: 1px; height: 1px; top: 26.108%; left: 44.6978%; --base-opacity: 0.40514269249664936; --peak-opacity: 1; opacity: 0.405143;"></div><div class="star" style="width: 1px; height: 1px; top: 41.9072%; left: 72.1133%; --base-opacity: 0.2465953999999475; --peak-opacity: 0.7713704422197989; animation: 4s ease-in-out 5.29172s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 45.008%; left: 31.1639%; --base-opacity: 0.4101126469292078; --peak-opacity: 1; animation: 4s ease-in-out 1.53446s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 4.6739%; left: 83.9194%; --base-opacity: 0.28302298520029756; --peak-opacity: 0.7939342109503483; opacity: 0.283023;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 49.3389%; left: 32.0697%; --base-opacity: 0.2000698140187702; --peak-opacity: 0.7008414804064956; opacity: 0.20007; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 2.26793px;"></div><div class="star" style="width: 1px; height: 1px; top: 63.7166%; left: 14.5716%; --base-opacity: 0.24185548334512996; --peak-opacity: 0.9684998173871804; opacity: 0.241855;"></div><div class="star" style="width: 1px; height: 1px; top: 20.2205%; left: 71.8237%; --base-opacity: 0.204262219332917; --peak-opacity: 0.8315960074093915; animation: 1.8s ease-in-out 3.43221s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 3.79884%; left: 49.8867%; --base-opacity: 0.31359097021071053; --peak-opacity: 1; opacity: 0.313591;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 62.3995%; left: 9.75458%; --base-opacity: 0.4818169064837638; --peak-opacity: 1; animation: 4s ease-in-out 0.852119s infinite normal none running twinkle; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 2.89323px;"></div><div class="star" style="width: 1px; height: 1px; top: 59.0655%; left: 3.01955%; --base-opacity: 0.35285073616536056; --peak-opacity: 1; opacity: 0.352851;"></div><div class="star" style="width: 1px; height: 1px; top: 42.4681%; left: 2.24749%; --base-opacity: 0.2786703401796715; --peak-opacity: 0.7841725336979557; animation: 2.5s ease-in-out 4.67553s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 47.5637%; left: 79.9393%; --base-opacity: 0.3465880130935909; --peak-opacity: 1; animation: 4s ease-in-out 2.28059s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 61.5393%; left: 43.4333%; --base-opacity: 0.4573483622236693; --peak-opacity: 1; opacity: 0.457348;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 73.7935%; left: 66.1292%; --base-opacity: 0.31753237797884293; --peak-opacity: 0.9456617298546394; animation: 4s ease-in-out 0.376939s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 43.7163%; left: 50.1789%; --base-opacity: 0.21613265031529386; --peak-opacity: 0.8145831131732768; opacity: 0.216133;"></div><div class="star" style="width: 1px; height: 1px; top: 52.0787%; left: 10.3666%; --base-opacity: 0.30798677432786475; --peak-opacity: 1; opacity: 0.307987;"></div><div class="star" style="width: 1px; height: 1px; top: 32.0017%; left: 30.0027%; --base-opacity: 0.3749899733258112; --peak-opacity: 0.9328136355425467; opacity: 0.37499;"></div><div class="star" style="width: 1px; height: 1px; top: 16.6133%; left: 98.0072%; --base-opacity: 0.34438264506011995; --peak-opacity: 1; animation: 4s ease-in-out 3.97734s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 44.2726%; left: 90.6696%; --base-opacity: 0.3869741111296223; --peak-opacity: 0.9796151186355858; opacity: 0.386974;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 24.7842%; left: 49.924%; --base-opacity: 0.33348385571391914; --peak-opacity: 1; animation: 4s ease-in-out 4.44361s infinite normal none running twinkle; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 3.93387px;"></div><div class="star" style="width: 1px; height: 1px; top: 34.8837%; left: 82.7959%; --base-opacity: 0.326039421720399; --peak-opacity: 1; opacity: 0.326039;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 28.7395%; left: 85.4883%; --base-opacity: 0.46254493599337154; --peak-opacity: 1; animation: 4s ease-in-out 3.49752s infinite normal none running twinkle; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 4.30732px;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 16.5029%; left: 92.5309%; --base-opacity: 0.30593816934665524; --peak-opacity: 1; opacity: 0.305938;"></div><div class="star" style="width: 1px; height: 1px; top: 25.644%; left: 84.6249%; --base-opacity: 0.30519069272850596; --peak-opacity: 0.9875158633420434; animation: 4s ease-in-out 2.61784s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 28.3377%; left: 74.8329%; --base-opacity: 0.2957858599824239; --peak-opacity: 1; animation: 4s ease-in-out 4.85371s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 70.2683%; left: 47.7862%; --base-opacity: 0.22367081200839353; --peak-opacity: 0.8052734821436067; animation: 2.5s ease-in-out 0.689133s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 31.2543%; left: 48.6535%; --base-opacity: 0.4859062452687725; --peak-opacity: 1; animation: 2.5s ease-in-out 5.64059s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 38.2633%; left: 22.7331%; --base-opacity: 0.2441074473165781; --peak-opacity: 0.8833137197803409; opacity: 0.244107;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 13.5869%; left: 83.1674%; --base-opacity: 0.4989826026194611; --peak-opacity: 1; animation: 1.8s ease-in-out 0.712925s infinite normal none running twinkle; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 2.25495px;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 33.4624%; left: 95.7463%; --base-opacity: 0.20151120665894282; --peak-opacity: 0.8948929767539588; opacity: 0.201511;"></div><div class="star" style="width: 1px; height: 1px; top: 36.6573%; left: 99.1792%; --base-opacity: 0.22655709898377493; --peak-opacity: 0.8545522593566901; animation: 4s ease-in-out 3.46597s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 55.0011%; left: 44.73%; --base-opacity: 0.4552063832633993; --peak-opacity: 1; animation: 4s ease-in-out 5.13322s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 39.5949%; left: 69.6517%; --base-opacity: 0.33727115758708615; --peak-opacity: 0.838521563314922; opacity: 0.337271;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 78.3836%; left: 33.4575%; --base-opacity: 0.20233933584964703; --peak-opacity: 0.77785678906988; opacity: 0.202339;"></div><div class="star" style="width: 1px; height: 1px; top: 44.5944%; left: 40.8834%; --base-opacity: 0.4333797631310954; --peak-opacity: 1; animation: 1.8s ease-in-out 5.59851s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 19.5006%; left: 72.2532%; --base-opacity: 0.4346269621191866; --peak-opacity: 1; opacity: 0.434627;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 18.5292%; left: 81.852%; --base-opacity: 0.32913132262325584; --peak-opacity: 1; opacity: 0.329131;"></div><div class="star" style="width: 1px; height: 1px; top: 69.3269%; left: 62.6636%; --base-opacity: 0.28457385698461635; --peak-opacity: 1; animation: 1.8s ease-in-out 0.26027s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 29.3842%; left: 67.0516%; --base-opacity: 0.35843569223788907; --peak-opacity: 0.9355021976521278; opacity: 0.358436;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 49.4628%; left: 83.7328%; --base-opacity: 0.4545002532573469; --peak-opacity: 1; animation: 4s ease-in-out 5.17671s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 9.1978%; left: 14.8494%; --base-opacity: 0.22539512535333708; --peak-opacity: 0.791313700729936; animation: 2.5s ease-in-out 3.05512s infinite normal none running twinkle;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 12.003%; left: 37.7328%; --base-opacity: 0.4506334048242594; --peak-opacity: 1; animation: 1.8s ease-in-out 4.62063s infinite normal none running twinkle; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 3.08631px;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 35.133%; left: 75.8043%; --base-opacity: 0.35156291579783183; --peak-opacity: 0.8855276665932441; animation: 1.8s ease-in-out 5.45584s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 54.407%; left: 88.185%; --base-opacity: 0.44448542677119873; --peak-opacity: 1; animation: 1.8s ease-in-out 5.86285s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 33.9747%; left: 64.3962%; --base-opacity: 0.3063816352732327; --peak-opacity: 0.8525185401255904; animation: 4s ease-in-out 2.83227s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 65.3068%; left: 69.5224%; --base-opacity: 0.2550629810957416; --peak-opacity: 1; animation: 1.8s ease-in-out 5.78697s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 77.6122%; left: 38.9506%; --base-opacity: 0.27878647502682175; --peak-opacity: 0.8192497567400939; animation: 1.8s ease-in-out 3.40274s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 21.4308%; left: 26.8756%; --base-opacity: 0.30139558132085864; --peak-opacity: 1; opacity: 0.301396;"></div><div class="star" style="width: 2.5px; height: 2.5px; top: 35.5254%; left: 16.3214%; --base-opacity: 0.4799371775198135; --peak-opacity: 1; animation: 4s ease-in-out 1.65833s infinite normal none running twinkle; box-shadow: rgba(180, 190, 255, 0.5) 0px 0px 3.47398px;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 61.4089%; left: 12.8258%; --base-opacity: 0.25324176862515235; --peak-opacity: 0.7668282458050357; animation: 1.8s ease-in-out 1.85645s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 66.0924%; left: 23.8795%; --base-opacity: 0.48591205418627226; --peak-opacity: 1; opacity: 0.485912;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 63.9266%; left: 10.8829%; --base-opacity: 0.25605135204404034; --peak-opacity: 0.9807855173952974; animation: 1.8s ease-in-out 5.59807s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 39.4166%; left: 33.8464%; --base-opacity: 0.3392399223118857; --peak-opacity: 0.9657607290876997; opacity: 0.33924;"></div><div class="star" style="width: 1px; height: 1px; top: 13.7463%; left: 70.5242%; --base-opacity: 0.3772311100321929; --peak-opacity: 0.9098478455905643; animation: 4s ease-in-out 4.73319s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 15.1931%; left: 45.7561%; --base-opacity: 0.36842030699296; --peak-opacity: 1; animation: 2.5s ease-in-out 1.68424s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 36.1369%; left: 44.8834%; --base-opacity: 0.2452214818636416; --peak-opacity: 0.8927673841792891; opacity: 0.245221;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 19.5287%; left: 65.7338%; --base-opacity: 0.21366112460468456; --peak-opacity: 0.8820826656846306; opacity: 0.213661;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 53.4622%; left: 52.6156%; --base-opacity: 0.2997266080409019; --peak-opacity: 1; animation: 4s ease-in-out 5.56831s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 69.8111%; left: 90.8022%; --base-opacity: 0.26412028260303955; --peak-opacity: 1; animation: 1.8s ease-in-out 1.31504s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 43.0262%; left: 35.8527%; --base-opacity: 0.31987705030347946; --peak-opacity: 1; animation: 4s ease-in-out 0.349194s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 35.6544%; left: 78.9897%; --base-opacity: 0.2444001371657177; --peak-opacity: 0.9296112531565892; opacity: 0.2444;"></div><div class="star" style="width: 1px; height: 1px; top: 62.6461%; left: 5.39%; --base-opacity: 0.3610780335892161; --peak-opacity: 0.9384165489238712; opacity: 0.361078;"></div><div class="star" style="width: 1px; height: 1px; top: 25.3241%; left: 39.2234%; --base-opacity: 0.23878019421546337; --peak-opacity: 0.7714876298612019; animation: 1.8s ease-in-out 3.83521s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 42.8867%; left: 93.7083%; --base-opacity: 0.41864079505940655; --peak-opacity: 1; opacity: 0.418641;"></div><div class="star" style="width: 1px; height: 1px; top: 12.206%; left: 87.0362%; --base-opacity: 0.2698511055576838; --peak-opacity: 0.862149705146019; opacity: 0.269851;"></div><div class="star" style="width: 1px; height: 1px; top: 30.5722%; left: 56.9594%; --base-opacity: 0.2805400786535577; --peak-opacity: 0.911599058328285; animation: 4s ease-in-out 0.104947s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 37.0425%; left: 28.223%; --base-opacity: 0.39558727155404316; --peak-opacity: 1; animation: 1.8s ease-in-out 0.508247s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 25.1151%; left: 26.4538%; --base-opacity: 0.47995296375020363; --peak-opacity: 1; animation: 2.5s ease-in-out 4.8318s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 60.5089%; left: 39.1993%; --base-opacity: 0.25892577192020255; --peak-opacity: 0.9602752128584445; animation: 2.5s ease-in-out 0.897707s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 18.7324%; left: 7.42582%; --base-opacity: 0.41246477971867423; --peak-opacity: 0.9721025843150363; animation: 4s ease-in-out 1.83702s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 56.536%; left: 25.7705%; --base-opacity: 0.4779861330924196; --peak-opacity: 1; opacity: 0.477986;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 2.13246%; left: 93.8627%; --base-opacity: 0.2521485495488337; --peak-opacity: 0.7982227173454415; animation: 2.5s ease-in-out 5.97892s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 16.1344%; left: 22.22%; --base-opacity: 0.2368884673790442; --peak-opacity: 0.8179987990567223; opacity: 0.236888;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 4.90311%; left: 0.531341%; --base-opacity: 0.2926873828527411; --peak-opacity: 0.9622809788304952; opacity: 0.292687;"></div><div class="star" style="width: 1px; height: 1px; top: 59.1777%; left: 89.6524%; --base-opacity: 0.32806126703266325; --peak-opacity: 1; opacity: 0.328061;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 60.4519%; left: 3.88916%; --base-opacity: 0.20462667503327453; --peak-opacity: 0.8667439739422633; animation: 2.5s ease-in-out 1.43505s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 29.1564%; left: 4.35433%; --base-opacity: 0.4878378080243421; --peak-opacity: 1; opacity: 0.487838;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 56.4955%; left: 76.4658%; --base-opacity: 0.45564231425147955; --peak-opacity: 1; opacity: 0.455642;"></div><div class="star" style="width: 1px; height: 1px; top: 10.6989%; left: 36.6305%; --base-opacity: 0.4856027729617287; --peak-opacity: 1; animation: 1.8s ease-in-out 0.435992s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 37.927%; left: 2.32153%; --base-opacity: 0.40234345435895086; --peak-opacity: 1; animation: 2.5s ease-in-out 2.50516s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 50.3646%; left: 38.115%; --base-opacity: 0.47983639867939704; --peak-opacity: 1; opacity: 0.479836;"></div><div class="star" style="width: 1px; height: 1px; top: 38.9032%; left: 81.9576%; --base-opacity: 0.3861981444463136; --peak-opacity: 0.9392605364757127; animation: 1.8s ease-in-out 5.21615s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 49.7729%; left: 10.3277%; --base-opacity: 0.21764194550349417; --peak-opacity: 0.7219394567623987; animation: 4s ease-in-out 0.0305091s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 59.6914%; left: 61.9812%; --base-opacity: 0.47266191748490805; --peak-opacity: 1; animation: 2.5s ease-in-out 5.24603s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 33.3974%; left: 13.1069%; --base-opacity: 0.28501542303876765; --peak-opacity: 0.977814952226103; opacity: 0.285015;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 11.2977%; left: 75.2026%; --base-opacity: 0.23365831386439243; --peak-opacity: 0.842167803685112; animation: 1.8s ease-in-out 2.72223s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 44.5423%; left: 85.3422%; --base-opacity: 0.28393593410941365; --peak-opacity: 0.8254280292377655; opacity: 0.283936;"></div><div class="star" style="width: 1px; height: 1px; top: 64.7384%; left: 40.0783%; --base-opacity: 0.49599064982046576; --peak-opacity: 1; animation: 4s ease-in-out 1.62593s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 43.2174%; left: 13.6616%; --base-opacity: 0.39392062917643755; --peak-opacity: 1; animation: 2.5s ease-in-out 5.86361s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 22.7958%; left: 71.6125%; --base-opacity: 0.41754587386230946; --peak-opacity: 0.9625742287859381; opacity: 0.417546;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 20.7317%; left: 23.5799%; --base-opacity: 0.4809160766602929; --peak-opacity: 1; opacity: 0.480916;"></div><div class="star" style="width: 1px; height: 1px; top: 14.2912%; left: 82.6034%; --base-opacity: 0.30826866345769366; --peak-opacity: 1; opacity: 0.308269;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 22.2617%; left: 8.82131%; --base-opacity: 0.3814061945400368; --peak-opacity: 1; opacity: 0.381406;"></div><div class="star" style="width: 1px; height: 1px; top: 18.4511%; left: 88.5763%; --base-opacity: 0.3390891845317727; --peak-opacity: 1; opacity: 0.339089;"></div><div class="star" style="width: 1px; height: 1px; top: 63.7433%; left: 84.6638%; --base-opacity: 0.4536222080204893; --peak-opacity: 1; opacity: 0.453622;"></div><div class="star" style="width: 1px; height: 1px; top: 16.7834%; left: 2.82765%; --base-opacity: 0.21850966682429265; --peak-opacity: 0.9652853584642548; animation: 2.5s ease-in-out 3.55535s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 9.50006%; left: 66.872%; --base-opacity: 0.34569039682893477; --peak-opacity: 0.8674757212066236; opacity: 0.34569;"></div><div class="star" style="width: 1px; height: 1px; top: 33.46%; left: 94.0496%; --base-opacity: 0.21965800360549392; --peak-opacity: 0.7460774190453178; opacity: 0.219658;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 12.1019%; left: 15.0528%; --base-opacity: 0.4586150708200032; --peak-opacity: 1; animation: 1.8s ease-in-out 4.12602s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 14.0072%; left: 9.42826%; --base-opacity: 0.326585341600667; --peak-opacity: 0.9001151068534324; animation: 2.5s ease-in-out 5.68491s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 13.6254%; left: 75.1108%; --base-opacity: 0.22871306464267105; --peak-opacity: 0.7288403893716807; animation: 2.5s ease-in-out 2.04386s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 52.28%; left: 1.76085%; --base-opacity: 0.2797101714118471; --peak-opacity: 0.8240616844462088; opacity: 0.27971;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 51.2615%; left: 93.8936%; --base-opacity: 0.4736229183810805; --peak-opacity: 1; animation: 4s ease-in-out 5.92181s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 35.8543%; left: 25.3916%; --base-opacity: 0.4793109745944735; --peak-opacity: 1; animation: 4s ease-in-out 1.21445s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 18.1542%; left: 93.2222%; --base-opacity: 0.4855376165332524; --peak-opacity: 1; opacity: 0.485538;"></div><div class="star" style="width: 1px; height: 1px; top: 61.2985%; left: 71.0287%; --base-opacity: 0.41824434622759077; --peak-opacity: 1; animation: 2.5s ease-in-out 3.63481s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 18.6858%; left: 45.5486%; --base-opacity: 0.4827273258616741; --peak-opacity: 1; animation: 1.8s ease-in-out 4.80266s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 0.0465477%; left: 55.2113%; --base-opacity: 0.3607499653834665; --peak-opacity: 0.9303991010992009; animation: 2.5s ease-in-out 1.01951s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 22.7347%; left: 70.5396%; --base-opacity: 0.4597634141396381; --peak-opacity: 1; opacity: 0.459763;"></div><div class="star" style="width: 1px; height: 1px; top: 36.9023%; left: 30.3154%; --base-opacity: 0.4811064295602169; --peak-opacity: 1; animation: 2.5s ease-in-out 4.42717s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 22.8366%; left: 39.988%; --base-opacity: 0.30696204413485123; --peak-opacity: 1; opacity: 0.306962;"></div><div class="star" style="width: 1px; height: 1px; top: 74.5599%; left: 87.7232%; --base-opacity: 0.42639057992768276; --peak-opacity: 1; animation: 2.5s ease-in-out 4.3851s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 6.10035%; left: 93.5337%; --base-opacity: 0.27937439737150743; --peak-opacity: 0.8559635796844902; animation: 2.5s ease-in-out 0.304441s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 79.2976%; left: 49.0003%; --base-opacity: 0.20224018459702106; --peak-opacity: 0.9627300984872271; opacity: 0.20224;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 65.7893%; left: 12.7876%; --base-opacity: 0.4849601607205154; --peak-opacity: 1; animation: 2.5s ease-in-out 1.3186s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 54.5648%; left: 48.7549%; --base-opacity: 0.36843805510674776; --peak-opacity: 0.9656454352981482; animation: 2.5s ease-in-out 0.916895s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 59.5909%; left: 20.4707%; --base-opacity: 0.3304803085138472; --peak-opacity: 1; opacity: 0.33048;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 49.5001%; left: 74.3498%; --base-opacity: 0.26847689990954; --peak-opacity: 0.975678671941683; animation: 4s ease-in-out 0.488237s infinite normal none running twinkle;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 34.4369%; left: 9.0774%; --base-opacity: 0.3187412053647891; --peak-opacity: 1; opacity: 0.318741;"></div><div class="star" style="width: 1px; height: 1px; top: 7.54166%; left: 25.7333%; --base-opacity: 0.29876098489177777; --peak-opacity: 1; opacity: 0.298761;"></div><div class="star" style="width: 1.5px; height: 1.5px; top: 78.3862%; left: 40.7785%; --base-opacity: 0.2250521551538116; --peak-opacity: 0.8036490595740381; animation: 2.5s ease-in-out 0.772506s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 79.7173%; left: 47.9765%; --base-opacity: 0.47726559373981087; --peak-opacity: 1; animation: 4s ease-in-out 4.73342s infinite normal none running twinkle;"></div><div class="star" style="width: 1px; height: 1px; top: 75.6961%; left: 13.1727%; --base-opacity: 0.47654421518641904; --peak-opacity: 1; animation: 2.5s ease-in-out 0.754123s infinite normal none running twinkle;"></div></div>
+        <div id="shootingStars" aria-hidden="true"></div>
+        <div class="flash-overlay" id="flashOverlay" aria-hidden="true" style="opacity: 0;"></div>
+        <div class="lightning-container" id="lightningContainer" aria-hidden="true"></div>
+        <div class="fog fog-1" aria-hidden="true"></div>
+        <div class="fog fog-2" aria-hidden="true"></div>
+        <div class="fog fog-3" aria-hidden="true"></div>
+
+        <!-- Logo Stanga (Text "Sociale" ELEGANT) -->
+        <div class="logo-area" style="transform: translateY(-50%);">
+            <div class="eyebrow">International Room</div>
+            <!-- TEXT SOCIALE -->
+            <h1 class="logo-text">Sociale</h1>
+            
+            <div class="logo-sub">MySociale.Net</div>
+        </div>
+
+        <!-- Chat backdrop (La locul lui, fix ca în xat) -->
+        <div class="chat-backdrop" role="img" aria-label="Chat background preview"></div>
+
+        
+
+        <!-- Reguli (Dreapta - Efect Sticlă) -->
+        <aside class="rules-panel">
+            <div class="rules-header" id="rulesTitle">Community Rules</div>
+            
+            <div class="rule-item">
+                <div class="rule-num">01</div>
+                <div class="rule-content">
+                    <h3>Freedom of Expression</h3>
+                    <p>Feel free to chat and express yourself. All languages are allowed.</p>
+                </div>
+            </div>
+            <div class="rule-item">
+                <div class="rule-num">02</div>
+                <div class="rule-content">
+                    <h3>Mutual Respect</h3>
+                    <p>Personal insults, excessively vulgar language, constant provocation, or harassment will not be tolerated.</p>
+                </div>
+            </div>
+            <div class="rule-item">
+                <div class="rule-num">03</div>
+                <div class="rule-content">
+                    <h3>Respect for the Staff</h3>
+                    <p>All staff members must be treated with respect. Disrespect or undermining staff may result in a ban.</p>
+                </div>
+            </div>
+            <div class="rule-item">
+                <div class="rule-num">04</div>
+                <div class="rule-content">
+                    <h3>Transparency</h3>
+                    <p>Bans longer than 10 hours must be accompanied by screenshot evidence. 1-hour bans are exempt.</p>
+                </div>
+            </div>
+            <div class="rule-item">
+    <div class="rule-num">05</div>
+    <div class="rule-content">
+        <h3>Staff Impartiality</h3>
+        <p>Banning for personal reasons is strictly prohibited. Punishments must be fair and impartial.</p>
+    </div>
+</div>
+
+
+            <div class="rules-footer">
+                <div class="rules-lang" role="tablist" aria-label="Rules language">
+                    <a class="lang-btn active" href="https://iemma19.github.io/frames/gjnsvdhjsa.html#" data-lang="en" onclick="applyRulesLang('en'); return false;">EN</a>
+                    <a class="lang-btn" href="https://iemma19.github.io/frames/gjnsvdhjsa.html#" data-lang="ro" onclick="applyRulesLang('ro'); return false;">RO</a>
+                    <a class="lang-btn" href="https://iemma19.github.io/frames/gjnsvdhjsa.html#" data-lang="it" onclick="applyRulesLang('it'); return false;">IT</a>
+                    <a class="lang-btn" href="https://iemma19.github.io/frames/gjnsvdhjsa.html#" data-lang="es" onclick="applyRulesLang('es'); return false;">ES</a>
+                </div>
+                <div class="rule-credit">© SOCIALE</div>
+            </div>
+        </aside>
+    </div>
+
+    <script>
+        var eco = false;
+        try {
+            eco = window.matchMedia("(hover: none) and (pointer: coarse)").matches ||
+                window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+                (navigator.connection && navigator.connection.saveData);
+        } catch (e) {}
+        if (eco) document.documentElement.classList.add("eco");
+
+        var rulesData = {
+            en: {
+                title: "Community Rules",
+                items: [
+                    { h: "Freedom of Expression", p: "Feel free to chat and express yourself. All languages are allowed." },
+                    { h: "Mutual Respect", p: "Personal insults, excessively vulgar language, constant provocation, or harassment will not be tolerated." },
+                    { h: "Respect for the Staff", p: "All staff members must be treated with respect. Disrespect or undermining staff may result in a ban." },
+                    { h: "Transparency", p: "Bans longer than 10 hours must be accompanied by screenshot evidence. 1-hour bans are exempt." },
+                    { h: "Staff Impartiality", p: "Banning for personal reasons is strictly prohibited. Punishments must be fair and impartial." }
+                ]
+            },
+            ro: {
+                title: "Regulile Comunității",
+                items: [
+                    { h: "Libertate de exprimare", p: "Poți discuta liber și să te exprimi. Toate limbile sunt permise." },
+                    { h: "Respect reciproc", p: "Insultele personale, limbajul excesiv de vulgar, provocările constante sau hărțuirea nu vor fi tolerate." },
+                    { h: "Respect față de staff", p: "Toți membrii staff-ului trebuie tratați cu respect. Disprețul sau subminarea staff-ului poate duce la ban." },
+                    { h: "Transparență", p: "Banurile mai lungi de 10 ore trebuie însoțite de dovezi (screenshot). Banurile de 1 oră sunt exceptate." },
+                    { h: "Imparțialitatea staff-ului", p: "Banarea din motive personale este strict interzisă. Sancțiunile trebuie să fie corecte și imparțiale." }
+					]
+            },
+            it: {
+                title: "Regole della Community",
+                items: [
+                    { h: "Libertà di espressione", p: "Sentiti liberi di chattare ed esprimervi. Tutte le lingue sono consentite." },
+                    { h: "Rispetto reciproco", p: "Insulti personali, linguaggio eccessivamente volgare, provocazioni continue o molestie non saranno tollerati." },
+                    { h: "Rispetto per lo staff", p: "Tutti i membri dello staff devono essere trattati con rispetto. Mancanza di rispetto o sabotaggio può portare al ban." },
+                    { h: "Trasparenza", p: "I ban superiori a 10 ore devono essere accompagnati da prove (screenshot). I ban di 1 ora sono esenti." },
+                    { h: "Imparzialità dello staff", p: "Bannare per motivi personali è severamente vietato. Le punizioni devono essere eque e imparziali." }
+                ]
+            },
+            es: {
+                title: "Reglas de la Comunidad",
+                items: [
+                    { h: "Libertad de expresión", p: "Siéntete libre de chatear y expresarte. Se permiten todos los idiomas." },
+                    { h: "Respeto mutuo", p: "No se tolerarán insultos personales, lenguaje excesivamente vulgar, provocación constante ni acoso." },
+                    { h: "Respeto al staff", p: "Todo el staff debe ser tratado con respeto. La falta de respeto o el sabotaje puede resultar en ban." },
+                    { h: "Transparencia", p: "Los bans de más de 10 horas deben ir acompañados de pruebas (capturas). Los bans de 1 hora están exentos." },
+                    { h: "Imparcialidad del staff", p: "Está estrictamente prohibido banear por motivos personales. Los castigos deben ser justos e imparciales." }
+					]
+            }
+        };
+
+        function applyRulesLang(lang) {
+            var data = rulesData[lang] || rulesData.en;
+            var titleEl = document.getElementById("rulesTitle");
+            if (titleEl) titleEl.textContent = data.title;
+            var items = document.querySelectorAll(".rules-panel .rule-item");
+            for (var i = 0; i < items.length && i < data.items.length; i++) {
+                var h = items[i].querySelector(".rule-content h3");
+                var p = items[i].querySelector(".rule-content p");
+                if (h) h.textContent = data.items[i].h;
+                if (p) p.textContent = data.items[i].p;
+            }
+            var btns = document.querySelectorAll(".rules-lang .lang-btn");
+            for (var j = 0; j < btns.length; j++) {
+                btns[j].classList.toggle("active", btns[j].getAttribute("data-lang") === lang);
+            }
+        }
+        window.applyRulesLang = applyRulesLang;
+
+        var langBtns = document.querySelectorAll(".rules-lang .lang-btn");
+        for (var k = 0; k < langBtns.length; k++) {
+            langBtns[k].addEventListener("click", function () {
+                applyRulesLang(this.getAttribute("data-lang") || "en");
+            });
+        }
+        applyRulesLang("en");
+
+        /* ── Stars ───────────────────────────────── */
+        var starsEl = document.getElementById("stars");
+        for (var i = 0; i < 180; i++) {
+            var s = document.createElement("div");
+            s.className = "star";
+            var size = Math.random() < 0.6 ? 1 : (Math.random() < 0.75 ? 1.5 : 2.5);
+            s.style.width = size + "px"; s.style.height = size + "px";
+            s.style.top = (Math.random() * 80) + "%"; s.style.left = (Math.random() * 100) + "%";
+            var baseOp = 0.2 + Math.random() * 0.3;
+            s.style.setProperty("--base-opacity", baseOp);
+            s.style.setProperty("--peak-opacity", Math.min(baseOp + 0.5 + Math.random() * 0.3, 1));
+            if (Math.random() < 0.6) {
+                var speed = Math.random() < 0.33 ? "2.5s" : (Math.random() < 0.5 ? "1.8s" : "4s");
+                s.style.animation = `twinkle ${speed} ease-in-out infinite`;
+                s.style.animationDelay = (Math.random() * 6) + "s";
+            } else {
+                s.style.opacity = baseOp;
+            }
+            if (size >= 2) s.style.boxShadow = "0 0 " + (2 + Math.random() * 3) + "px rgba(180, 190, 255, 0.5)";
+            starsEl.appendChild(s);
+        }
+
+        /* ── Shooting stars & Lightning ── */
+        var isWidescreen = window.matchMedia("(min-aspect-ratio: 16/10)").matches;
+        var isSplit = window.matchMedia("(min-aspect-ratio: 3/4) and (max-aspect-ratio: 10/9)").matches;
+
+        if (isWidescreen || isSplit) {
+            var shootEl = document.getElementById("shootingStars");
+            function spawnShootingStar() {
+                if (!shootEl) return;
+                var el = document.createElement("div"); el.className = "shooting-star";
+                el.style.top = (3 + Math.random() * 55) + "%"; el.style.left = (5 + Math.random() * 85) + "%";
+                var angle = 25 + Math.random() * 30;
+                el.style.setProperty("--angle", angle + "deg"); el.style.transform = "rotate(" + angle + "deg)";
+                el.style.width = (60 + Math.random() * 60) + "px"; shootEl.appendChild(el);
+                setTimeout(function () { el.remove(); }, 1500);
+            }
+
+            var lightCont = document.getElementById("lightningContainer");
+            var flashEl = document.getElementById("flashOverlay");
+            var svgNS = "http://www.w3.org/2000/svg";
+            function generateBoltPoints(startX, startY, endY) {
+                var points = startX + "," + startY; var y = startY; var x = startX;
+                while (y < endY) { y += 15 + Math.random() * 40; x += (Math.random() - 0.5) * 80; points += " " + x + "," + y; }
+                return points;
+            }
+            function spawnLightning() {
+                if (!lightCont || !flashEl) return;
+                var svg = document.createElementNS(svgNS, "svg");
+                svg.setAttribute("width", "100%"); svg.setAttribute("height", "100%");
+                svg.style.cssText = "position:absolute; top:0; left:0; filter:drop-shadow(0 0 6px rgba(150,180,255,0.9)) drop-shadow(0 0 15px rgba(100,140,255,0.5)); opacity:0;";
+                var bolt = document.createElementNS(svgNS, "polyline");
+                var startX = window.innerWidth * (0.1 + Math.random() * 0.8);
+                var endY = window.innerHeight * (0.4 + Math.random() * 0.4);
+                bolt.setAttribute("points", generateBoltPoints(startX, 0, endY));
+                bolt.setAttribute("fill", "none"); bolt.setAttribute("stroke", "rgba(210, 220, 255, 0.9)");
+                bolt.setAttribute("stroke-width", "1.5"); bolt.setAttribute("stroke-linecap", "round"); bolt.setAttribute("stroke-linejoin", "round");
+                svg.appendChild(bolt); lightCont.appendChild(svg);
+                flashEl.style.opacity = "1";
+                setTimeout(function() { flashEl.style.opacity = "0.2"; }, 60);
+                setTimeout(function() { flashEl.style.opacity = "0.8"; }, 120);
+                setTimeout(function() { flashEl.style.opacity = "0"; }, 250);
+                svg.animate([
+                    { opacity: 0 }, { opacity: 1, offset: 0.1 }, { opacity: 0.2, offset: 0.2 }, { opacity: 0.9, offset: 0.3 }, { opacity: 0 }
+                ], { duration: 500, easing: "ease-out" }).onfinish = function() { svg.remove(); };
+            }
+
+            if (eco) {
+                function ecoBurst() {
+                    if (document.hidden) return;
+                    document.documentElement.classList.add("fx-active");
+                    spawnShootingStar();
+                    if (Math.random() < 0.18) spawnLightning();
+                    setTimeout(function () { document.documentElement.classList.remove("fx-active"); }, 1200);
+                }
+                function scheduleEcoBurst() {
+                    var delay = 6500 + Math.random() * 9000;
+                    setTimeout(function () { ecoBurst(); scheduleEcoBurst(); }, delay);
+                }
+                setTimeout(function () { ecoBurst(); scheduleEcoBurst(); }, 1200);
+            } else {
+                function scheduleShoot() {
+                    var delay = 3000 + Math.random() * 5000;
+                    setTimeout(function () { spawnShootingStar(); scheduleShoot(); }, delay);
+                }
+                setTimeout(function () { spawnShootingStar(); scheduleShoot(); }, 1500 + Math.random() * 1500);
+                setTimeout(function () {
+                    function scheduleShoot2() {
+                        var delay = 4000 + Math.random() * 7000;
+                        setTimeout(function () { spawnShootingStar(); scheduleShoot2(); }, delay);
+                    }
+                    spawnShootingStar(); scheduleShoot2();
+                }, 3000 + Math.random() * 2000);
+
+                function scheduleLightning() {
+                    var delay = 8000 + Math.random() * 15000;
+                    setTimeout(function() { spawnLightning(); scheduleLightning(); }, delay);
+                }
+                setTimeout(function() { spawnLightning(); scheduleLightning(); }, 6000 + Math.random() * 2000);
+            }
+        }
+
+        /* ── Pause when tab hidden ────────────────── */
+        var sceneEl = document.querySelector(".scene");
+        document.addEventListener("visibilitychange", function () {
+            sceneEl.classList.toggle("paused", document.hidden);
+        });
+    </script>
+	<script>
+function keepLogoBelowMoon() {
+    const moon = document.querySelector('.moon-container');
+    const logo = document.querySelector('.logo-area');
+
+    if (!moon || !logo) return;
+
+    // Păstrăm poziția originală
+    logo.style.transform = 'translateY(-50%)';
+
+    const moonRect = moon.getBoundingClientRect();
+    const logoRect = logo.getBoundingClientRect();
+
+    // Spațiul dintre lună și text
+    const gap = 20;
+
+    // Dacă logo-ul intră peste lună, îl coborâm doar cât trebuie
+    if (logoRect.top < moonRect.bottom + gap) {
+        const moveDown = moonRect.bottom + gap - logoRect.top;
+
+        logo.style.transform =
+            `translateY(calc(-50% + ${moveDown}px))`;
+    }
+}
+
+window.addEventListener('load', keepLogoBelowMoon);
+window.addEventListener('resize', keepLogoBelowMoon);
+
+if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', keepLogoBelowMoon);
+}
+</script>
+
+
+</body></html>
