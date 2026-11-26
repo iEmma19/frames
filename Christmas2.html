@@ -1,0 +1,2635 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sociale - International Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --text-primary: #ffffff;
+    --text-secondary: rgba(238, 246, 255, 0.82);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    font-family: 'Outfit', sans-serif; color: var(--text-primary);
+    background: #05090f;
+}
+
+#bgPhoto {
+    position: fixed; inset: 0; z-index: 0;
+    background: url("https://xatimg.com/image/G2qhwG3vl95c.png") center/cover no-repeat;
+}
+#bgOverlay {
+    position: fixed; inset: 0; z-index: 1;
+    background: radial-gradient(circle at 50% 0%, rgba(12,19,37,.15), rgba(8,13,24,.78) 55%, rgba(8,13,24,.92));
+}
+
+/* Zăpadă care cade: un singur canvas */
+#snow {
+    position: fixed; inset: 0; z-index: 12;
+    width: 100%; height: 100%;
+    pointer-events: none;
+}
+
+.scene { position: relative; width: 100vw; height: 100vh; overflow: hidden; z-index: 2; }
+
+/* ── Titlu stânga ── */
+.logo-area {
+    position: absolute; left: 80px; top: 50%;
+    transform: translateY(calc(-50% + 63px));
+    z-index: 15; text-align: left;
+    touch-action: none; -webkit-user-select: none; user-select: none;
+}
+.eyebrow {
+    font-size: .75rem; letter-spacing: 4px; text-transform: uppercase;
+    color: #fff; font-weight: 500; margin-bottom: 10px;
+}
+h1.logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 5vw, 72px);
+    font-weight: 600; line-height: .9; margin-bottom: 10px;
+    background: linear-gradient(105deg, #ffffff 0%, #d9f2ff 30%, #ffffff 50%, #a9d8f2 75%, #ffffff 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-shadow: 0 0 24px rgba(205,238,255,.35);
+    position: relative;
+    isolation: isolate;
+}
+.logo-sub { font-size: 1rem; font-weight: 300; color: #fff; margin-top: 10px; }
+
+/* ── Panou reguli ── */
+.rules-panel {
+    position: absolute; top: 50%; right: 9%;
+    transform: translateY(-50%) perspective(800px) rotateY(-10deg);
+    transform-origin: left center;
+    width: clamp(240px, 18vw, 310px);
+    z-index: 15;
+    display: flex; flex-direction: column;
+    padding: 24px;
+    background: linear-gradient(145deg, rgba(3,7,12,.97) 0%, rgba(12,22,32,.96) 55%, rgba(23,39,52,.94) 100%);
+    border: 1px solid rgba(225,244,255,.30);
+    border-radius: 24px;
+    box-shadow: 0 24px 64px rgba(0,0,0,.58), inset 0 1px 1px rgba(255,255,255,.14);
+    transition: transform .3s ease;
+    isolation: isolate;
+}
+.rules-panel:hover { transform: translateY(-50%) perspective(800px) rotateY(-6deg); }
+
+.rules-header {
+    font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic;
+    margin-bottom: 24px;
+    background: linear-gradient(90deg, #ffffff 0%, #c8eaff 50%, #a9d7f2 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+.rule-item { display: flex; gap: 14px; margin-bottom: 20px; }
+.rule-num {
+    font-size: 1rem; font-weight: 800; min-width: 20px; letter-spacing: .02em;
+    background: linear-gradient(90deg, #b7e4ff 0%, #ffffff 50%, #a9d7f2 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+.rule-content h3 { color: #fff; }
+.rule-content p { font-size: .75rem; font-weight: 300; line-height: 1.5; color: var(--text-secondary); }
+
+.rules-footer {
+    margin-top: auto; padding-top: 18px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+.rules-lang { display: flex; gap: 6px; justify-content: center; }
+.lang-btn {
+    border: 1px solid rgba(220,240,255,.2);
+    background: rgba(220,240,255,.08);
+    color: rgba(255,255,255,.85);
+    padding: 6px 10px; border-radius: 999px;
+    font-family: 'Outfit', sans-serif; font-size: .7rem; font-weight: 650;
+    letter-spacing: .06em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none; line-height: 1;
+}
+.lang-btn.active {
+    background: rgba(190,230,255,.20);
+    border-color: rgba(220,242,255,.62);
+    color: #fff;
+}
+.rule-credit { text-align: right; font-size: .7rem; letter-spacing: 2px; color: rgba(255,255,255,.3); }
+
+/* Zăpada adunată (desenată din JS, urmărește forma reală a literelor / panoului) */
+.rules-snow-cap, .logo-snow-cap {
+    position: absolute;
+    pointer-events: none;
+    display: block;
+}
+.rules-snow-cap { z-index: 3; }
+.logo-snow-cap { z-index: 2; left: 0; top: 0; }
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+    .rules-panel { display: none; }
+    .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+}
+@media (max-aspect-ratio: 3/4), (min-aspect-ratio: 10/9) and (max-aspect-ratio: 16/10) {
+    .rules-panel { display: none; }
+    .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+    #snow { display: none; }
+    .rules-panel { transition: none; }
+}
+</style>
+</head>
+<body>
+<div id="bgPhoto"></div>
+<div id="bgOverlay"></div>
+<canvas id="snow" aria-hidden="true"></canvas>
+
+<div class="scene">
+    <div class="logo-area">
+        <div class="eyebrow">International Room</div>
+        <h1 class="logo-text">Sociale<canvas class="logo-snow-cap" aria-hidden="true"></canvas></h1>
+        <div class="logo-sub">MySociale.Net</div>
+    </div>
+
+    <aside class="rules-panel">
+        <canvas class="rules-snow-cap" aria-hidden="true"></canvas>
+        <div class="rules-header" id="rulesTitle">Community Rules</div>
+
+        <div class="rule-item"><div class="rule-num">01</div><div class="rule-content"><h3></h3><p></p></div></div>
+        <div class="rule-item"><div class="rule-num">02</div><div class="rule-content"><h3></h3><p></p></div></div>
+        <div class="rule-item"><div class="rule-num">03</div><div class="rule-content"><h3></h3><p></p></div></div>
+        <div class="rule-item"><div class="rule-num">04</div><div class="rule-content"><h3></h3><p></p></div></div>
+        <div class="rule-item"><div class="rule-num">05</div><div class="rule-content"><h3></h3><p></p></div></div>
+
+        <div class="rules-footer">
+            <div class="rules-lang" role="tablist" aria-label="Rules language">
+                <a class="lang-btn active" href="#" data-lang="en">EN</a>
+                <a class="lang-btn" href="#" data-lang="ro">RO</a>
+                <a class="lang-btn" href="#" data-lang="it">IT</a>
+                <a class="lang-btn" href="#" data-lang="es">ES</a>
+            </div>
+            <div class="rule-credit">© SOCIALE</div>
+        </div>
+    </aside>
+</div>
+
+<script>
+/* ── Reguli ── */
+var rulesData = {
+    en: { title: "Community Rules", items: [
+        { h: "Freedom of Expression", p: "Feel free to chat and express yourself. All languages are allowed." },
+        { h: "Mutual Respect", p: "Personal insults, excessively vulgar language, constant provocation, or harassment will not be tolerated." },
+        { h: "Respect for the Staff", p: "All staff members must be treated with respect. Disrespect or undermining staff may result in a ban." },
+        { h: "Transparency", p: "Bans longer than 10 hours must be accompanied by screenshot evidence. 1-hour bans are exempt." },
+        { h: "Staff Impartiality", p: "Banning for personal reasons is strictly prohibited. Punishments must be fair and impartial." }
+    ]},
+    ro: { title: "Regulile Comunității", items: [
+        { h: "Libertate de exprimare", p: "Poți discuta liber și să te exprimi. Toate limbile sunt permise." },
+        { h: "Respect reciproc", p: "Insultele personale, limbajul excesiv de vulgar, provocările constante sau hărțuirea nu vor fi tolerate." },
+        { h: "Respect față de staff", p: "Toți membrii staff-ului trebuie tratați cu respect. Disprețul sau subminarea staff-ului poate duce la ban." },
+        { h: "Transparență", p: "Banurile mai lungi de 10 ore trebuie însoțite de dovezi (screenshot). Banurile de 1 oră sunt exceptate." },
+        { h: "Imparțialitatea staff-ului", p: "Banarea din motive personale este strict interzisă. Sancțiunile trebuie să fie corecte și imparțiale." }
+    ]},
+    it: { title: "Regole della Community", items: [
+        { h: "Libertà di espressione", p: "Sentiti liberi di chattare ed esprimervi. Tutte le lingue sono consentite." },
+        { h: "Rispetto reciproco", p: "Insulti personali, linguaggio eccessivamente volgare, provocazioni continue o molestie non saranno tollerati." },
+        { h: "Rispetto per lo staff", p: "Tutti i membri dello staff devono essere trattati con rispetto. Mancanza di rispetto o sabotaggio può portare al ban." },
+        { h: "Trasparenza", p: "I ban superiori a 10 ore devono essere accompagnati da prove (screenshot). I ban di 1 ora sono esenti." },
+        { h: "Imparzialità dello staff", p: "Bannare per motivi personali è severamente vietato. Le punizioni devono essere eque e imparziali." }
+    ]},
+    es: { title: "Reglas de la Comunidad", items: [
+        { h: "Libertad de expresión", p: "Siéntete libre de chatear y expresarte. Se permiten todos los idiomas." },
+        { h: "Respeto mutuo", p: "No se tolerarán insultos personales, lenguaje excesivamente vulgar, provocación constante ni acoso." },
+        { h: "Respeto al staff", p: "Todo el staff debe ser tratado con respeto. La falta de respeto o el sabotaje puede resultar en ban." },
+        { h: "Transparencia", p: "Los bans de más de 10 horas deben ir acompañados de pruebas (capturas). Los bans de 1 hora están exentos." },
+        { h: "Imparcialidad del staff", p: "Está estrictamente prohibido banear por motivos personales. Los castigos deben ser justos e imparciales." }
+    ]}
+};
+
+function applyRulesLang(lang) {
+    var data = rulesData[lang] || rulesData.en;
+    document.getElementById("rulesTitle").textContent = data.title;
+    var items = document.querySelectorAll(".rules-panel .rule-item");
+    for (var i = 0; i < items.length; i++) {
+        items[i].querySelector("h3").textContent = data.items[i].h;
+        items[i].querySelector("p").textContent = data.items[i].p;
+    }
+    var btns = document.querySelectorAll(".rules-lang .lang-btn");
+    for (var j = 0; j < btns.length; j++) {
+        btns[j].classList.toggle("active", btns[j].getAttribute("data-lang") === lang);
+    }
+}
+document.querySelector(".rules-lang").addEventListener("click", function (e) {
+    var b = e.target.closest(".lang-btn");
+    if (!b) return;
+    e.preventDefault();
+    applyRulesLang(b.getAttribute("data-lang"));
+});
+applyRulesLang("en");
+
+</script>
+
+<script>
+(function () {
+    "use strict";
+    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* LITE = telefon / cadru mic: mai puțini fulgi, FPS mai mic, fără gradiente per bulgăre */
+    var LITE = matchMedia("(hover: none) and (pointer: coarse)").matches || Math.min(screen.width, innerWidth) < 700;
+
+    /* =====================================================
+       1) ZĂPADA CARE CADE (un singur canvas, sprite-uri)
+       ===================================================== */
+    var fall = document.getElementById("snow"), fctx = fall.getContext("2d");
+    var FDPR = LITE ? 0.5 : Math.min(window.devicePixelRatio || 1, 1.5);   // canvas mai mic = mult mai puțin de compus pe ecran
+    var W = 0, H = 0, flakes = [], chunks = [], debris = [];
+    var COUNT = LITE ? 16 : 40;
+    var FRAME = 1000 / (LITE ? 15 : 24);
+    var last = 0, raf = 0, running = false, onScreen = true;
+
+    var SIZES = LITE ? [9, 13, 18] : [8, 11, 14, 17, 20, 24];
+    /* sprite-uri de fulgi desenate cu canvas (hexagonale, cu ramificații)
+       – mult mai realiste decât caracterele Unicode anterioare */
+    function makeSnowflakeSprite(size, kind) {
+        var dim = Math.ceil(size + 20);
+        var c = document.createElement("canvas");
+        c.width = c.height = dim * FDPR;
+        var g = c.getContext("2d");
+        g.scale(FDPR, FDPR);
+        g.translate(dim / 2, dim / 2);
+        g.strokeStyle = "#fff";
+        g.fillStyle = "#fff";
+        g.lineCap = "round";
+        g.shadowColor = "rgba(220,242,255,0.9)";
+        g.shadowBlur = 7;
+        if (kind === 0) {
+            /* punct simplu pentru fulgii mici/îndepărtați */
+            g.beginPath();
+            g.arc(0, 0, size * 0.25, 0, 6.2832);
+            g.fill();
+        } else if (kind === 1) {
+            /* stea simplă cu 6 brațe */
+            g.lineWidth = Math.max(0.5, size * 0.07);
+            for (var i = 0; i < 6; i++) {
+                var ang = i * Math.PI / 3;
+                g.beginPath();
+                g.moveTo(0, 0);
+                g.lineTo(Math.cos(ang) * size / 2, Math.sin(ang) * size / 2);
+                g.stroke();
+            }
+            g.beginPath();
+            g.arc(0, 0, size * 0.08, 0, 6.2832);
+            g.fill();
+        } else {
+            /* fulg dendritic detaliat cu ramificații la 1/3 și 2/3 */
+            g.lineWidth = Math.max(0.4, size * 0.055);
+            for (var i = 0; i < 6; i++) {
+                var ang = i * Math.PI / 3;
+                var ex = Math.cos(ang) * size / 2, ey = Math.sin(ang) * size / 2;
+                g.beginPath();
+                g.moveTo(0, 0);
+                g.lineTo(ex, ey);
+                g.stroke();
+                for (var b = 1; b <= 2; b++) {
+                    var bx = ex * b / 3, by = ey * b / 3;
+                    var bl = size * 0.16 * (1 - b / 4);
+                    g.beginPath();
+                    g.moveTo(bx, by);
+                    g.lineTo(bx + Math.cos(ang + Math.PI / 3) * bl, by + Math.sin(ang + Math.PI / 3) * bl);
+                    g.moveTo(bx, by);
+                    g.lineTo(bx + Math.cos(ang - Math.PI / 3) * bl, by + Math.sin(ang - Math.PI / 3) * bl);
+                    g.stroke();
+                }
+            }
+            g.beginPath();
+            g.arc(0, 0, size * 0.1, 0, 6.2832);
+            g.fill();
+        }
+        return { img: c, dim: dim };
+    }
+    var sprites = [];
+    SIZES.forEach(function (size) {
+        var kind = size < 11 ? 0 : (size < 16 ? 1 : 2);
+        sprites.push(makeSnowflakeSprite(size, kind));
+        /* o a doua variantă pentru fulgii mai mari (varietate vizuală) */
+        if (size >= 13) sprites.push(makeSnowflakeSprite(size, Math.min(2, kind + 1)));
+    });
+
+    function resizeFall() {
+        W = window.innerWidth; H = window.innerHeight;
+        fall.width = W * FDPR; fall.height = H * FDPR;
+    }
+    function make(initial) {
+        return {
+            x: Math.random() * W,
+            y: initial ? Math.random() * H : -30,
+            sp: sprites[Math.floor(Math.random() * sprites.length)],
+            vy: 40 + Math.random() * 80,
+            vx: -25 + Math.random() * 50,
+            sway: 6 + Math.random() * 18,
+            ph: Math.random() * 6.28,
+            rot: Math.random() * 6.28,
+            vr: (Math.random() - 0.5) * 1.6,
+            a: 0.35 + Math.random() * 0.6
+        };
+    }
+    function initFall() {
+        resizeFall();
+        flakes = [];
+        for (var i = 0; i < COUNT; i++) flakes.push(make(true));
+    }
+    function spawn(x, y, r, vx, vy) {
+        if (reduce || chunks.length > 60) return;
+        chunks.push({ x: x, y: y, r: r, vx: vx, vy: vy, life: 1.6 });
+    }
+    /* debris – particule mici de zăpadă împrăștiate la ștergere */
+    function spawnDebris(x, y, vx, vy) {
+        if (reduce || debris.length > 90) return;
+        debris.push({ x: x, y: y, vx: vx, vy: vy, life: 0.6 + Math.random() * 0.3, r: 0.4 + Math.random() * 0.9 });
+    }
+    var timerF = 0;
+    function tick(t) {
+        raf = 0;
+        var dt = Math.min((t - last) / 1000, 0.1);
+        last = t;
+
+        fctx.setTransform(1, 0, 0, 1, 0, 0);
+        fctx.clearRect(0, 0, fall.width, fall.height);
+
+        var i;
+        for (i = 0; i < flakes.length; i++) {
+            var f = flakes[i];
+            f.y += f.vy * dt;
+            f.x += f.vx * dt;
+            f.ph += dt * 0.8;
+            f.rot += f.vr * dt;
+            var px = f.x + Math.sin(f.ph) * f.sway;
+            if (f.y > H + 30 || px < -40 || px > W + 40) { flakes[i] = make(false); continue; }
+            var d = f.sp.dim;
+            var cos = Math.cos(f.rot) * FDPR, sin = Math.sin(f.rot) * FDPR;
+            fctx.setTransform(cos, sin, -sin, cos, px * FDPR, f.y * FDPR);
+            fctx.globalAlpha = f.a;
+            fctx.drawImage(f.sp.img, -d / 2, -d / 2, d, d);
+        }
+
+        /* bulgări de zăpadă care cad de pe text (cu gradient radial pentru volum) */
+        if (chunks.length) {
+            fctx.setTransform(FDPR, 0, 0, FDPR, 0, 0);
+            for (i = chunks.length - 1; i >= 0; i--) {
+                var c = chunks[i];
+                c.vy += 520 * dt;
+                c.x += c.vx * dt;
+                c.y += c.vy * dt;
+                c.life -= dt;
+                if (c.life <= 0 || c.y > H + 20) { chunks.splice(i, 1); continue; }
+                fctx.globalAlpha = Math.min(1, c.life * 2.5) * 0.95;
+                /* bulgăr cu gradient radial pentru aspect de zăpadă (alb sus, gri-albastru jos) */
+                if (!LITE && c.r > 2) {
+                    var cg = fctx.createRadialGradient(c.x - c.r * 0.3, c.y - c.r * 0.3, 0, c.x, c.y, c.r * 1.3);
+                    cg.addColorStop(0, "#ffffff");
+                    cg.addColorStop(0.5, "#f4f8fc");
+                    cg.addColorStop(1, "#bccde0");
+                    fctx.fillStyle = cg;
+                } else {
+                    fctx.fillStyle = "#fff";
+                }
+                fctx.beginPath();
+                fctx.arc(c.x, c.y, c.r, 0, 6.2832);
+                fctx.fill();
+            }
+        }
+        /* debris – particule mici de zăpadă împrăștiate la ștergere */
+        if (debris.length) {
+            fctx.setTransform(FDPR, 0, 0, FDPR, 0, 0);
+            fctx.fillStyle = "#fff";
+            for (i = debris.length - 1; i >= 0; i--) {
+                var db = debris[i];
+                db.vy += 350 * dt;
+                db.x += db.vx * dt;
+                db.y += db.vy * dt;
+                db.life -= dt;
+                if (db.life <= 0 || db.y > H + 10) { debris.splice(i, 1); continue; }
+                fctx.globalAlpha = Math.min(1, db.life * 3) * 0.7;
+                fctx.beginPath();
+                fctx.arc(db.x, db.y, db.r, 0, 6.2832);
+                fctx.fill();
+            }
+        }
+        fctx.setTransform(1, 0, 0, 1, 0, 0);
+        fctx.globalAlpha = 1;
+        if (running) {
+            timerF = setTimeout(function () { raf = requestAnimationFrame(tick); },
+                                Math.max(0, FRAME - (performance.now() - t) - 3));
+        }
+    }
+    function start() { if (!running) { running = true; last = performance.now(); raf = requestAnimationFrame(tick); } }
+    function stop() { running = false; cancelAnimationFrame(raf); clearTimeout(timerF); }
+    function sync() { (onScreen && !document.hidden) ? start() : stop(); }
+
+    if (!reduce) {
+        initFall();
+        sync();
+        document.addEventListener("visibilitychange", sync);
+        if (window.IntersectionObserver) {
+            new IntersectionObserver(function (e) { onScreen = e[0].isIntersecting; sync(); })
+                .observe(document.querySelector(".scene"));
+        }
+        var frt;
+        window.addEventListener("resize", function () { clearTimeout(frt); frt = setTimeout(initFall, 200); });
+    }
+
+    /* =====================================================
+       2) ZĂPADA ADUNATĂ pe "Sociale" și pe panoul Rules
+       ===================================================== */
+    var DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var SNOW_DURATION = 50000;       // cât durează până se adună toată zăpada
+    var STEP = LITE ? 1200 : 600;    // redesenăm doar din când în când, nu la fiecare cadru
+    var REGROW = 1 / 40;             // cât de repede se reface zăpada ștearsă (1/secunde)
+    var currentG = 0.08;
+
+    function rng(seed) {
+        return function () {
+            seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+            var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+            t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+            return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+    }
+    function h01(n) { var x = Math.sin(n * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); }
+    function noise1(seed) {
+        var r = rng(seed), n = 128, a = [];
+        for (var i = 0; i < n; i++) a.push(r());
+        return function (x) {
+            var i = Math.floor(x), f = x - i;
+            f = f * f * (3 - 2 * f);
+            var i0 = ((i % n) + n) % n, i1 = (i0 + 1) % n;
+            return a[i0] * (1 - f) + a[i1] * f;
+        };
+    }
+    function smooth(a, b, x) {
+        var t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+        return t * t * (3 - 2 * t);
+    }
+    function snowGradient(ctx, y0, y1) {
+        /* gradient de gheață cu reflexie fizică: alb pur → alb rece → albastru-deschis → albastru mediu */
+        var g = ctx.createLinearGradient(0, y0, 0, Math.max(y1, y0 + 1));
+        g.addColorStop(0, "#ffffff");
+        g.addColorStop(0.35, "#fbfdff");
+        g.addColorStop(0.7, "#e3edf6");
+        g.addColorStop(1, "#a8c2d8");
+        return g;
+    }
+    /* stea cristalină cu 6 brațe + halo + punct central – sclipire de fulg real */
+    function drawSparkle(ctx, x, y, r, alpha) {
+        if (r < 0.6) return;
+        ctx.save();
+        ctx.translate(x, y);
+        /* halo moale în jurul sclipirii (doar pentru sclipiri mai mari) */
+        if (!LITE && r > 1.4) {
+            var halo = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 2.8);
+            halo.addColorStop(0, "rgba(255,255,255," + (alpha * 0.35) + ")");
+            halo.addColorStop(0.5, "rgba(220,240,255," + (alpha * 0.12) + ")");
+            halo.addColorStop(1, "rgba(220,240,255,0)");
+            ctx.fillStyle = halo;
+            ctx.beginPath(); ctx.arc(0, 0, r * 2.8, 0, 6.2832); ctx.fill();
+        }
+        ctx.strokeStyle = "rgba(255,255,255," + alpha + ")";
+        ctx.lineWidth = 0.75;
+        ctx.lineCap = "round";
+        /* 3 axe principale = 6 brațe */
+        for (var k = 0; k < 3; k++) {
+            ctx.beginPath();
+            var ang = k * Math.PI / 3;
+            var dx = Math.cos(ang) * r, dy = Math.sin(ang) * r;
+            ctx.moveTo(-dx, -dy); ctx.lineTo(dx, dy);
+            ctx.stroke();
+        }
+        /* cruciulițe perpendiculare la mijlocul fiecărui braț */
+        ctx.lineWidth = 0.5;
+        for (var j = 0; j < 6; j++) {
+            var a2 = j * Math.PI / 3;
+            var cx2 = Math.cos(a2) * r * 0.55, cy2 = Math.sin(a2) * r * 0.55;
+            var perp = a2 + Math.PI / 2;
+            var px = Math.cos(perp) * r * 0.22, py = Math.sin(perp) * r * 0.22;
+            ctx.beginPath();
+            ctx.moveTo(cx2 - px, cy2 - py); ctx.lineTo(cx2 + px, cy2 + py);
+            ctx.stroke();
+        }
+        /* nucleu strălucitor */
+        ctx.fillStyle = "rgba(255,255,255," + Math.min(1, alpha + 0.15) + ")";
+        ctx.beginPath();
+        ctx.arc(0, 0, r * 0.22, 0, 6.2832); ctx.fill();
+        ctx.restore();
+    }
+    function tracePath(ctx, top, bot) {
+        var i;
+        ctx.beginPath();
+        ctx.moveTo(top[0][0], top[0][1]);
+        for (i = 1; i < top.length; i++) ctx.lineTo(top[i][0], top[i][1]);
+        for (i = bot.length - 1; i >= 0; i--) ctx.lineTo(bot[i][0], bot[i][1]);
+        ctx.closePath();
+    }
+    function puff(ctx, cx, cy, rad) {
+        /* bulb cu volum: glow exterior + gradient cu lumină din stânga-sus + specular */
+        if (rad < 0.8) return;
+        /* glow moale exterior pentru efect de lumină difuză */
+        if (!LITE && rad > 2) {
+            var og = ctx.createRadialGradient(cx, cy, rad * 0.6, cx, cy, rad * 1.6);
+            og.addColorStop(0, "rgba(220,235,250,0.22)");
+            og.addColorStop(1, "rgba(220,235,250,0)");
+            ctx.fillStyle = og;
+            ctx.beginPath(); ctx.arc(cx, cy, rad * 1.6, 0, 6.2832); ctx.fill();
+        }
+        /* corpul cu gradient radial */
+        var g = ctx.createRadialGradient(cx - rad * 0.35, cy - rad * 0.35, 0, cx, cy, rad * 1.25);
+        g.addColorStop(0, "#ffffff");
+        g.addColorStop(0.35, "#f8fbfd");
+        g.addColorStop(0.75, "#dde6f0");
+        g.addColorStop(1, "#9eb6cf");
+        ctx.beginPath();
+        ctx.arc(cx, cy, rad, 0, 6.2832);
+        ctx.fillStyle = g;
+        ctx.fill();
+        /* specular highlight pe vârf */
+        ctx.beginPath();
+        ctx.arc(cx - rad * 0.4, cy - rad * 0.4, rad * 0.22, 0, 6.2832);
+        ctx.fillStyle = "rgba(255,255,255,0.98)";
+        ctx.fill();
+        /* sclipire fină pe highlight pentru bulgării mai mari */
+        if (!LITE && rad > 2.5) {
+            drawSparkle(ctx, cx - rad * 0.4, cy - rad * 0.4, rad * 0.2, 0.85);
+        }
+    }
+    function fillSnow(ctx, top, bot, y0, y1) {
+        var i, n = top.length, px, th;
+        if (n < 3) return;
+        /* 1. umbră de contact moale, alungită, cu nuanță albastru-închis */
+        ctx.save();
+        tracePath(ctx, top, bot);
+        ctx.shadowColor = "rgba(20,30,55,0.6)";
+        ctx.shadowBlur = LITE ? 5 : 8;
+        ctx.shadowOffsetY = 2.5;
+        ctx.fillStyle = "#8aa3bd";
+        ctx.fill();
+        ctx.restore();
+        /* 2. corp: gradient cu 6 opriri pentru fizica luminii în zăpadă */
+        var g = ctx.createLinearGradient(0, y0, 0, Math.max(y1, y0 + 1));
+        g.addColorStop(0, "#ffffff");       /* creastă – lumină directă */
+        g.addColorStop(0.1, "#fcfdfe");     /* alb pur */
+        g.addColorStop(0.3, "#edf3f9");     /* alb rece */
+        g.addColorStop(0.55, "#d3e0ec");    /* gri-albastru */
+        g.addColorStop(0.8, "#a5bbd2");     /* umbră medie */
+        g.addColorStop(1, "#7891ad");       /* umbră adâncă (sub-surface) – contrast mai puternic */
+        tracePath(ctx, top, bot);
+        ctx.fillStyle = g;
+        ctx.fill();
+        /* 3. detalii interioare (decupate pe formă) */
+        ctx.save();
+        tracePath(ctx, top, bot);
+        ctx.clip();
+        ctx.lineJoin = "round";
+        /* 3a. adâncituri organice cu gradient radial mai dens */
+        for (i = 2; i < n - 2; i++) {
+            px = Math.round(top[i][0]);
+            if (px % 9 !== 0) continue;
+            th = bot[i][1] - top[i][1];
+            if (th < 3.5) continue;
+            var hr = th * (0.45 + h01(px * 1.7) * 0.55), hx = top[i][0], hy = top[i][1] + th * (0.42 + h01(px * 2.9) * 0.4);
+            if (LITE) {
+                ctx.fillStyle = "rgba(130,160,195,0.16)";
+                ctx.beginPath(); ctx.arc(hx, hy, hr, 0, 6.2832); ctx.fill();
+            } else {
+                var rg = ctx.createRadialGradient(hx, hy, 0, hx, hy, hr * 1.5);
+                rg.addColorStop(0, "rgba(110,145,185,0.34)");
+                rg.addColorStop(0.6, "rgba(130,160,195,0.14)");
+                rg.addColorStop(1, "rgba(140,170,203,0)");
+                ctx.fillStyle = rg;
+                ctx.beginPath(); ctx.arc(hx, hy, hr * 1.5, 0, 6.2832); ctx.fill();
+            }
+        }
+        /* 3b. subsurface scattering – strălucire caldă din interior */
+        if (!LITE) {
+            for (i = 3; i < n - 3; i += 4) {
+                px = Math.round(top[i][0]);
+                th = bot[i][1] - top[i][1];
+                if (th < 5) continue;
+                var sx = top[i][0] + (h01(px * 4.1) * 2 - 1);
+                var sy = top[i][1] + th * 0.25 + h01(px * 2.3) * th * 0.15;
+                var sr = th * 0.5;
+                var ssg = ctx.createRadialGradient(sx, sy, 0, sx, sy, sr);
+                ssg.addColorStop(0, "rgba(255,255,255,0.2)");
+                ssg.addColorStop(1, "rgba(255,255,255,0)");
+                ctx.fillStyle = ssg;
+                ctx.beginPath(); ctx.arc(sx, sy, sr, 0, 6.2832); ctx.fill();
+            }
+        }
+        /* 3c. textură cristalină – cristale de zăpadă vizibile ca puncte mai mari + pete de lumină */
+        if (!LITE) {
+            /* cristale albe mai mari (vizibile ca granulație) */
+            ctx.fillStyle = "rgba(255,255,255,0.75)";
+            for (i = 0; i < n; i++) {
+                px = Math.round(top[i][0]);
+                th = bot[i][1] - top[i][1];
+                if (th < 2.5) continue;
+                if (h01(px * 7.13) > 0.55) continue;
+                var spy = top[i][1] + th * (0.15 + h01(px * 3.1) * 0.7);
+                var spr = 0.9 + h01(px * 9.1) * 1.1;
+                ctx.beginPath();
+                ctx.arc(top[i][0], spy, spr, 0, 6.2832); ctx.fill();
+            }
+            /* pete mici de lumină (specular micro-patches) */
+            ctx.fillStyle = "rgba(255,255,255,0.45)";
+            for (i = 1; i < n - 1; i += 2) {
+                px = Math.round(top[i][0]);
+                th = bot[i][1] - top[i][1];
+                if (th < 4) continue;
+                if (h01(px * 5.7) > 0.4) continue;
+                var lpy = top[i][1] + th * (0.25 + h01(px * 4.3) * 0.5);
+                var lpr = 1.4 + h01(px * 8.1) * 1.8;
+                ctx.beginPath();
+                ctx.arc(top[i][0], lpy, lpr, 0, 6.2832); ctx.fill();
+            }
+            /* micro-umbre pentru adâncime (cristale mai întunecate în văi) */
+            ctx.fillStyle = "rgba(75,110,150,0.3)";
+            for (i = 1; i < n - 1; i += 2) {
+                px = Math.round(top[i][0]);
+                th = bot[i][1] - top[i][1];
+                if (th < 4) continue;
+                if (h01(px * 17.3 + 5.1) > 0.5) continue;
+                var dsy = top[i][1] + th * (0.55 + h01(px * 5.7) * 0.35);
+                ctx.beginPath();
+                ctx.arc(top[i][0], dsy, 0.7, 0, 6.2832); ctx.fill();
+            }
+        }
+        /* 3d. bandă speculară – unde lovește direct lumina (în partea superioară) */
+        ctx.beginPath();
+        ctx.moveTo(top[0][0], top[0][1] + 1.2);
+        for (i = 1; i < n; i++) ctx.lineTo(top[i][0], top[i][1] + 1.2);
+        ctx.strokeStyle = "rgba(255,255,255,0.92)";
+        ctx.lineWidth = 3.2;
+        ctx.stroke();
+        /* 3e. secundă speculară mai slabă, mai jos */
+        if (!LITE) {
+            ctx.beginPath();
+            ctx.moveTo(top[0][0], top[0][1] + 3.5);
+            for (i = 1; i < n; i++) ctx.lineTo(top[i][0], top[i][1] + 3.5);
+            ctx.strokeStyle = "rgba(255,255,255,0.4)";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+        /* 3f. umbră pe marginea de jos (transiția cu suprafața) */
+        ctx.beginPath();
+        ctx.moveTo(bot[0][0], bot[0][1] - 0.5);
+        for (i = 1; i < n; i++) ctx.lineTo(bot[i][0], bot[i][1] - 0.5);
+        ctx.strokeStyle = "rgba(70,110,160,0.58)";
+        ctx.lineWidth = 5;
+        ctx.stroke();
+        /* 3g. penumbră sub marginea inferioară */
+        ctx.beginPath();
+        ctx.moveTo(bot[0][0], bot[0][1] + 1);
+        for (i = 1; i < n; i++) ctx.lineTo(bot[i][0], bot[i][1] + 1);
+        ctx.strokeStyle = "rgba(40,70,110,0.28)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+        /* 4. creastă fină albă */
+        ctx.beginPath();
+        ctx.moveTo(top[0][0], top[0][1] + 0.3);
+        for (i = 1; i < n; i++) ctx.lineTo(top[i][0], top[i][1] + 0.3);
+        ctx.strokeStyle = "rgba(255,255,255,0.98)";
+        ctx.lineWidth = 0.85;
+        ctx.stroke();
+        /* 5. sclipiri cristaline cu halo + câteva sclipiri mari ocazionale */
+        if (!LITE) {
+            for (i = 2; i < n - 2; i++) {
+                px = Math.round(top[i][0]);
+                if (h01(px * 7.7) > 0.06) continue;
+                th = bot[i][1] - top[i][1];
+                if (th < 3) continue;
+                var gx = top[i][0], gy = top[i][1] + th * (0.2 + h01(px * 3.1) * 0.45), gl = 1.6 + h01(px * 5.3) * 2.2;
+                drawSparkle(ctx, gx, gy, gl, 0.92);
+            }
+            /* sclipiri mari rare (specular highlights) */
+            for (i = 5; i < n - 5; i += 5) {
+                px = Math.round(top[i][0]);
+                if (h01(px * 11.3 + 3.7) > 0.018) continue;
+                th = bot[i][1] - top[i][1];
+                if (th < 4) continue;
+                var lgx = top[i][0], lgy = top[i][1] + th * (0.15 + h01(px * 4.7) * 0.3);
+                drawSparkle(ctx, lgx, lgy, 2.8 + h01(px * 7.1) * 1.6, 1);
+            }
+        }
+    }
+    function icicle(ctx, x, y, len, w) {
+        if (len < 3) return;
+        /* picătură de gheață cu vârf bulbous */
+        var tipW = w * 1.4, tipY = y + len;
+        /* gradient orizontal pentru efect de gheață translucidă */
+        var g = ctx.createLinearGradient(x - w / 2, 0, x + w / 2, 0);
+        g.addColorStop(0, "rgba(115,165,210,0.85)");
+        g.addColorStop(0.25, "rgba(185,222,243,0.95)");
+        g.addColorStop(0.5, "rgba(248,252,255,0.98)");
+        g.addColorStop(0.75, "rgba(178,213,238,0.95)");
+        g.addColorStop(1, "rgba(105,155,200,0.85)");
+        ctx.beginPath();
+        ctx.moveTo(x - w / 2, y);
+        ctx.bezierCurveTo(x - w * 0.4, y + len * 0.35, x - tipW * 0.45, y + len * 0.78, x, tipY);
+        ctx.bezierCurveTo(x + tipW * 0.45, y + len * 0.78, x + w * 0.4, y + len * 0.35, x + w / 2, y);
+        ctx.closePath();
+        ctx.fillStyle = g;
+        ctx.fill();
+        /* mărgele de gheață de-a lungul corpului (picături înghețate) */
+        if (!LITE && len > 8) {
+            var beadCount = Math.min(5, Math.floor(len / 6));
+            for (var b = 1; b <= beadCount; b++) {
+                var by = y + (b / (beadCount + 1)) * len;
+                var bw = w * (0.32 + 0.5 * (1 - b / (beadCount + 1)));
+                var bx = x + (h01(x * 0.7 + b * 3.3) - 0.5) * w * 0.35;
+                var bg = ctx.createRadialGradient(bx - bw * 0.2, by - bw * 0.2, 0, bx, by, bw * 0.7);
+                bg.addColorStop(0, "rgba(255,255,255,0.85)");
+                bg.addColorStop(1, "rgba(220,235,250,0.3)");
+                ctx.fillStyle = bg;
+                ctx.beginPath(); ctx.arc(bx, by, bw * 0.5, 0, 6.2832); ctx.fill();
+                ctx.beginPath(); ctx.arc(bx - bw * 0.15, by - bw * 0.15, bw * 0.18, 0, 6.2832);
+                ctx.fillStyle = "rgba(255,255,255,0.98)";
+                ctx.fill();
+            }
+        }
+        /* cârlig de lumină vertical pe partea stângă (reflexia în gheață) */
+        ctx.beginPath();
+        ctx.moveTo(x - w * 0.22, y + 1);
+        ctx.quadraticCurveTo(x - w * 0.14, y + len * 0.45, x - w * 0.06, y + len * 0.85);
+        ctx.strokeStyle = "rgba(255,255,255,0.92)";
+        ctx.lineWidth = 1.1;
+        ctx.stroke();
+        /* vârf luminos + sclipire pentru țurțuri mai lungi */
+        if (len > 8) {
+            var tg = ctx.createRadialGradient(x, tipY - 1, 0, x, tipY - 1, w * 0.5);
+            tg.addColorStop(0, "rgba(255,255,255,0.75)");
+            tg.addColorStop(1, "rgba(255,255,255,0)");
+            ctx.fillStyle = tg;
+            ctx.beginPath(); ctx.arc(x, tipY - 1, w * 0.5, 0, 6.2832); ctx.fill();
+            drawSparkle(ctx, x, tipY - 1, 1.8, 0.95);
+        }
+        /* umbră sub țurțur la baza de contact */
+        ctx.beginPath();
+        ctx.arc(x, y + 1, w * 0.45, 0, Math.PI, true);
+        ctx.fillStyle = "rgba(35,65,100,0.35)";
+        ctx.fill();
+    }
+    function clump(ctx, x, y, r) {
+        /* bulgăr de zăpadă cu volum: glow + umbră de contact + bulgări suprapuși */
+        var cy = y + r * 0.3;
+        if (r < 1) { puff(ctx, x, cy, r * 0.8); return; }
+        /* umbră de contact eliptică */
+        ctx.beginPath();
+        ctx.ellipse(x, y + r * 0.65, r * 0.95, r * 0.28, 0, 0, 6.2832);
+        ctx.fillStyle = "rgba(35,65,100,0.38)";
+        ctx.fill();
+        /* glow exterior difuz */
+        if (!LITE && r > 2) {
+            var og = ctx.createRadialGradient(x, cy, r * 0.5, x, cy, r * 1.6);
+            og.addColorStop(0, "rgba(220,235,250,0.2)");
+            og.addColorStop(1, "rgba(220,235,250,0)");
+            ctx.fillStyle = og;
+            ctx.beginPath(); ctx.arc(x, cy, r * 1.6, 0, 6.2832); ctx.fill();
+        }
+        /* bulgăr principal */
+        puff(ctx, x, cy, r * 0.85);
+        /* bulgări satelit pentru aspect organic */
+        puff(ctx, x - r * 0.4, cy - r * 0.12, r * 0.5);
+        puff(ctx, x + r * 0.35, cy + r * 0.05, r * 0.45);
+        /* bulgăricică sus pentru neregularitate */
+        if (r > 2) puff(ctx, x + r * 0.05, cy - r * 0.4, r * 0.3);
+    }
+    function sizeCanvas(cv, cssW, cssH) {
+        cv.width = Math.round(cssW * DPR);
+        cv.height = Math.round(cssH * DPR);
+        cv.style.width = cssW + "px";
+        cv.style.height = cssH + "px";
+        return cv.getContext("2d");
+    }
+
+    /* ---------- titlul "Sociale" ---------- */
+    var logo = null, E = 4;
+
+    function buildLogo() {
+        var h1 = document.querySelector(".logo-text");
+        var cv = h1 && h1.querySelector(".logo-snow-cap");
+        if (!h1 || !cv) { logo = null; return; }
+
+        var cs = getComputedStyle(h1);
+        var fs = parseFloat(cs.fontSize) || 64;
+        var Wd = Math.ceil(h1.offsetWidth), Hd = Math.round(h1.offsetHeight);
+        if (!Wd || !Hd) { logo = null; return; }
+        var L = parseFloat(cs.lineHeight) || fs * 0.9;
+        E = Math.max(4, Math.round(fs * 0.07));
+        var padT = Math.ceil(fs * 0.55), EXT = E + 3;
+
+        var oc = document.createElement("canvas");
+        var hh = Hd + padT;
+        oc.width = Wd; oc.height = hh;
+        var o = oc.getContext("2d");
+        o.font = "600 " + fs + 'px "Playfair Display", serif';
+        o.textBaseline = "alphabetic";
+        o.fillStyle = "#000";
+        var m = o.measureText("Sociale");
+        var A = m.fontBoundingBoxAscent, D = m.fontBoundingBoxDescent;
+        if (!(A > 0)) { A = fs * 1.082; D = fs * 0.251; }
+        var base = (L - (A + D)) / 2 + A;
+        var offX = 0;
+        try {
+            var rg = document.createRange();
+            rg.selectNodeContents(h1.firstChild);
+            offX = rg.getBoundingClientRect().left - h1.getBoundingClientRect().left;
+        } catch (e) { offX = 0; }
+        o.fillText("Sociale", offX, padT + base);
+        var data = o.getImageData(0, 0, Wd, hh).data;
+
+        var tops = new Array(Wd), x, y;
+        for (x = 0; x < Wd; x++) {
+            tops[x] = -1;
+            for (y = 0; y < hh; y++) {
+                if (data[(y * Wd + x) * 4 + 3] > 100) { tops[x] = y; break; }
+            }
+        }
+        var globalTop = 1e9;
+        for (x = 0; x < Wd; x++) if (tops[x] >= 0 && tops[x] < globalTop) globalTop = tops[x];
+
+        var nA = noise1(11), nB = noise1(23), nC = noise1(37), segs = [];
+        x = 0;
+        while (x < Wd) {
+            if (tops[x] < 0) { x++; continue; }
+            var xs = x, jump = fs * 0.1;
+            while (x < Wd && tops[x] >= 0 && (x === xs || Math.abs(tops[x] - tops[x - 1]) <= jump)) x++;
+            var xe = x - 1, n = xe - xs + 1;
+            if (n < 3) continue;
+            var segMin = 1e9, q;
+            for (q = xs; q <= xe; q++) if (tops[q] < segMin) segMin = tops[q];
+            if (segMin > globalTop + fs * 0.4) continue;
+            var ys = [], sl = [], lump = [], i, j, k;
+            for (i = 0; i < n; i++) {
+                var sum = 0, cnt = 0;
+                for (j = -3; j <= 3; j++) {
+                    k = i + j;
+                    if (k < 0 || k >= n) continue;
+                    sum += tops[xs + k]; cnt++;
+                }
+                ys.push(sum / cnt);
+            }
+            for (i = 0; i < n; i++) {
+                var a = Math.max(0, i - 3), b = Math.min(n - 1, i + 3);
+                sl.push((ys[b] - ys[a]) / Math.max(1, b - a));
+                var gx = xs + i;
+                /* 3 octave de noise pentru formă de acumulare mai naturală */
+                var v = 0.5 * nA(gx / 16) + 0.3 * nB(gx / 5) + 0.2 * nC(gx / 2.5);
+                lump.push(0.6 + 0.85 * v);
+            }
+            var r = rng(97 + xs), clumps = [];
+            for (i = 0; i < n; i += 2) {
+                if (r() < 0.55) clumps.push({ k: i, r: (1.2 + r() * 2.4) * fs / 72, dy: r() });
+            }
+            var w = new Float32Array(n);
+            for (i = 0; i < n; i++) w[i] = 1;
+            var ici = [];
+            if (r() < 0.85) ici.push({ k: -E + 2, len: (0.5 + r() * 0.5) * fs * 0.22, w: fs * (0.045 + r() * 0.025) });
+            if (r() < 0.85) ici.push({ k: n - 1 + E - 2, len: (0.5 + r() * 0.5) * fs * 0.22, w: fs * (0.04 + r() * 0.025) });
+            if (n > 24 && r() < 0.12) ici.push({ k: Math.floor(n * (0.3 + r() * 0.4)), len: (0.3 + r() * 0.4) * fs * 0.26, w: fs * 0.04 });
+            segs.push({ x0: xs, ys: ys, sl: sl, lump: lump, clumps: clumps, w: w, ici: ici });
+        }
+
+        var cw = Wd + EXT * 2, ch = Hd + padT;
+        cv.style.left = (-EXT) + "px";
+        cv.style.top = (-padT) + "px";
+        var ctx = sizeCanvas(cv, cw, ch);
+        logo = { cv: cv, ctx: ctx, fs: fs, segs: segs, EXT: EXT, cw: cw, ch: ch, rect: null };
+    }
+
+    function logoThick(s, i, k, grow) {
+        var n = s.ys.length;
+        var d = Math.min(k + E, n - 1 + E - k);
+        var u = Math.min(1, Math.max(0, d + 0.5) / (E + 3));
+        var taper = Math.sqrt(1 - (1 - u) * (1 - u));
+        var sf = 1 - 0.7 * Math.min(1, Math.abs(s.sl[i]) / 0.9);
+        return grow * logo.fs * 0.165 * s.lump[i] * sf * taper;
+    }
+
+    function drawRun(ctx, s, a, b, grow) {
+        var n = s.ys.length, top = [], bot = [], minY = 1e9, maxY = -1e9, k, i;
+        var k0 = (a === 0) ? -E : a, k1 = (b === n - 1) ? n - 1 + E : b;
+        for (k = k0; k <= k1; k++) {
+            i = Math.max(0, Math.min(n - 1, k));
+            var wv = s.w[i];
+            var t = logoThick(s, i, k, grow) * wv;
+            var y0 = s.ys[i], px = s.x0 + k + logo.EXT;
+            var ty = y0 - t, by = y0 + 1.8 * Math.min(1, wv * 3) + t * 0.4;
+            top.push([px, ty]); bot.push([px, by]);
+            if (ty < minY) minY = ty;
+            if (by > maxY) maxY = by;
+        }
+        if (top.length < 3) return;
+        fillSnow(ctx, top, bot, minY, maxY);
+    }
+
+    function drawLogo(grow) {
+        if (!logo) return;
+        var ctx = logo.ctx;
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        ctx.clearRect(0, 0, logo.cw, logo.ch);
+        logo.segs.forEach(function (s) {
+            var n = s.ys.length, a = -1, i;
+            for (i = 0; i <= n; i++) {
+                var on = i < n && s.w[i] > 0.05;
+                if (on && a < 0) a = i;
+                if (!on && a >= 0) { drawRun(ctx, s, a, i - 1, grow); a = -1; }
+            }
+            for (var c = 0; c < s.clumps.length; c++) {
+                var cl = s.clumps[c], wv = s.w[cl.k];
+                if (wv < 0.3) continue;
+                var tt = logoThick(s, cl.k, cl.k, grow) * wv;
+                if (tt < 1.4) continue;
+                clump(ctx, s.x0 + cl.k + logo.EXT, s.ys[cl.k] - tt + cl.r * (0.2 + 0.4 * cl.dy), cl.r * (0.45 + 0.55 * grow));
+            }
+            if (grow > 0.4) {
+                var gi = Math.pow((grow - 0.4) / 0.6, 1.4);
+                for (var q = 0; q < s.ici.length; q++) {
+                    var ic = s.ici[q], ki = Math.max(0, Math.min(n - 1, ic.k));
+                    if (s.w[ki] < 0.6) continue;
+                    var ti = logoThick(s, ki, ic.k, grow) * s.w[ki];
+                    icicle(ctx, s.x0 + ic.k + logo.EXT, s.ys[ki] + 1.8 + ti * 0.4 - 1, ic.len * gi, ic.w);
+                }
+            }
+        });
+    }
+
+    /* ---------- ștergerea zăpezii cu mouse / deget ---------- */
+    var queue = [], lastP = null, raf2 = 0, timer2 = 0, lastT = 0, lastWipe = 0, dirty = false;
+
+    function wipePoint(px, py, R, vx, vpX, vpY) {
+        var any = false, EXT = logo.EXT;
+        logo.segs.forEach(function (s) {
+            var n = s.ys.length;
+            var i0 = Math.max(0, Math.floor(px - s.x0 - EXT - R)), i1 = Math.min(n - 1, Math.ceil(px - s.x0 - EXT + R));
+            for (var i = i0; i <= i1; i++) {
+                var gx = s.x0 + i + EXT, t = logoThick(s, i, i, currentG);
+                var sy = s.ys[i] - t * 0.5, dx = gx - px, dy = sy - py;
+                var d = Math.sqrt(dx * dx + dy * dy);
+                if (d >= R) continue;
+                var nw = d / R; nw = nw * nw;
+                if (nw < s.w[i]) {
+                    var removed = s.w[i] - nw;
+                    s.w[i] = nw; any = true;
+                    if (removed > 0.3 && t > 1.8 && (i & 1) === 0 && Math.random() < 0.7) {
+                        /* folosim coordonatele viewport reale ale pointer-ului (vpX, vpY) */
+                        spawn(vpX, vpY,
+                              1 + Math.random() * Math.min(3.4, t * 0.3),
+                              vx * 0.2 + (Math.random() - 0.5) * 50,
+                              -10 + Math.random() * 50);
+                        /* debris – particule mici care se împrăștie */
+                        for (var db = 0; db < 2; db++) {
+                            spawnDebris(vpX, vpY,
+                                vx * 0.3 + (Math.random() - 0.5) * 120,
+                                -40 + Math.random() * 80);
+                        }
+                    }
+                }
+            }
+        });
+        if (any) lastWipe = performance.now();
+        return any;
+    }
+    /* ștergerea zăpezii pe panoul Rules – aceeași logică ca pe titlul Sociale */
+    function wipeRulesPoint(px, py, R, vx, vpX, vpY) {
+        if (!rules) return false;
+        var any = false, rl = rules;
+        var u0 = Math.max(0, Math.floor(px - R)), u1 = Math.min(rl.cw - 1, Math.ceil(px + R));
+        for (var u = u0; u <= u1; u++) {
+            var t = rulesT(rl, u, currentG, 13);
+            if (t < 0.35) continue;
+            var X = u - rl.EXT;
+            var e = edgeY(rl, X);
+            var ty = e - t;
+            var by = rl.byArr[u] >= 0 ? rl.byArr[u] : e + t * 0.5;
+            var sy = Math.max(ty, Math.min(by, py));
+            var dx = u - px, dy = sy - py;
+            var d = Math.sqrt(dx * dx + dy * dy);
+            if (d >= R) continue;
+            var nw = d / R; nw = nw * nw;
+            if (nw < rl.w[u]) {
+                var removed = rl.w[u] - nw;
+                rl.w[u] = nw; any = true;
+                if (removed > 0.3 && t > 1.8 && (u & 1) === 0 && Math.random() < 0.7) {
+                    /* FOLOSIM vpX, vpY (coordonate viewport reale ale pointer-ului)
+                       în loc de rect.left + u (care e greșit din cauza transformării 3D rotateY) */
+                    spawn(vpX, vpY,
+                          1 + Math.random() * Math.min(3.4, t * 0.3),
+                          vx * 0.2 + (Math.random() - 0.5) * 50,
+                          -10 + Math.random() * 50);
+                    /* debris – particule mici care se împrăștie */
+                    for (var db = 0; db < 2; db++) {
+                        spawnDebris(vpX, vpY,
+                            vx * 0.3 + (Math.random() - 0.5) * 120,
+                            -40 + Math.random() * 80);
+                    }
+                }
+            }
+        }
+        if (any) lastWipe = performance.now();
+        return any;
+    }
+
+    function kick() {
+        if (raf2 || document.hidden) return;
+        clearTimeout(timer2);
+        raf2 = requestAnimationFrame(logoTick);
+    }
+    function logoTick(now) {
+        raf2 = 0;
+        if (!logo && !rules) return;
+        var dt = Math.min((now - lastT) / 1000, 1); lastT = now;
+        var hitL = false, hitR = false, growL = false, growR = false;
+        while (queue.length) {
+            var q = queue.shift();
+            var isR = (q.target === "rules");
+            var hit = isR ? wipeRulesPoint(q.x, q.y, q.R, q.vx, q.vpX, q.vpY)
+                          : wipePoint(q.x, q.y, q.R, q.vx, q.vpX, q.vpY);
+            if (hit) { if (isR) hitR = true; else hitL = true; }
+        }
+        var changed = hitL || hitR;
+        if (changed) dirty = true;
+        if (dirty && now - lastWipe > 2500) {
+            var allL = true, allR = true;
+            if (logo) logo.segs.forEach(function (s) {
+                for (var i = 0; i < s.w.length; i++) {
+                    if (s.w[i] < 1) { growL = true; s.w[i] = Math.min(1, s.w[i] + dt * REGROW); if (s.w[i] < 1) allL = false; }
+                }
+            });
+            if (rules) {
+                for (var u = 0; u < rules.w.length; u++) {
+                    if (rules.w[u] < 1) { growR = true; rules.w[u] = Math.min(1, rules.w[u] + dt * REGROW); if (rules.w[u] < 1) allR = false; }
+                }
+            }
+            if (allL && allR) dirty = false;
+        }
+        /* redesenăm DOAR canvasul care s-a schimbat */
+        if (hitL || growL) drawLogo(currentG);
+        if (hitR || growR) drawRules(currentG);
+        if (changed) {
+            raf2 = 1;   // blochează kick() cât așteptăm
+            timer2 = setTimeout(function () { raf2 = requestAnimationFrame(logoTick); }, LITE ? 24 : 8);
+        }
+        else if (dirty) timer2 = setTimeout(kick, document.hidden ? 1500 : (LITE ? 800 : 400));
+    }
+
+    function onPointer(e) {
+        if (reduce) return;
+        var target = e.currentTarget;
+        var isRules = target && target.classList && target.classList.contains("rules-panel");
+        var ctxObj = isRules ? rules : logo;
+        if (!ctxObj) return;
+        var cv = ctxObj.cv;
+        var rect = cv.getBoundingClientRect();
+        ctxObj.rect = rect;
+        var xCss = e.clientX - rect.left, yCss = e.clientY - rect.top;
+        /* panoul Rules are rotateY(-10deg) – mapăm liniar coordonata CSS X la coordonata internă */
+        var x = isRules ? (xCss / Math.max(1, rect.width)) * rules.cw : xCss;
+        var y = yCss;
+        /* vpX, vpY = coordonate viewport reale ale pointer-ului (pentru spawn corect al bulgărilor) */
+        var vpX = e.clientX, vpY = e.clientY;
+        var R = isRules ? Math.max(28, rules.cw * 0.07)
+                        : (e.pointerType === "touch") ? Math.max(logo.fs * 0.6, 32) : logo.fs * 0.45;
+        var tgt = isRules ? "rules" : "logo";
+        if (lastP && lastP.target === tgt && e.type !== "pointerdown") {
+            var dx = x - lastP.x, dy = y - lastP.y;
+            var dvpX = vpX - lastP.vpX, dvpY = vpY - lastP.vpY;
+            var steps = Math.min(12, Math.max(1, Math.ceil(Math.sqrt(dx * dx + dy * dy) / (R * 0.5))));
+            var vx = Math.max(-200, Math.min(200, dx * 12));
+            for (var s = 1; s <= steps; s++) {
+                var fr = s / steps;
+                queue.push({ x: lastP.x + dx * fr, y: lastP.y + dy * fr, R: R, vx: vx, target: tgt,
+                             vpX: lastP.vpX + dvpX * fr, vpY: lastP.vpY + dvpY * fr });
+            }
+        } else {
+            queue.push({ x: x, y: y, R: R, vx: 0, target: tgt, vpX: vpX, vpY: vpY });
+        }
+        if (queue.length > 40) queue.splice(0, queue.length - 40);
+        lastP = { x: x, y: y, target: tgt, vpX: vpX, vpY: vpY };
+        kick();
+    }
+
+    /* ---------- panoul Rules ---------- */
+    var rules = null;
+
+    function buildRules() {
+        var p = document.querySelector(".rules-panel");
+        var cv = p && p.querySelector(".rules-snow-cap");
+        if (!p || !cv) { rules = null; return; }
+        var Wp = p.offsetWidth;
+        if (!Wp) { rules = null; return; }
+
+        var R = 24, PAD = 34, EXT = 6, DRIP = 36;
+        var cw = Wp + EXT * 2, ch = PAD + R + DRIP + 6;
+        cv.style.left = (-(EXT + 1)) + "px";
+        cv.style.top = (-(PAD + 1)) + "px";
+        var ctx = sizeCanvas(cv, cw, ch);
+
+        var nA = noise1(5), nB = noise1(41), nC = noise1(53), r = rng(77);
+        var lump = [], lobe = [], u, X;
+        for (u = 0; u < cw; u++) {
+            X = u - EXT;
+            /* 4 octave de noise pentru formă de acumulare mai naturală pe panou */
+            var v = 0.42 * nA(X / 42) + 0.28 * nB(X / 12) + 0.15 * nB(X / 3.1 + 40) + 0.15 * nC(X / 2.2);
+            lump.push(0.45 + 0.95 * v);
+            lobe.push(0);
+        }
+        var cx = 4;
+        while (cx < Wp - 4) {
+            var hw = 6 + r() * 9, dep = 2.5 + r() * 6.5, c = cx + hw;
+            for (u = 0; u < cw; u++) {
+                X = u - EXT;
+                var q = (X - c) / hw;
+                if (Math.abs(q) < 1) lobe[u] = Math.max(lobe[u], dep * Math.sqrt(1 - q * q));
+            }
+            cx += 2 * hw + (r() * 4 - 2.5);
+        }
+        var clumps = [];
+        for (u = 0; u < cw; u += 3) {
+            if (r() < 0.6) clumps.push({ u: u, r: 1 + r() * 2.2, dy: r() });
+        }
+        var ici = [], ux = 12;
+        while (ux < Wp - 8) {
+            if (r() < 0.55) ici.push({ u: Math.round(ux + EXT), len: 6 + r() * 14, w: 3.4 + r() * 2.6 });
+            ux += 14 + r() * 24;
+        }
+        ici.push({ u: EXT + 1, len: 10 + r() * 8, w: 3.4 }, { u: EXT + Wp - 1, len: 10 + r() * 8, w: 3.4 });
+        /* weights per coloană pentru ștergerea zăpezii cu mouse/deget */
+        var w = new Float32Array(cw);
+        for (u = 0; u < cw; u++) w[u] = 1;
+        rules = {
+            ici: ici, byArr: new Array(cw),
+            cv: cv, ctx: ctx, W: Wp, R: R, PAD: PAD, EXT: EXT, cw: cw, ch: ch,
+            lump: lump, lobe: lobe, clumps: clumps, w: w, rect: null,
+            dripL: 11 + r() * 6, dripR: 8 + r() * 6, dripL2: 5 + r() * 4, dripR2: 4 + r() * 4
+        };
+    }
+
+    function edgeY(rl, X) {
+        var Wp = rl.W, R = rl.R, PAD = rl.PAD;
+        if (X <= 0 || X >= Wp) return PAD + R;
+        if (X < R) return PAD + R - Math.sqrt(Math.max(0, R * R - (R - X) * (R - X)));
+        if (X > Wp - R) { var dx = X - (Wp - R); return PAD + R - Math.sqrt(Math.max(0, R * R - dx * dx)); }
+        return PAD;
+    }
+    function rulesCov(rl, u, grow) {
+        var g = Math.max(0, (grow - 0.08) / 0.92);
+        var nrm = Math.max(0, Math.min(1, (rl.lump[u] - 0.45) / 0.9));
+        var c = Math.max(0, Math.min(1, (g * 1.55 - (1 - nrm)) / 0.45));
+        return c * c * (3 - 2 * c);
+    }
+    function rulesT(rl, u, grow, maxT) {
+        var X = u - rl.EXT, Wp = rl.W;
+        var xc = Math.max(0, Math.min(Wp, X));
+        var taper = 0.4 + 0.6 * smooth(0, 38, Math.min(xc, Wp - xc));
+        var dome = 0.8 + 0.2 * Math.sin(Math.PI * xc / Wp);
+        var out = X < 0 ? -X : (X > Wp ? X - Wp : 0);
+        var fo = Math.max(0, 1 - out / (rl.EXT + 0.5));
+        var wMul = rl.w ? rl.w[u] : 1;   /* ștergere zăpadă cu mouse */
+        return maxT * rl.lump[u] * dome * taper * fo * rulesCov(rl, u, grow) * wMul;
+    }
+    function drip(ctx, x, y0, len, w) {
+        if (len < 2.5) return;
+        var y1 = y0 + len;
+        ctx.beginPath();
+        ctx.moveTo(x - w / 2, y0);
+        ctx.lineTo(x - w / 2, y1 - w / 2);
+        ctx.arc(x, y1 - w / 2, w / 2, Math.PI, 0, true);
+        ctx.lineTo(x + w / 2, y0);
+        ctx.closePath();
+        ctx.fillStyle = snowGradient(ctx, y0, y1);
+        ctx.fill();
+    }
+    function drawRules(grow) {
+        if (!rules) return;
+        var rl = rules, ctx = rl.ctx, u;
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        ctx.clearRect(0, 0, rl.cw, rl.ch);
+        var maxT = 13, g = Math.max(0, (grow - 0.08) / 0.92);
+        var g15 = g * Math.sqrt(g);
+
+        // zăpada apare în petice care cresc și se unesc
+        var top = [], bot = [], minY = 1e9, maxY = -1e9;
+        function flush() {
+            if (top.length >= 4) fillSnow(ctx, top, bot, minY, maxY);
+            top = []; bot = []; minY = 1e9; maxY = -1e9;
+        }
+        for (u = 0; u < rl.cw; u++) {
+            var X = u - rl.EXT;
+            var t = rulesT(rl, u, grow, maxT);
+            if (t < 0.35) { rl.byArr[u] = -1; flush(); continue; }
+            var e = edgeY(rl, X);
+            var out = X < 0 ? -X : (X > rl.W ? X - rl.W : 0);
+            var fo = Math.max(0, 1 - out / (rl.EXT + 0.5));
+            var ty = e - t, by = e + Math.min(2.5, t * 0.5) + g15 * rl.lobe[u] * fo * rulesCov(rl, u, grow);
+            rl.byArr[u] = by;
+            top.push([u, ty]); bot.push([u, by]);
+            if (ty < minY) minY = ty;
+            if (by > maxY) maxY = by;
+        }
+        flush();
+
+        // țurțuri, după ce stratul s-a format
+        if (g > 0.45) {
+            var gi = Math.pow((g - 0.45) / 0.55, 1.4);
+            for (var q = 0; q < rl.ici.length; q++) {
+                var ic = rl.ici[q], bb = rl.byArr[ic.u];
+                if (bb > 0) icicle(ctx, ic.u, bb - 1, ic.len * gi, ic.w);
+            }
+        }
+
+        for (var c = 0; c < rl.clumps.length; c++) {
+            var cl = rl.clumps[c];
+            var tt = rulesT(rl, cl.u, grow, maxT);
+            if (tt < 2) continue;
+            var ee = edgeY(rl, cl.u - rl.EXT);
+            clump(ctx, cl.u, ee - tt + cl.r * (0.2 + 0.4 * cl.dy), cl.r * (0.45 + 0.55 * Math.min(1, tt / 5)));
+        }
+    }
+
+    /* ---------- orchestrare ---------- */
+    var t0 = 0, gtimer = 0, started = false;
+
+    function renderAll(g) { currentG = g; drawLogo(g); drawRules(g); }
+    function rebuild() { buildLogo(); buildRules(); renderAll(currentG); }
+
+    function init() {
+        if (started) return;
+        started = true;
+        buildLogo(); buildRules();
+        if (reduce) {
+            renderAll(1);
+        } else {
+            t0 = performance.now();
+            renderAll(0.08);
+            gtimer = setInterval(function () {
+                if (document.hidden) return;
+                var k = Math.min(1, (performance.now() - t0) / SNOW_DURATION);
+                renderAll(0.08 + 0.92 * (1 - Math.pow(1 - k, 2)));
+                if (k >= 1) clearInterval(gtimer);
+            }, STEP);
+
+            /* atașăm ascultători pointer pe ambele zone: titlul Sociale și panoul Rules */
+            function attachPointer(area) {
+                area.addEventListener("pointermove", onPointer);
+                area.addEventListener("pointerdown", onPointer);
+                area.addEventListener("pointerleave", function () { lastP = null; });
+                area.addEventListener("pointerup", function () { lastP = null; });
+                area.addEventListener("pointercancel", function () { lastP = null; });
+            }
+            var area = document.querySelector(".logo-area");
+            if (area) attachPointer(area);
+            var rulesPanel = document.querySelector(".rules-panel");
+            if (rulesPanel) attachPointer(rulesPanel);
+            document.addEventListener("visibilitychange", function () { if (!document.hidden && dirty) kick(); });
+        }
+        var rt, first = true;
+        function sched() { clearTimeout(rt); rt = setTimeout(rebuild, 150); }
+        window.addEventListener("resize", sched);
+        if (window.ResizeObserver) {
+            var ro = new ResizeObserver(function () { if (first) { first = false; return; } sched(); });
+            var p = document.querySelector(".rules-panel"), h = document.querySelector(".logo-text");
+            if (p) ro.observe(p);
+            if (h) ro.observe(h);
+        }
+    }
+
+    if (document.fonts && document.fonts.load) {
+        Promise.all([document.fonts.load('600 64px "Playfair Display"', "Sociale"), document.fonts.ready]).then(init, init);
+        setTimeout(init, 3000);
+    } else {
+        window.addEventListener("load", init);
+    }
+})();
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sociale - International Room</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+    --text-primary: #ffffff;
+    --text-secondary: rgba(238, 246, 255, 0.82);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+    width: 100%; height: 100%; overflow: hidden;
+    font-family: 'Outfit', sans-serif; color: var(--text-primary);
+    background: #05090f;
+}
+
+#bgPhoto {
+    position: fixed; inset: 0; z-index: 0;
+    background: url("https://xatimg.com/image/G2qhwG3vl95c.png") center/cover no-repeat;
+}
+#bgOverlay {
+    position: fixed; inset: 0; z-index: 1;
+    background: radial-gradient(circle at 50% 0%, rgba(12,19,37,.15), rgba(8,13,24,.78) 55%, rgba(8,13,24,.92));
+}
+
+/* Zăpadă care cade: un singur canvas */
+#snow {
+    position: fixed; inset: 0; z-index: 12;
+    width: 100%; height: 100%;
+    pointer-events: none;
+}
+
+.scene { position: relative; width: 100vw; height: 100vh; overflow: hidden; z-index: 2; }
+
+/* ── Titlu stânga ── */
+.logo-area {
+    position: absolute; left: 80px; top: 50%;
+    transform: translateY(calc(-50% + 63px));
+    z-index: 15; text-align: left;
+    touch-action: none; -webkit-user-select: none; user-select: none;
+}
+.eyebrow {
+    font-size: .75rem; letter-spacing: 4px; text-transform: uppercase;
+    color: #fff; font-weight: 500; margin-bottom: 10px;
+}
+h1.logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(48px, 5vw, 72px);
+    font-weight: 600; line-height: .9; margin-bottom: 10px;
+    background: linear-gradient(105deg, #ffffff 0%, #d9f2ff 30%, #ffffff 50%, #a9d8f2 75%, #ffffff 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    text-shadow: 0 0 24px rgba(205,238,255,.35);
+    position: relative;
+    isolation: isolate;
+}
+.logo-sub { font-size: 1rem; font-weight: 300; color: #fff; margin-top: 10px; }
+
+/* ── Panou reguli ── */
+.rules-panel {
+    position: absolute; top: 50%; right: 9%;
+    transform: translateY(-50%) perspective(800px) rotateY(-10deg);
+    transform-origin: left center;
+    width: clamp(240px, 18vw, 310px);
+    z-index: 15;
+    display: flex; flex-direction: column;
+    padding: 24px;
+    background: linear-gradient(145deg, rgba(3,7,12,.97) 0%, rgba(12,22,32,.96) 55%, rgba(23,39,52,.94) 100%);
+    border: 1px solid rgba(225,244,255,.30);
+    border-radius: 24px;
+    box-shadow: 0 24px 64px rgba(0,0,0,.58), inset 0 1px 1px rgba(255,255,255,.14);
+    transition: transform .3s ease;
+    isolation: isolate;
+}
+.rules-panel:hover { transform: translateY(-50%) perspective(800px) rotateY(-6deg); }
+
+.rules-header {
+    font-family: 'Playfair Display', serif; font-size: 1.5rem; font-style: italic;
+    margin-bottom: 24px;
+    background: linear-gradient(90deg, #ffffff 0%, #c8eaff 50%, #a9d7f2 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+.rule-item { display: flex; gap: 14px; margin-bottom: 20px; }
+.rule-num {
+    font-size: 1rem; font-weight: 800; min-width: 20px; letter-spacing: .02em;
+    background: linear-gradient(90deg, #b7e4ff 0%, #ffffff 50%, #a9d7f2 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+}
+.rule-content h3 { color: #fff; }
+.rule-content p { font-size: .75rem; font-weight: 300; line-height: 1.5; color: var(--text-secondary); }
+
+.rules-footer {
+    margin-top: auto; padding-top: 18px;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;
+    border-top: 1px solid rgba(255,255,255,.08);
+}
+.rules-lang { display: flex; gap: 6px; justify-content: center; }
+.lang-btn {
+    border: 1px solid rgba(220,240,255,.2);
+    background: rgba(220,240,255,.08);
+    color: rgba(255,255,255,.85);
+    padding: 6px 10px; border-radius: 999px;
+    font-family: 'Outfit', sans-serif; font-size: .7rem; font-weight: 650;
+    letter-spacing: .06em; text-transform: uppercase;
+    cursor: pointer; text-decoration: none; line-height: 1;
+}
+.lang-btn.active {
+    background: rgba(190,230,255,.20);
+    border-color: rgba(220,242,255,.62);
+    color: #fff;
+}
+.rule-credit { text-align: right; font-size: .7rem; letter-spacing: 2px; color: rgba(255,255,255,.3); }
+
+/* Zăpada adunată (desenată din JS, urmărește forma reală a literelor / panoului) */
+.rules-snow-cap, .logo-snow-cap {
+    position: absolute;
+    pointer-events: none;
+    display: block;
+}
+.rules-snow-cap { z-index: 3; }
+.logo-snow-cap { z-index: 2; left: 0; top: 0; }
+
+/* ── Responsive ── */
+@media (max-width: 960px) {
+    .rules-panel { display: none; }
+    .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+}
+@media (max-aspect-ratio: 3/4), (min-aspect-ratio: 10/9) and (max-aspect-ratio: 16/10) {
+    .rules-panel { display: none; }
+    .logo-area { left: 50%; text-align: center; transform: translate(-50%, -50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+    #snow { display: none; }
+    .rules-panel { transition: none; }
+}
+</style>
+</head>
+<body>
+<div id="bgPhoto"></div>
+<div id="bgOverlay"></div>
+<canvas id="snow" aria-hidden="true"></canvas>
+
+<div class="scene">
+    <div class="logo-area">
+        <div class="eyebrow">International Room</div>
+        <h1 class="logo-text">Sociale<canvas class="logo-snow-cap" aria-hidden="true"></canvas></h1>
+        <div class="logo-sub">MySociale.Net</div>
+    </div>
+
+    <aside class="rules-panel">
+        <canvas class="rules-snow-cap" aria-hidden="true"></canvas>
+        <div class="rules-header" id="rulesTitle">Community Rules</div>
+
+        <div class="rule-item"><div class="rule-num">01</div><div class="rule-content"><h3></h3><p></p></div></div>
+        <div class="rule-item"><div class="rule-num">02</div><div class="rule-content"><h3></h3><p></p></div></div>
+        <div class="rule-item"><div class="rule-num">03</div><div class="rule-content"><h3></h3><p></p></div></div>
+        <div class="rule-item"><div class="rule-num">04</div><div class="rule-content"><h3></h3><p></p></div></div>
+        <div class="rule-item"><div class="rule-num">05</div><div class="rule-content"><h3></h3><p></p></div></div>
+
+        <div class="rules-footer">
+            <div class="rules-lang" role="tablist" aria-label="Rules language">
+                <a class="lang-btn active" href="#" data-lang="en">EN</a>
+                <a class="lang-btn" href="#" data-lang="ro">RO</a>
+                <a class="lang-btn" href="#" data-lang="it">IT</a>
+                <a class="lang-btn" href="#" data-lang="es">ES</a>
+            </div>
+            <div class="rule-credit">© SOCIALE</div>
+        </div>
+    </aside>
+</div>
+
+<script>
+/* ── Reguli ── */
+var rulesData = {
+    en: { title: "Community Rules", items: [
+        { h: "Freedom of Expression", p: "Feel free to chat and express yourself. All languages are allowed." },
+        { h: "Mutual Respect", p: "Personal insults, excessively vulgar language, constant provocation, or harassment will not be tolerated." },
+        { h: "Respect for the Staff", p: "All staff members must be treated with respect. Disrespect or undermining staff may result in a ban." },
+        { h: "Transparency", p: "Bans longer than 10 hours must be accompanied by screenshot evidence. 1-hour bans are exempt." },
+        { h: "Staff Impartiality", p: "Banning for personal reasons is strictly prohibited. Punishments must be fair and impartial." }
+    ]},
+    ro: { title: "Regulile Comunității", items: [
+        { h: "Libertate de exprimare", p: "Poți discuta liber și să te exprimi. Toate limbile sunt permise." },
+        { h: "Respect reciproc", p: "Insultele personale, limbajul excesiv de vulgar, provocările constante sau hărțuirea nu vor fi tolerate." },
+        { h: "Respect față de staff", p: "Toți membrii staff-ului trebuie tratați cu respect. Disprețul sau subminarea staff-ului poate duce la ban." },
+        { h: "Transparență", p: "Banurile mai lungi de 10 ore trebuie însoțite de dovezi (screenshot). Banurile de 1 oră sunt exceptate." },
+        { h: "Imparțialitatea staff-ului", p: "Banarea din motive personale este strict interzisă. Sancțiunile trebuie să fie corecte și imparțiale." }
+    ]},
+    it: { title: "Regole della Community", items: [
+        { h: "Libertà di espressione", p: "Sentiti liberi di chattare ed esprimervi. Tutte le lingue sono consentite." },
+        { h: "Rispetto reciproco", p: "Insulti personali, linguaggio eccessivamente volgare, provocazioni continue o molestie non saranno tollerati." },
+        { h: "Rispetto per lo staff", p: "Tutti i membri dello staff devono essere trattati con rispetto. Mancanza di rispetto o sabotaggio può portare al ban." },
+        { h: "Trasparenza", p: "I ban superiori a 10 ore devono essere accompagnati da prove (screenshot). I ban di 1 ora sono esenti." },
+        { h: "Imparzialità dello staff", p: "Bannare per motivi personali è severamente vietato. Le punizioni devono essere eque e imparziali." }
+    ]},
+    es: { title: "Reglas de la Comunidad", items: [
+        { h: "Libertad de expresión", p: "Siéntete libre de chatear y expresarte. Se permiten todos los idiomas." },
+        { h: "Respeto mutuo", p: "No se tolerarán insultos personales, lenguaje excesivamente vulgar, provocación constante ni acoso." },
+        { h: "Respeto al staff", p: "Todo el staff debe ser tratado con respeto. La falta de respeto o el sabotaje puede resultar en ban." },
+        { h: "Transparencia", p: "Los bans de más de 10 horas deben ir acompañados de pruebas (capturas). Los bans de 1 hora están exentos." },
+        { h: "Imparcialidad del staff", p: "Está estrictamente prohibido banear por motivos personales. Los castigos deben ser justos e imparciales." }
+    ]}
+};
+
+function applyRulesLang(lang) {
+    var data = rulesData[lang] || rulesData.en;
+    document.getElementById("rulesTitle").textContent = data.title;
+    var items = document.querySelectorAll(".rules-panel .rule-item");
+    for (var i = 0; i < items.length; i++) {
+        items[i].querySelector("h3").textContent = data.items[i].h;
+        items[i].querySelector("p").textContent = data.items[i].p;
+    }
+    var btns = document.querySelectorAll(".rules-lang .lang-btn");
+    for (var j = 0; j < btns.length; j++) {
+        btns[j].classList.toggle("active", btns[j].getAttribute("data-lang") === lang);
+    }
+}
+document.querySelector(".rules-lang").addEventListener("click", function (e) {
+    var b = e.target.closest(".lang-btn");
+    if (!b) return;
+    e.preventDefault();
+    applyRulesLang(b.getAttribute("data-lang"));
+});
+applyRulesLang("en");
+
+</script>
+
+<script>
+(function () {
+    "use strict";
+    var reduce = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /* LITE = telefon / cadru mic: mai puțini fulgi, FPS mai mic, fără gradiente per bulgăre */
+    var LITE = matchMedia("(hover: none) and (pointer: coarse)").matches || Math.min(screen.width, innerWidth) < 700;
+
+    /* =====================================================
+       1) ZĂPADA CARE CADE (un singur canvas, sprite-uri)
+       ===================================================== */
+    var fall = document.getElementById("snow"), fctx = fall.getContext("2d");
+    var FDPR = LITE ? 0.5 : Math.min(window.devicePixelRatio || 1, 1.5);   // canvas mai mic = mult mai puțin de compus pe ecran
+    var W = 0, H = 0, flakes = [], chunks = [], debris = [];
+    var COUNT = LITE ? 16 : 40;
+    var FRAME = 1000 / (LITE ? 15 : 24);
+    var last = 0, raf = 0, running = false, onScreen = true;
+
+    var SIZES = LITE ? [9, 13, 18] : [8, 11, 14, 17, 20, 24];
+    /* sprite-uri de fulgi desenate cu canvas (hexagonale, cu ramificații)
+       – mult mai realiste decât caracterele Unicode anterioare */
+    function makeSnowflakeSprite(size, kind) {
+        var dim = Math.ceil(size + 20);
+        var c = document.createElement("canvas");
+        c.width = c.height = dim * FDPR;
+        var g = c.getContext("2d");
+        g.scale(FDPR, FDPR);
+        g.translate(dim / 2, dim / 2);
+        g.strokeStyle = "#fff";
+        g.fillStyle = "#fff";
+        g.lineCap = "round";
+        g.shadowColor = "rgba(220,242,255,0.9)";
+        g.shadowBlur = 7;
+        if (kind === 0) {
+            /* punct simplu pentru fulgii mici/îndepărtați */
+            g.beginPath();
+            g.arc(0, 0, size * 0.25, 0, 6.2832);
+            g.fill();
+        } else if (kind === 1) {
+            /* stea simplă cu 6 brațe */
+            g.lineWidth = Math.max(0.5, size * 0.07);
+            for (var i = 0; i < 6; i++) {
+                var ang = i * Math.PI / 3;
+                g.beginPath();
+                g.moveTo(0, 0);
+                g.lineTo(Math.cos(ang) * size / 2, Math.sin(ang) * size / 2);
+                g.stroke();
+            }
+            g.beginPath();
+            g.arc(0, 0, size * 0.08, 0, 6.2832);
+            g.fill();
+        } else {
+            /* fulg dendritic detaliat cu ramificații la 1/3 și 2/3 */
+            g.lineWidth = Math.max(0.4, size * 0.055);
+            for (var i = 0; i < 6; i++) {
+                var ang = i * Math.PI / 3;
+                var ex = Math.cos(ang) * size / 2, ey = Math.sin(ang) * size / 2;
+                g.beginPath();
+                g.moveTo(0, 0);
+                g.lineTo(ex, ey);
+                g.stroke();
+                for (var b = 1; b <= 2; b++) {
+                    var bx = ex * b / 3, by = ey * b / 3;
+                    var bl = size * 0.16 * (1 - b / 4);
+                    g.beginPath();
+                    g.moveTo(bx, by);
+                    g.lineTo(bx + Math.cos(ang + Math.PI / 3) * bl, by + Math.sin(ang + Math.PI / 3) * bl);
+                    g.moveTo(bx, by);
+                    g.lineTo(bx + Math.cos(ang - Math.PI / 3) * bl, by + Math.sin(ang - Math.PI / 3) * bl);
+                    g.stroke();
+                }
+            }
+            g.beginPath();
+            g.arc(0, 0, size * 0.1, 0, 6.2832);
+            g.fill();
+        }
+        return { img: c, dim: dim };
+    }
+    var sprites = [];
+    SIZES.forEach(function (size) {
+        var kind = size < 11 ? 0 : (size < 16 ? 1 : 2);
+        sprites.push(makeSnowflakeSprite(size, kind));
+        /* o a doua variantă pentru fulgii mai mari (varietate vizuală) */
+        if (size >= 13) sprites.push(makeSnowflakeSprite(size, Math.min(2, kind + 1)));
+    });
+
+    function resizeFall() {
+        W = window.innerWidth; H = window.innerHeight;
+        fall.width = W * FDPR; fall.height = H * FDPR;
+    }
+    function make(initial) {
+        return {
+            x: Math.random() * W,
+            y: initial ? Math.random() * H : -30,
+            sp: sprites[Math.floor(Math.random() * sprites.length)],
+            vy: 40 + Math.random() * 80,
+            vx: -25 + Math.random() * 50,
+            sway: 6 + Math.random() * 18,
+            ph: Math.random() * 6.28,
+            rot: Math.random() * 6.28,
+            vr: (Math.random() - 0.5) * 1.6,
+            a: 0.35 + Math.random() * 0.6
+        };
+    }
+    function initFall() {
+        resizeFall();
+        flakes = [];
+        for (var i = 0; i < COUNT; i++) flakes.push(make(true));
+    }
+    function spawn(x, y, r, vx, vy) {
+        if (reduce || chunks.length > 60) return;
+        chunks.push({ x: x, y: y, r: r, vx: vx, vy: vy, life: 1.6 });
+    }
+    /* debris – particule mici de zăpadă împrăștiate la ștergere */
+    function spawnDebris(x, y, vx, vy) {
+        if (reduce || debris.length > 90) return;
+        debris.push({ x: x, y: y, vx: vx, vy: vy, life: 0.6 + Math.random() * 0.3, r: 0.4 + Math.random() * 0.9 });
+    }
+    var timerF = 0;
+    function tick(t) {
+        raf = 0;
+        var dt = Math.min((t - last) / 1000, 0.1);
+        last = t;
+
+        fctx.setTransform(1, 0, 0, 1, 0, 0);
+        fctx.clearRect(0, 0, fall.width, fall.height);
+
+        var i;
+        for (i = 0; i < flakes.length; i++) {
+            var f = flakes[i];
+            f.y += f.vy * dt;
+            f.x += f.vx * dt;
+            f.ph += dt * 0.8;
+            f.rot += f.vr * dt;
+            var px = f.x + Math.sin(f.ph) * f.sway;
+            if (f.y > H + 30 || px < -40 || px > W + 40) { flakes[i] = make(false); continue; }
+            var d = f.sp.dim;
+            var cos = Math.cos(f.rot) * FDPR, sin = Math.sin(f.rot) * FDPR;
+            fctx.setTransform(cos, sin, -sin, cos, px * FDPR, f.y * FDPR);
+            fctx.globalAlpha = f.a;
+            fctx.drawImage(f.sp.img, -d / 2, -d / 2, d, d);
+        }
+
+        /* bulgări de zăpadă care cad de pe text (cu gradient radial pentru volum) */
+        if (chunks.length) {
+            fctx.setTransform(FDPR, 0, 0, FDPR, 0, 0);
+            for (i = chunks.length - 1; i >= 0; i--) {
+                var c = chunks[i];
+                c.vy += 520 * dt;
+                c.x += c.vx * dt;
+                c.y += c.vy * dt;
+                c.life -= dt;
+                if (c.life <= 0 || c.y > H + 20) { chunks.splice(i, 1); continue; }
+                fctx.globalAlpha = Math.min(1, c.life * 2.5) * 0.95;
+                /* bulgăr cu gradient radial pentru aspect de zăpadă (alb sus, gri-albastru jos) */
+                if (!LITE && c.r > 2) {
+                    var cg = fctx.createRadialGradient(c.x - c.r * 0.3, c.y - c.r * 0.3, 0, c.x, c.y, c.r * 1.3);
+                    cg.addColorStop(0, "#ffffff");
+                    cg.addColorStop(0.5, "#f4f8fc");
+                    cg.addColorStop(1, "#bccde0");
+                    fctx.fillStyle = cg;
+                } else {
+                    fctx.fillStyle = "#fff";
+                }
+                fctx.beginPath();
+                fctx.arc(c.x, c.y, c.r, 0, 6.2832);
+                fctx.fill();
+            }
+        }
+        /* debris – particule mici de zăpadă împrăștiate la ștergere */
+        if (debris.length) {
+            fctx.setTransform(FDPR, 0, 0, FDPR, 0, 0);
+            fctx.fillStyle = "#fff";
+            for (i = debris.length - 1; i >= 0; i--) {
+                var db = debris[i];
+                db.vy += 350 * dt;
+                db.x += db.vx * dt;
+                db.y += db.vy * dt;
+                db.life -= dt;
+                if (db.life <= 0 || db.y > H + 10) { debris.splice(i, 1); continue; }
+                fctx.globalAlpha = Math.min(1, db.life * 3) * 0.7;
+                fctx.beginPath();
+                fctx.arc(db.x, db.y, db.r, 0, 6.2832);
+                fctx.fill();
+            }
+        }
+        fctx.setTransform(1, 0, 0, 1, 0, 0);
+        fctx.globalAlpha = 1;
+        if (running) {
+            timerF = setTimeout(function () { raf = requestAnimationFrame(tick); },
+                                Math.max(0, FRAME - (performance.now() - t) - 3));
+        }
+    }
+    function start() { if (!running) { running = true; last = performance.now(); raf = requestAnimationFrame(tick); } }
+    function stop() { running = false; cancelAnimationFrame(raf); clearTimeout(timerF); }
+    function sync() { (onScreen && !document.hidden) ? start() : stop(); }
+
+    if (!reduce) {
+        initFall();
+        sync();
+        document.addEventListener("visibilitychange", sync);
+        if (window.IntersectionObserver) {
+            new IntersectionObserver(function (e) { onScreen = e[0].isIntersecting; sync(); })
+                .observe(document.querySelector(".scene"));
+        }
+        var frt;
+        window.addEventListener("resize", function () { clearTimeout(frt); frt = setTimeout(initFall, 200); });
+    }
+
+    /* =====================================================
+       2) ZĂPADA ADUNATĂ pe "Sociale" și pe panoul Rules
+       ===================================================== */
+    var DPR = Math.min(window.devicePixelRatio || 1, 2);
+    var SNOW_DURATION = 50000;       // cât durează până se adună toată zăpada
+    var STEP = LITE ? 1200 : 600;    // redesenăm doar din când în când, nu la fiecare cadru
+    var REGROW = 1 / 40;             // cât de repede se reface zăpada ștearsă (1/secunde)
+    var currentG = 0.08;
+
+    function rng(seed) {
+        return function () {
+            seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+            var t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+            t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+            return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+    }
+    function h01(n) { var x = Math.sin(n * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); }
+    function noise1(seed) {
+        var r = rng(seed), n = 128, a = [];
+        for (var i = 0; i < n; i++) a.push(r());
+        return function (x) {
+            var i = Math.floor(x), f = x - i;
+            f = f * f * (3 - 2 * f);
+            var i0 = ((i % n) + n) % n, i1 = (i0 + 1) % n;
+            return a[i0] * (1 - f) + a[i1] * f;
+        };
+    }
+    function smooth(a, b, x) {
+        var t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+        return t * t * (3 - 2 * t);
+    }
+    function snowGradient(ctx, y0, y1) {
+        /* gradient de gheață cu reflexie fizică: alb pur → alb rece → albastru-deschis → albastru mediu */
+        var g = ctx.createLinearGradient(0, y0, 0, Math.max(y1, y0 + 1));
+        g.addColorStop(0, "#ffffff");
+        g.addColorStop(0.35, "#fbfdff");
+        g.addColorStop(0.7, "#e3edf6");
+        g.addColorStop(1, "#a8c2d8");
+        return g;
+    }
+    /* stea cristalină cu 6 brațe + halo + punct central – sclipire de fulg real */
+    function drawSparkle(ctx, x, y, r, alpha) {
+        if (r < 0.6) return;
+        ctx.save();
+        ctx.translate(x, y);
+        /* halo moale în jurul sclipirii (doar pentru sclipiri mai mari) */
+        if (!LITE && r > 1.4) {
+            var halo = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 2.8);
+            halo.addColorStop(0, "rgba(255,255,255," + (alpha * 0.35) + ")");
+            halo.addColorStop(0.5, "rgba(220,240,255," + (alpha * 0.12) + ")");
+            halo.addColorStop(1, "rgba(220,240,255,0)");
+            ctx.fillStyle = halo;
+            ctx.beginPath(); ctx.arc(0, 0, r * 2.8, 0, 6.2832); ctx.fill();
+        }
+        ctx.strokeStyle = "rgba(255,255,255," + alpha + ")";
+        ctx.lineWidth = 0.75;
+        ctx.lineCap = "round";
+        /* 3 axe principale = 6 brațe */
+        for (var k = 0; k < 3; k++) {
+            ctx.beginPath();
+            var ang = k * Math.PI / 3;
+            var dx = Math.cos(ang) * r, dy = Math.sin(ang) * r;
+            ctx.moveTo(-dx, -dy); ctx.lineTo(dx, dy);
+            ctx.stroke();
+        }
+        /* cruciulițe perpendiculare la mijlocul fiecărui braț */
+        ctx.lineWidth = 0.5;
+        for (var j = 0; j < 6; j++) {
+            var a2 = j * Math.PI / 3;
+            var cx2 = Math.cos(a2) * r * 0.55, cy2 = Math.sin(a2) * r * 0.55;
+            var perp = a2 + Math.PI / 2;
+            var px = Math.cos(perp) * r * 0.22, py = Math.sin(perp) * r * 0.22;
+            ctx.beginPath();
+            ctx.moveTo(cx2 - px, cy2 - py); ctx.lineTo(cx2 + px, cy2 + py);
+            ctx.stroke();
+        }
+        /* nucleu strălucitor */
+        ctx.fillStyle = "rgba(255,255,255," + Math.min(1, alpha + 0.15) + ")";
+        ctx.beginPath();
+        ctx.arc(0, 0, r * 0.22, 0, 6.2832); ctx.fill();
+        ctx.restore();
+    }
+    function tracePath(ctx, top, bot) {
+        var i;
+        ctx.beginPath();
+        ctx.moveTo(top[0][0], top[0][1]);
+        for (i = 1; i < top.length; i++) ctx.lineTo(top[i][0], top[i][1]);
+        for (i = bot.length - 1; i >= 0; i--) ctx.lineTo(bot[i][0], bot[i][1]);
+        ctx.closePath();
+    }
+    function puff(ctx, cx, cy, rad) {
+        /* bulb cu volum: glow exterior + gradient cu lumină din stânga-sus + specular */
+        if (rad < 0.8) return;
+        /* glow moale exterior pentru efect de lumină difuză */
+        if (!LITE && rad > 2) {
+            var og = ctx.createRadialGradient(cx, cy, rad * 0.6, cx, cy, rad * 1.6);
+            og.addColorStop(0, "rgba(220,235,250,0.22)");
+            og.addColorStop(1, "rgba(220,235,250,0)");
+            ctx.fillStyle = og;
+            ctx.beginPath(); ctx.arc(cx, cy, rad * 1.6, 0, 6.2832); ctx.fill();
+        }
+        /* corpul cu gradient radial */
+        var g = ctx.createRadialGradient(cx - rad * 0.35, cy - rad * 0.35, 0, cx, cy, rad * 1.25);
+        g.addColorStop(0, "#ffffff");
+        g.addColorStop(0.35, "#f8fbfd");
+        g.addColorStop(0.75, "#dde6f0");
+        g.addColorStop(1, "#9eb6cf");
+        ctx.beginPath();
+        ctx.arc(cx, cy, rad, 0, 6.2832);
+        ctx.fillStyle = g;
+        ctx.fill();
+        /* specular highlight pe vârf */
+        ctx.beginPath();
+        ctx.arc(cx - rad * 0.4, cy - rad * 0.4, rad * 0.22, 0, 6.2832);
+        ctx.fillStyle = "rgba(255,255,255,0.98)";
+        ctx.fill();
+        /* sclipire fină pe highlight pentru bulgării mai mari */
+        if (!LITE && rad > 2.5) {
+            drawSparkle(ctx, cx - rad * 0.4, cy - rad * 0.4, rad * 0.2, 0.85);
+        }
+    }
+    function fillSnow(ctx, top, bot, y0, y1) {
+        var i, n = top.length, px, th;
+        if (n < 3) return;
+        /* 1. umbră de contact moale, alungită, cu nuanță albastru-închis */
+        ctx.save();
+        tracePath(ctx, top, bot);
+        ctx.shadowColor = "rgba(20,30,55,0.6)";
+        ctx.shadowBlur = LITE ? 5 : 8;
+        ctx.shadowOffsetY = 2.5;
+        ctx.fillStyle = "#8aa3bd";
+        ctx.fill();
+        ctx.restore();
+        /* 2. corp: gradient cu 6 opriri pentru fizica luminii în zăpadă */
+        var g = ctx.createLinearGradient(0, y0, 0, Math.max(y1, y0 + 1));
+        g.addColorStop(0, "#ffffff");       /* creastă – lumină directă */
+        g.addColorStop(0.1, "#fcfdfe");     /* alb pur */
+        g.addColorStop(0.3, "#edf3f9");     /* alb rece */
+        g.addColorStop(0.55, "#d3e0ec");    /* gri-albastru */
+        g.addColorStop(0.8, "#a5bbd2");     /* umbră medie */
+        g.addColorStop(1, "#7891ad");       /* umbră adâncă (sub-surface) – contrast mai puternic */
+        tracePath(ctx, top, bot);
+        ctx.fillStyle = g;
+        ctx.fill();
+        /* 3. detalii interioare (decupate pe formă) */
+        ctx.save();
+        tracePath(ctx, top, bot);
+        ctx.clip();
+        ctx.lineJoin = "round";
+        /* 3a. adâncituri organice cu gradient radial mai dens */
+        for (i = 2; i < n - 2; i++) {
+            px = Math.round(top[i][0]);
+            if (px % 9 !== 0) continue;
+            th = bot[i][1] - top[i][1];
+            if (th < 3.5) continue;
+            var hr = th * (0.45 + h01(px * 1.7) * 0.55), hx = top[i][0], hy = top[i][1] + th * (0.42 + h01(px * 2.9) * 0.4);
+            if (LITE) {
+                ctx.fillStyle = "rgba(130,160,195,0.16)";
+                ctx.beginPath(); ctx.arc(hx, hy, hr, 0, 6.2832); ctx.fill();
+            } else {
+                var rg = ctx.createRadialGradient(hx, hy, 0, hx, hy, hr * 1.5);
+                rg.addColorStop(0, "rgba(110,145,185,0.34)");
+                rg.addColorStop(0.6, "rgba(130,160,195,0.14)");
+                rg.addColorStop(1, "rgba(140,170,203,0)");
+                ctx.fillStyle = rg;
+                ctx.beginPath(); ctx.arc(hx, hy, hr * 1.5, 0, 6.2832); ctx.fill();
+            }
+        }
+        /* 3b. subsurface scattering – strălucire caldă din interior */
+        if (!LITE) {
+            for (i = 3; i < n - 3; i += 4) {
+                px = Math.round(top[i][0]);
+                th = bot[i][1] - top[i][1];
+                if (th < 5) continue;
+                var sx = top[i][0] + (h01(px * 4.1) * 2 - 1);
+                var sy = top[i][1] + th * 0.25 + h01(px * 2.3) * th * 0.15;
+                var sr = th * 0.5;
+                var ssg = ctx.createRadialGradient(sx, sy, 0, sx, sy, sr);
+                ssg.addColorStop(0, "rgba(255,255,255,0.2)");
+                ssg.addColorStop(1, "rgba(255,255,255,0)");
+                ctx.fillStyle = ssg;
+                ctx.beginPath(); ctx.arc(sx, sy, sr, 0, 6.2832); ctx.fill();
+            }
+        }
+        /* 3c. textură cristalină – cristale de zăpadă vizibile ca puncte mai mari + pete de lumină */
+        if (!LITE) {
+            /* cristale albe mai mari (vizibile ca granulație) */
+            ctx.fillStyle = "rgba(255,255,255,0.75)";
+            for (i = 0; i < n; i++) {
+                px = Math.round(top[i][0]);
+                th = bot[i][1] - top[i][1];
+                if (th < 2.5) continue;
+                if (h01(px * 7.13) > 0.55) continue;
+                var spy = top[i][1] + th * (0.15 + h01(px * 3.1) * 0.7);
+                var spr = 0.9 + h01(px * 9.1) * 1.1;
+                ctx.beginPath();
+                ctx.arc(top[i][0], spy, spr, 0, 6.2832); ctx.fill();
+            }
+            /* pete mici de lumină (specular micro-patches) */
+            ctx.fillStyle = "rgba(255,255,255,0.45)";
+            for (i = 1; i < n - 1; i += 2) {
+                px = Math.round(top[i][0]);
+                th = bot[i][1] - top[i][1];
+                if (th < 4) continue;
+                if (h01(px * 5.7) > 0.4) continue;
+                var lpy = top[i][1] + th * (0.25 + h01(px * 4.3) * 0.5);
+                var lpr = 1.4 + h01(px * 8.1) * 1.8;
+                ctx.beginPath();
+                ctx.arc(top[i][0], lpy, lpr, 0, 6.2832); ctx.fill();
+            }
+            /* micro-umbre pentru adâncime (cristale mai întunecate în văi) */
+            ctx.fillStyle = "rgba(75,110,150,0.3)";
+            for (i = 1; i < n - 1; i += 2) {
+                px = Math.round(top[i][0]);
+                th = bot[i][1] - top[i][1];
+                if (th < 4) continue;
+                if (h01(px * 17.3 + 5.1) > 0.5) continue;
+                var dsy = top[i][1] + th * (0.55 + h01(px * 5.7) * 0.35);
+                ctx.beginPath();
+                ctx.arc(top[i][0], dsy, 0.7, 0, 6.2832); ctx.fill();
+            }
+        }
+        /* 3d. bandă speculară – unde lovește direct lumina (în partea superioară) */
+        ctx.beginPath();
+        ctx.moveTo(top[0][0], top[0][1] + 1.2);
+        for (i = 1; i < n; i++) ctx.lineTo(top[i][0], top[i][1] + 1.2);
+        ctx.strokeStyle = "rgba(255,255,255,0.92)";
+        ctx.lineWidth = 3.2;
+        ctx.stroke();
+        /* 3e. secundă speculară mai slabă, mai jos */
+        if (!LITE) {
+            ctx.beginPath();
+            ctx.moveTo(top[0][0], top[0][1] + 3.5);
+            for (i = 1; i < n; i++) ctx.lineTo(top[i][0], top[i][1] + 3.5);
+            ctx.strokeStyle = "rgba(255,255,255,0.4)";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+        /* 3f. umbră pe marginea de jos (transiția cu suprafața) */
+        ctx.beginPath();
+        ctx.moveTo(bot[0][0], bot[0][1] - 0.5);
+        for (i = 1; i < n; i++) ctx.lineTo(bot[i][0], bot[i][1] - 0.5);
+        ctx.strokeStyle = "rgba(70,110,160,0.58)";
+        ctx.lineWidth = 5;
+        ctx.stroke();
+        /* 3g. penumbră sub marginea inferioară */
+        ctx.beginPath();
+        ctx.moveTo(bot[0][0], bot[0][1] + 1);
+        for (i = 1; i < n; i++) ctx.lineTo(bot[i][0], bot[i][1] + 1);
+        ctx.strokeStyle = "rgba(40,70,110,0.28)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.restore();
+        /* 4. creastă fină albă */
+        ctx.beginPath();
+        ctx.moveTo(top[0][0], top[0][1] + 0.3);
+        for (i = 1; i < n; i++) ctx.lineTo(top[i][0], top[i][1] + 0.3);
+        ctx.strokeStyle = "rgba(255,255,255,0.98)";
+        ctx.lineWidth = 0.85;
+        ctx.stroke();
+        /* 5. sclipiri cristaline cu halo + câteva sclipiri mari ocazionale */
+        if (!LITE) {
+            for (i = 2; i < n - 2; i++) {
+                px = Math.round(top[i][0]);
+                if (h01(px * 7.7) > 0.06) continue;
+                th = bot[i][1] - top[i][1];
+                if (th < 3) continue;
+                var gx = top[i][0], gy = top[i][1] + th * (0.2 + h01(px * 3.1) * 0.45), gl = 1.6 + h01(px * 5.3) * 2.2;
+                drawSparkle(ctx, gx, gy, gl, 0.92);
+            }
+            /* sclipiri mari rare (specular highlights) */
+            for (i = 5; i < n - 5; i += 5) {
+                px = Math.round(top[i][0]);
+                if (h01(px * 11.3 + 3.7) > 0.018) continue;
+                th = bot[i][1] - top[i][1];
+                if (th < 4) continue;
+                var lgx = top[i][0], lgy = top[i][1] + th * (0.15 + h01(px * 4.7) * 0.3);
+                drawSparkle(ctx, lgx, lgy, 2.8 + h01(px * 7.1) * 1.6, 1);
+            }
+        }
+    }
+    function icicle(ctx, x, y, len, w) {
+        if (len < 3) return;
+        /* picătură de gheață cu vârf bulbous */
+        var tipW = w * 1.4, tipY = y + len;
+        /* gradient orizontal pentru efect de gheață translucidă */
+        var g = ctx.createLinearGradient(x - w / 2, 0, x + w / 2, 0);
+        g.addColorStop(0, "rgba(115,165,210,0.85)");
+        g.addColorStop(0.25, "rgba(185,222,243,0.95)");
+        g.addColorStop(0.5, "rgba(248,252,255,0.98)");
+        g.addColorStop(0.75, "rgba(178,213,238,0.95)");
+        g.addColorStop(1, "rgba(105,155,200,0.85)");
+        ctx.beginPath();
+        ctx.moveTo(x - w / 2, y);
+        ctx.bezierCurveTo(x - w * 0.4, y + len * 0.35, x - tipW * 0.45, y + len * 0.78, x, tipY);
+        ctx.bezierCurveTo(x + tipW * 0.45, y + len * 0.78, x + w * 0.4, y + len * 0.35, x + w / 2, y);
+        ctx.closePath();
+        ctx.fillStyle = g;
+        ctx.fill();
+        /* mărgele de gheață de-a lungul corpului (picături înghețate) */
+        if (!LITE && len > 8) {
+            var beadCount = Math.min(5, Math.floor(len / 6));
+            for (var b = 1; b <= beadCount; b++) {
+                var by = y + (b / (beadCount + 1)) * len;
+                var bw = w * (0.32 + 0.5 * (1 - b / (beadCount + 1)));
+                var bx = x + (h01(x * 0.7 + b * 3.3) - 0.5) * w * 0.35;
+                var bg = ctx.createRadialGradient(bx - bw * 0.2, by - bw * 0.2, 0, bx, by, bw * 0.7);
+                bg.addColorStop(0, "rgba(255,255,255,0.85)");
+                bg.addColorStop(1, "rgba(220,235,250,0.3)");
+                ctx.fillStyle = bg;
+                ctx.beginPath(); ctx.arc(bx, by, bw * 0.5, 0, 6.2832); ctx.fill();
+                ctx.beginPath(); ctx.arc(bx - bw * 0.15, by - bw * 0.15, bw * 0.18, 0, 6.2832);
+                ctx.fillStyle = "rgba(255,255,255,0.98)";
+                ctx.fill();
+            }
+        }
+        /* cârlig de lumină vertical pe partea stângă (reflexia în gheață) */
+        ctx.beginPath();
+        ctx.moveTo(x - w * 0.22, y + 1);
+        ctx.quadraticCurveTo(x - w * 0.14, y + len * 0.45, x - w * 0.06, y + len * 0.85);
+        ctx.strokeStyle = "rgba(255,255,255,0.92)";
+        ctx.lineWidth = 1.1;
+        ctx.stroke();
+        /* vârf luminos + sclipire pentru țurțuri mai lungi */
+        if (len > 8) {
+            var tg = ctx.createRadialGradient(x, tipY - 1, 0, x, tipY - 1, w * 0.5);
+            tg.addColorStop(0, "rgba(255,255,255,0.75)");
+            tg.addColorStop(1, "rgba(255,255,255,0)");
+            ctx.fillStyle = tg;
+            ctx.beginPath(); ctx.arc(x, tipY - 1, w * 0.5, 0, 6.2832); ctx.fill();
+            drawSparkle(ctx, x, tipY - 1, 1.8, 0.95);
+        }
+        /* umbră sub țurțur la baza de contact */
+        ctx.beginPath();
+        ctx.arc(x, y + 1, w * 0.45, 0, Math.PI, true);
+        ctx.fillStyle = "rgba(35,65,100,0.35)";
+        ctx.fill();
+    }
+    function clump(ctx, x, y, r) {
+        /* bulgăr de zăpadă cu volum: glow + umbră de contact + bulgări suprapuși */
+        var cy = y + r * 0.3;
+        if (r < 1) { puff(ctx, x, cy, r * 0.8); return; }
+        /* umbră de contact eliptică */
+        ctx.beginPath();
+        ctx.ellipse(x, y + r * 0.65, r * 0.95, r * 0.28, 0, 0, 6.2832);
+        ctx.fillStyle = "rgba(35,65,100,0.38)";
+        ctx.fill();
+        /* glow exterior difuz */
+        if (!LITE && r > 2) {
+            var og = ctx.createRadialGradient(x, cy, r * 0.5, x, cy, r * 1.6);
+            og.addColorStop(0, "rgba(220,235,250,0.2)");
+            og.addColorStop(1, "rgba(220,235,250,0)");
+            ctx.fillStyle = og;
+            ctx.beginPath(); ctx.arc(x, cy, r * 1.6, 0, 6.2832); ctx.fill();
+        }
+        /* bulgăr principal */
+        puff(ctx, x, cy, r * 0.85);
+        /* bulgări satelit pentru aspect organic */
+        puff(ctx, x - r * 0.4, cy - r * 0.12, r * 0.5);
+        puff(ctx, x + r * 0.35, cy + r * 0.05, r * 0.45);
+        /* bulgăricică sus pentru neregularitate */
+        if (r > 2) puff(ctx, x + r * 0.05, cy - r * 0.4, r * 0.3);
+    }
+    function sizeCanvas(cv, cssW, cssH) {
+        cv.width = Math.round(cssW * DPR);
+        cv.height = Math.round(cssH * DPR);
+        cv.style.width = cssW + "px";
+        cv.style.height = cssH + "px";
+        return cv.getContext("2d");
+    }
+
+    /* ---------- titlul "Sociale" ---------- */
+    var logo = null, E = 4;
+
+    function buildLogo() {
+        var h1 = document.querySelector(".logo-text");
+        var cv = h1 && h1.querySelector(".logo-snow-cap");
+        if (!h1 || !cv) { logo = null; return; }
+
+        var cs = getComputedStyle(h1);
+        var fs = parseFloat(cs.fontSize) || 64;
+        var Wd = Math.ceil(h1.offsetWidth), Hd = Math.round(h1.offsetHeight);
+        if (!Wd || !Hd) { logo = null; return; }
+        var L = parseFloat(cs.lineHeight) || fs * 0.9;
+        E = Math.max(4, Math.round(fs * 0.07));
+        var padT = Math.ceil(fs * 0.55), EXT = E + 3;
+
+        var oc = document.createElement("canvas");
+        var hh = Hd + padT;
+        oc.width = Wd; oc.height = hh;
+        var o = oc.getContext("2d");
+        o.font = "600 " + fs + 'px "Playfair Display", serif';
+        o.textBaseline = "alphabetic";
+        o.fillStyle = "#000";
+        var m = o.measureText("Sociale");
+        var A = m.fontBoundingBoxAscent, D = m.fontBoundingBoxDescent;
+        if (!(A > 0)) { A = fs * 1.082; D = fs * 0.251; }
+        var base = (L - (A + D)) / 2 + A;
+        var offX = 0;
+        try {
+            var rg = document.createRange();
+            rg.selectNodeContents(h1.firstChild);
+            offX = rg.getBoundingClientRect().left - h1.getBoundingClientRect().left;
+        } catch (e) { offX = 0; }
+        o.fillText("Sociale", offX, padT + base);
+        var data = o.getImageData(0, 0, Wd, hh).data;
+
+        var tops = new Array(Wd), x, y;
+        for (x = 0; x < Wd; x++) {
+            tops[x] = -1;
+            for (y = 0; y < hh; y++) {
+                if (data[(y * Wd + x) * 4 + 3] > 100) { tops[x] = y; break; }
+            }
+        }
+        var globalTop = 1e9;
+        for (x = 0; x < Wd; x++) if (tops[x] >= 0 && tops[x] < globalTop) globalTop = tops[x];
+
+        var nA = noise1(11), nB = noise1(23), nC = noise1(37), segs = [];
+        x = 0;
+        while (x < Wd) {
+            if (tops[x] < 0) { x++; continue; }
+            var xs = x, jump = fs * 0.1;
+            while (x < Wd && tops[x] >= 0 && (x === xs || Math.abs(tops[x] - tops[x - 1]) <= jump)) x++;
+            var xe = x - 1, n = xe - xs + 1;
+            if (n < 3) continue;
+            var segMin = 1e9, q;
+            for (q = xs; q <= xe; q++) if (tops[q] < segMin) segMin = tops[q];
+            if (segMin > globalTop + fs * 0.4) continue;
+            var ys = [], sl = [], lump = [], i, j, k;
+            for (i = 0; i < n; i++) {
+                var sum = 0, cnt = 0;
+                for (j = -3; j <= 3; j++) {
+                    k = i + j;
+                    if (k < 0 || k >= n) continue;
+                    sum += tops[xs + k]; cnt++;
+                }
+                ys.push(sum / cnt);
+            }
+            for (i = 0; i < n; i++) {
+                var a = Math.max(0, i - 3), b = Math.min(n - 1, i + 3);
+                sl.push((ys[b] - ys[a]) / Math.max(1, b - a));
+                var gx = xs + i;
+                /* 3 octave de noise pentru formă de acumulare mai naturală */
+                var v = 0.5 * nA(gx / 16) + 0.3 * nB(gx / 5) + 0.2 * nC(gx / 2.5);
+                lump.push(0.6 + 0.85 * v);
+            }
+            var r = rng(97 + xs), clumps = [];
+            for (i = 0; i < n; i += 2) {
+                if (r() < 0.55) clumps.push({ k: i, r: (1.2 + r() * 2.4) * fs / 72, dy: r() });
+            }
+            var w = new Float32Array(n);
+            for (i = 0; i < n; i++) w[i] = 1;
+            var ici = [];
+            if (r() < 0.85) ici.push({ k: -E + 2, len: (0.5 + r() * 0.5) * fs * 0.22, w: fs * (0.045 + r() * 0.025) });
+            if (r() < 0.85) ici.push({ k: n - 1 + E - 2, len: (0.5 + r() * 0.5) * fs * 0.22, w: fs * (0.04 + r() * 0.025) });
+            if (n > 24 && r() < 0.12) ici.push({ k: Math.floor(n * (0.3 + r() * 0.4)), len: (0.3 + r() * 0.4) * fs * 0.26, w: fs * 0.04 });
+            segs.push({ x0: xs, ys: ys, sl: sl, lump: lump, clumps: clumps, w: w, ici: ici });
+        }
+
+        var cw = Wd + EXT * 2, ch = Hd + padT;
+        cv.style.left = (-EXT) + "px";
+        cv.style.top = (-padT) + "px";
+        var ctx = sizeCanvas(cv, cw, ch);
+        logo = { cv: cv, ctx: ctx, fs: fs, segs: segs, EXT: EXT, cw: cw, ch: ch, rect: null };
+    }
+
+    function logoThick(s, i, k, grow) {
+        var n = s.ys.length;
+        var d = Math.min(k + E, n - 1 + E - k);
+        var u = Math.min(1, Math.max(0, d + 0.5) / (E + 3));
+        var taper = Math.sqrt(1 - (1 - u) * (1 - u));
+        var sf = 1 - 0.7 * Math.min(1, Math.abs(s.sl[i]) / 0.9);
+        return grow * logo.fs * 0.165 * s.lump[i] * sf * taper;
+    }
+
+    function drawRun(ctx, s, a, b, grow) {
+        var n = s.ys.length, top = [], bot = [], minY = 1e9, maxY = -1e9, k, i;
+        var k0 = (a === 0) ? -E : a, k1 = (b === n - 1) ? n - 1 + E : b;
+        for (k = k0; k <= k1; k++) {
+            i = Math.max(0, Math.min(n - 1, k));
+            var wv = s.w[i];
+            var t = logoThick(s, i, k, grow) * wv;
+            var y0 = s.ys[i], px = s.x0 + k + logo.EXT;
+            var ty = y0 - t, by = y0 + 1.8 * Math.min(1, wv * 3) + t * 0.4;
+            top.push([px, ty]); bot.push([px, by]);
+            if (ty < minY) minY = ty;
+            if (by > maxY) maxY = by;
+        }
+        if (top.length < 3) return;
+        fillSnow(ctx, top, bot, minY, maxY);
+    }
+
+    function drawLogo(grow) {
+        if (!logo) return;
+        var ctx = logo.ctx;
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        ctx.clearRect(0, 0, logo.cw, logo.ch);
+        logo.segs.forEach(function (s) {
+            var n = s.ys.length, a = -1, i;
+            for (i = 0; i <= n; i++) {
+                var on = i < n && s.w[i] > 0.05;
+                if (on && a < 0) a = i;
+                if (!on && a >= 0) { drawRun(ctx, s, a, i - 1, grow); a = -1; }
+            }
+            for (var c = 0; c < s.clumps.length; c++) {
+                var cl = s.clumps[c], wv = s.w[cl.k];
+                if (wv < 0.3) continue;
+                var tt = logoThick(s, cl.k, cl.k, grow) * wv;
+                if (tt < 1.4) continue;
+                clump(ctx, s.x0 + cl.k + logo.EXT, s.ys[cl.k] - tt + cl.r * (0.2 + 0.4 * cl.dy), cl.r * (0.45 + 0.55 * grow));
+            }
+            if (grow > 0.4) {
+                var gi = Math.pow((grow - 0.4) / 0.6, 1.4);
+                for (var q = 0; q < s.ici.length; q++) {
+                    var ic = s.ici[q], ki = Math.max(0, Math.min(n - 1, ic.k));
+                    if (s.w[ki] < 0.6) continue;
+                    var ti = logoThick(s, ki, ic.k, grow) * s.w[ki];
+                    icicle(ctx, s.x0 + ic.k + logo.EXT, s.ys[ki] + 1.8 + ti * 0.4 - 1, ic.len * gi, ic.w);
+                }
+            }
+        });
+    }
+
+    /* ---------- ștergerea zăpezii cu mouse / deget ---------- */
+    var queue = [], lastP = null, raf2 = 0, timer2 = 0, lastT = 0, lastWipe = 0, dirty = false;
+
+    function wipePoint(px, py, R, vx, vpX, vpY) {
+        var any = false, EXT = logo.EXT;
+        logo.segs.forEach(function (s) {
+            var n = s.ys.length;
+            var i0 = Math.max(0, Math.floor(px - s.x0 - EXT - R)), i1 = Math.min(n - 1, Math.ceil(px - s.x0 - EXT + R));
+            for (var i = i0; i <= i1; i++) {
+                var gx = s.x0 + i + EXT, t = logoThick(s, i, i, currentG);
+                var sy = s.ys[i] - t * 0.5, dx = gx - px, dy = sy - py;
+                var d = Math.sqrt(dx * dx + dy * dy);
+                if (d >= R) continue;
+                var nw = d / R; nw = nw * nw;
+                if (nw < s.w[i]) {
+                    var removed = s.w[i] - nw;
+                    s.w[i] = nw; any = true;
+                    if (removed > 0.3 && t > 1.8 && (i & 1) === 0 && Math.random() < 0.7) {
+                        /* folosim coordonatele viewport reale ale pointer-ului (vpX, vpY) */
+                        spawn(vpX, vpY,
+                              1 + Math.random() * Math.min(3.4, t * 0.3),
+                              vx * 0.2 + (Math.random() - 0.5) * 50,
+                              -10 + Math.random() * 50);
+                        /* debris – particule mici care se împrăștie */
+                        for (var db = 0; db < 2; db++) {
+                            spawnDebris(vpX, vpY,
+                                vx * 0.3 + (Math.random() - 0.5) * 120,
+                                -40 + Math.random() * 80);
+                        }
+                    }
+                }
+            }
+        });
+        if (any) lastWipe = performance.now();
+        return any;
+    }
+    /* ștergerea zăpezii pe panoul Rules – aceeași logică ca pe titlul Sociale */
+    function wipeRulesPoint(px, py, R, vx, vpX, vpY) {
+        if (!rules) return false;
+        var any = false, rl = rules;
+        var u0 = Math.max(0, Math.floor(px - R)), u1 = Math.min(rl.cw - 1, Math.ceil(px + R));
+        for (var u = u0; u <= u1; u++) {
+            var t = rulesT(rl, u, currentG, 13);
+            if (t < 0.35) continue;
+            var X = u - rl.EXT;
+            var e = edgeY(rl, X);
+            var ty = e - t;
+            var by = rl.byArr[u] >= 0 ? rl.byArr[u] : e + t * 0.5;
+            var sy = Math.max(ty, Math.min(by, py));
+            var dx = u - px, dy = sy - py;
+            var d = Math.sqrt(dx * dx + dy * dy);
+            if (d >= R) continue;
+            var nw = d / R; nw = nw * nw;
+            if (nw < rl.w[u]) {
+                var removed = rl.w[u] - nw;
+                rl.w[u] = nw; any = true;
+                if (removed > 0.3 && t > 1.8 && (u & 1) === 0 && Math.random() < 0.7) {
+                    /* FOLOSIM vpX, vpY (coordonate viewport reale ale pointer-ului)
+                       în loc de rect.left + u (care e greșit din cauza transformării 3D rotateY) */
+                    spawn(vpX, vpY,
+                          1 + Math.random() * Math.min(3.4, t * 0.3),
+                          vx * 0.2 + (Math.random() - 0.5) * 50,
+                          -10 + Math.random() * 50);
+                    /* debris – particule mici care se împrăștie */
+                    for (var db = 0; db < 2; db++) {
+                        spawnDebris(vpX, vpY,
+                            vx * 0.3 + (Math.random() - 0.5) * 120,
+                            -40 + Math.random() * 80);
+                    }
+                }
+            }
+        }
+        if (any) lastWipe = performance.now();
+        return any;
+    }
+
+    function kick() {
+        if (raf2 || document.hidden) return;
+        clearTimeout(timer2);
+        raf2 = requestAnimationFrame(logoTick);
+    }
+    function logoTick(now) {
+        raf2 = 0;
+        if (!logo && !rules) return;
+        var dt = Math.min((now - lastT) / 1000, 1); lastT = now;
+        var hitL = false, hitR = false, growL = false, growR = false;
+        while (queue.length) {
+            var q = queue.shift();
+            var isR = (q.target === "rules");
+            var hit = isR ? wipeRulesPoint(q.x, q.y, q.R, q.vx, q.vpX, q.vpY)
+                          : wipePoint(q.x, q.y, q.R, q.vx, q.vpX, q.vpY);
+            if (hit) { if (isR) hitR = true; else hitL = true; }
+        }
+        var changed = hitL || hitR;
+        if (changed) dirty = true;
+        if (dirty && now - lastWipe > 2500) {
+            var allL = true, allR = true;
+            if (logo) logo.segs.forEach(function (s) {
+                for (var i = 0; i < s.w.length; i++) {
+                    if (s.w[i] < 1) { growL = true; s.w[i] = Math.min(1, s.w[i] + dt * REGROW); if (s.w[i] < 1) allL = false; }
+                }
+            });
+            if (rules) {
+                for (var u = 0; u < rules.w.length; u++) {
+                    if (rules.w[u] < 1) { growR = true; rules.w[u] = Math.min(1, rules.w[u] + dt * REGROW); if (rules.w[u] < 1) allR = false; }
+                }
+            }
+            if (allL && allR) dirty = false;
+        }
+        /* redesenăm DOAR canvasul care s-a schimbat */
+        if (hitL || growL) drawLogo(currentG);
+        if (hitR || growR) drawRules(currentG);
+        if (changed) {
+            raf2 = 1;   // blochează kick() cât așteptăm
+            timer2 = setTimeout(function () { raf2 = requestAnimationFrame(logoTick); }, LITE ? 24 : 8);
+        }
+        else if (dirty) timer2 = setTimeout(kick, document.hidden ? 1500 : (LITE ? 800 : 400));
+    }
+
+    function onPointer(e) {
+        if (reduce) return;
+        var target = e.currentTarget;
+        var isRules = target && target.classList && target.classList.contains("rules-panel");
+        var ctxObj = isRules ? rules : logo;
+        if (!ctxObj) return;
+        var cv = ctxObj.cv;
+        var rect = cv.getBoundingClientRect();
+        ctxObj.rect = rect;
+        var xCss = e.clientX - rect.left, yCss = e.clientY - rect.top;
+        /* panoul Rules are rotateY(-10deg) – mapăm liniar coordonata CSS X la coordonata internă */
+        var x = isRules ? (xCss / Math.max(1, rect.width)) * rules.cw : xCss;
+        var y = yCss;
+        /* vpX, vpY = coordonate viewport reale ale pointer-ului (pentru spawn corect al bulgărilor) */
+        var vpX = e.clientX, vpY = e.clientY;
+        var R = isRules ? Math.max(28, rules.cw * 0.07)
+                        : (e.pointerType === "touch") ? Math.max(logo.fs * 0.6, 32) : logo.fs * 0.45;
+        var tgt = isRules ? "rules" : "logo";
+        if (lastP && lastP.target === tgt && e.type !== "pointerdown") {
+            var dx = x - lastP.x, dy = y - lastP.y;
+            var dvpX = vpX - lastP.vpX, dvpY = vpY - lastP.vpY;
+            var steps = Math.min(12, Math.max(1, Math.ceil(Math.sqrt(dx * dx + dy * dy) / (R * 0.5))));
+            var vx = Math.max(-200, Math.min(200, dx * 12));
+            for (var s = 1; s <= steps; s++) {
+                var fr = s / steps;
+                queue.push({ x: lastP.x + dx * fr, y: lastP.y + dy * fr, R: R, vx: vx, target: tgt,
+                             vpX: lastP.vpX + dvpX * fr, vpY: lastP.vpY + dvpY * fr });
+            }
+        } else {
+            queue.push({ x: x, y: y, R: R, vx: 0, target: tgt, vpX: vpX, vpY: vpY });
+        }
+        if (queue.length > 40) queue.splice(0, queue.length - 40);
+        lastP = { x: x, y: y, target: tgt, vpX: vpX, vpY: vpY };
+        kick();
+    }
+
+    /* ---------- panoul Rules ---------- */
+    var rules = null;
+
+    function buildRules() {
+        var p = document.querySelector(".rules-panel");
+        var cv = p && p.querySelector(".rules-snow-cap");
+        if (!p || !cv) { rules = null; return; }
+        var Wp = p.offsetWidth;
+        if (!Wp) { rules = null; return; }
+
+        var R = 24, PAD = 34, EXT = 6, DRIP = 36;
+        var cw = Wp + EXT * 2, ch = PAD + R + DRIP + 6;
+        cv.style.left = (-(EXT + 1)) + "px";
+        cv.style.top = (-(PAD + 1)) + "px";
+        var ctx = sizeCanvas(cv, cw, ch);
+
+        var nA = noise1(5), nB = noise1(41), nC = noise1(53), r = rng(77);
+        var lump = [], lobe = [], u, X;
+        for (u = 0; u < cw; u++) {
+            X = u - EXT;
+            /* 4 octave de noise pentru formă de acumulare mai naturală pe panou */
+            var v = 0.42 * nA(X / 42) + 0.28 * nB(X / 12) + 0.15 * nB(X / 3.1 + 40) + 0.15 * nC(X / 2.2);
+            lump.push(0.45 + 0.95 * v);
+            lobe.push(0);
+        }
+        var cx = 4;
+        while (cx < Wp - 4) {
+            var hw = 6 + r() * 9, dep = 2.5 + r() * 6.5, c = cx + hw;
+            for (u = 0; u < cw; u++) {
+                X = u - EXT;
+                var q = (X - c) / hw;
+                if (Math.abs(q) < 1) lobe[u] = Math.max(lobe[u], dep * Math.sqrt(1 - q * q));
+            }
+            cx += 2 * hw + (r() * 4 - 2.5);
+        }
+        var clumps = [];
+        for (u = 0; u < cw; u += 3) {
+            if (r() < 0.6) clumps.push({ u: u, r: 1 + r() * 2.2, dy: r() });
+        }
+        var ici = [], ux = 12;
+        while (ux < Wp - 8) {
+            if (r() < 0.55) ici.push({ u: Math.round(ux + EXT), len: 6 + r() * 14, w: 3.4 + r() * 2.6 });
+            ux += 14 + r() * 24;
+        }
+        ici.push({ u: EXT + 1, len: 10 + r() * 8, w: 3.4 }, { u: EXT + Wp - 1, len: 10 + r() * 8, w: 3.4 });
+        /* weights per coloană pentru ștergerea zăpezii cu mouse/deget */
+        var w = new Float32Array(cw);
+        for (u = 0; u < cw; u++) w[u] = 1;
+        rules = {
+            ici: ici, byArr: new Array(cw),
+            cv: cv, ctx: ctx, W: Wp, R: R, PAD: PAD, EXT: EXT, cw: cw, ch: ch,
+            lump: lump, lobe: lobe, clumps: clumps, w: w, rect: null,
+            dripL: 11 + r() * 6, dripR: 8 + r() * 6, dripL2: 5 + r() * 4, dripR2: 4 + r() * 4
+        };
+    }
+
+    function edgeY(rl, X) {
+        var Wp = rl.W, R = rl.R, PAD = rl.PAD;
+        if (X <= 0 || X >= Wp) return PAD + R;
+        if (X < R) return PAD + R - Math.sqrt(Math.max(0, R * R - (R - X) * (R - X)));
+        if (X > Wp - R) { var dx = X - (Wp - R); return PAD + R - Math.sqrt(Math.max(0, R * R - dx * dx)); }
+        return PAD;
+    }
+    function rulesCov(rl, u, grow) {
+        var g = Math.max(0, (grow - 0.08) / 0.92);
+        var nrm = Math.max(0, Math.min(1, (rl.lump[u] - 0.45) / 0.9));
+        var c = Math.max(0, Math.min(1, (g * 1.55 - (1 - nrm)) / 0.45));
+        return c * c * (3 - 2 * c);
+    }
+    function rulesT(rl, u, grow, maxT) {
+        var X = u - rl.EXT, Wp = rl.W;
+        var xc = Math.max(0, Math.min(Wp, X));
+        var taper = 0.4 + 0.6 * smooth(0, 38, Math.min(xc, Wp - xc));
+        var dome = 0.8 + 0.2 * Math.sin(Math.PI * xc / Wp);
+        var out = X < 0 ? -X : (X > Wp ? X - Wp : 0);
+        var fo = Math.max(0, 1 - out / (rl.EXT + 0.5));
+        var wMul = rl.w ? rl.w[u] : 1;   /* ștergere zăpadă cu mouse */
+        return maxT * rl.lump[u] * dome * taper * fo * rulesCov(rl, u, grow) * wMul;
+    }
+    function drip(ctx, x, y0, len, w) {
+        if (len < 2.5) return;
+        var y1 = y0 + len;
+        ctx.beginPath();
+        ctx.moveTo(x - w / 2, y0);
+        ctx.lineTo(x - w / 2, y1 - w / 2);
+        ctx.arc(x, y1 - w / 2, w / 2, Math.PI, 0, true);
+        ctx.lineTo(x + w / 2, y0);
+        ctx.closePath();
+        ctx.fillStyle = snowGradient(ctx, y0, y1);
+        ctx.fill();
+    }
+    function drawRules(grow) {
+        if (!rules) return;
+        var rl = rules, ctx = rl.ctx, u;
+        ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+        ctx.clearRect(0, 0, rl.cw, rl.ch);
+        var maxT = 13, g = Math.max(0, (grow - 0.08) / 0.92);
+        var g15 = g * Math.sqrt(g);
+
+        // zăpada apare în petice care cresc și se unesc
+        var top = [], bot = [], minY = 1e9, maxY = -1e9;
+        function flush() {
+            if (top.length >= 4) fillSnow(ctx, top, bot, minY, maxY);
+            top = []; bot = []; minY = 1e9; maxY = -1e9;
+        }
+        for (u = 0; u < rl.cw; u++) {
+            var X = u - rl.EXT;
+            var t = rulesT(rl, u, grow, maxT);
+            if (t < 0.35) { rl.byArr[u] = -1; flush(); continue; }
+            var e = edgeY(rl, X);
+            var out = X < 0 ? -X : (X > rl.W ? X - rl.W : 0);
+            var fo = Math.max(0, 1 - out / (rl.EXT + 0.5));
+            var ty = e - t, by = e + Math.min(2.5, t * 0.5) + g15 * rl.lobe[u] * fo * rulesCov(rl, u, grow);
+            rl.byArr[u] = by;
+            top.push([u, ty]); bot.push([u, by]);
+            if (ty < minY) minY = ty;
+            if (by > maxY) maxY = by;
+        }
+        flush();
+
+        // țurțuri, după ce stratul s-a format
+        if (g > 0.45) {
+            var gi = Math.pow((g - 0.45) / 0.55, 1.4);
+            for (var q = 0; q < rl.ici.length; q++) {
+                var ic = rl.ici[q], bb = rl.byArr[ic.u];
+                if (bb > 0) icicle(ctx, ic.u, bb - 1, ic.len * gi, ic.w);
+            }
+        }
+
+        for (var c = 0; c < rl.clumps.length; c++) {
+            var cl = rl.clumps[c];
+            var tt = rulesT(rl, cl.u, grow, maxT);
+            if (tt < 2) continue;
+            var ee = edgeY(rl, cl.u - rl.EXT);
+            clump(ctx, cl.u, ee - tt + cl.r * (0.2 + 0.4 * cl.dy), cl.r * (0.45 + 0.55 * Math.min(1, tt / 5)));
+        }
+    }
+
+    /* ---------- orchestrare ---------- */
+    var t0 = 0, gtimer = 0, started = false;
+
+    function renderAll(g) { currentG = g; drawLogo(g); drawRules(g); }
+    function rebuild() { buildLogo(); buildRules(); renderAll(currentG); }
+
+    function init() {
+        if (started) return;
+        started = true;
+        buildLogo(); buildRules();
+        if (reduce) {
+            renderAll(1);
+        } else {
+            t0 = performance.now();
+            renderAll(0.08);
+            gtimer = setInterval(function () {
+                if (document.hidden) return;
+                var k = Math.min(1, (performance.now() - t0) / SNOW_DURATION);
+                renderAll(0.08 + 0.92 * (1 - Math.pow(1 - k, 2)));
+                if (k >= 1) clearInterval(gtimer);
+            }, STEP);
+
+            /* atașăm ascultători pointer pe ambele zone: titlul Sociale și panoul Rules */
+            function attachPointer(area) {
+                area.addEventListener("pointermove", onPointer);
+                area.addEventListener("pointerdown", onPointer);
+                area.addEventListener("pointerleave", function () { lastP = null; });
+                area.addEventListener("pointerup", function () { lastP = null; });
+                area.addEventListener("pointercancel", function () { lastP = null; });
+            }
+            var area = document.querySelector(".logo-area");
+            if (area) attachPointer(area);
+            var rulesPanel = document.querySelector(".rules-panel");
+            if (rulesPanel) attachPointer(rulesPanel);
+            document.addEventListener("visibilitychange", function () { if (!document.hidden && dirty) kick(); });
+        }
+        var rt, first = true;
+        function sched() { clearTimeout(rt); rt = setTimeout(rebuild, 150); }
+        window.addEventListener("resize", sched);
+        if (window.ResizeObserver) {
+            var ro = new ResizeObserver(function () { if (first) { first = false; return; } sched(); });
+            var p = document.querySelector(".rules-panel"), h = document.querySelector(".logo-text");
+            if (p) ro.observe(p);
+            if (h) ro.observe(h);
+        }
+    }
+
+    if (document.fonts && document.fonts.load) {
+        Promise.all([document.fonts.load('600 64px "Playfair Display"', "Sociale"), document.fonts.ready]).then(init, init);
+        setTimeout(init, 3000);
+    } else {
+        window.addEventListener("load", init);
+    }
+})();
+</script>
+
+</body>
+</html>
